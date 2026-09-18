@@ -6,294 +6,437 @@
 <title>Wait Russia — Официальный форум</title>
 <style>
     :root{
-        --bg-main:#121418;
-        --bg-card:#1a1d24;
-        --bg-hover:#22252e;
-        --bg-elev:#20242c;
-        --accent-red:#ff3b3b;
-        --accent-red-h:#ff5a5a;
-        --text-main:#ffffff;
-        --text-muted:#9ba1a6;
-        --border-color:#2a2e39;
+        --bg-body:#0d0f13;
+        --bg-header:#15181e;
+        --bg-nav:#1a1e26;
+        --bg-card:#1b1f27;
+        --bg-card-hover:#22262f;
+        --bg-elev:#262b35;
+        --bg-input:#0f1117;
+        --accent:#e63946;
+        --accent-hover:#ff4d5a;
+        --accent-dim:rgba(230,57,70,.12);
+        --text-primary:#e8eaed;
+        --text-secondary:#9aa0a8;
+        --text-muted:#6b7280;
+        --border:#2a2f3a;
+        --border-light:#333945;
         --green:#2ecc71;
         --blue:#3498db;
         --orange:#e67e22;
         --purple:#9b59b6;
+        --yellow:#f1c40f;
+        --radius:8px;
+        --radius-lg:12px;
     }
     *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-    body{background:var(--bg-main);color:var(--text-main);min-height:100vh;padding-bottom:60px;-webkit-font-smoothing:antialiased}
-    button{font-family:inherit}
-    ::-webkit-scrollbar{width:9px;height:9px}
-    ::-webkit-scrollbar-track{background:var(--bg-main)}
-    ::-webkit-scrollbar-thumb{background:#2f3440;border-radius:6px}
+    body{background:var(--bg-body);color:var(--text-primary);min-height:100vh;padding-bottom:60px;-webkit-font-smoothing:antialiased}
+    button{font-family:inherit;cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-track{background:var(--bg-body)}
+    ::-webkit-scrollbar-thumb{background:#2f3440;border-radius:6px;border:2px solid var(--bg-body)}
     ::-webkit-scrollbar-thumb:hover{background:#3c424f}
 
-    /* ---------- ШАПКА ---------- */
-    header{
-        background:var(--bg-card);border-bottom:1px solid var(--border-color);
-        padding:12px 20px;display:flex;align-items:center;gap:18px;
-        position:sticky;top:0;z-index:100;
+    /* ============ ВЕРХНЯЯ ПАНЕЛЬ (как в XenForo) ============ */
+    .top-bar{
+        background:var(--bg-header);border-bottom:1px solid var(--border);
+        padding:0 20px;height:52px;display:flex;align-items:center;gap:16px;
+        position:sticky;top:0;z-index:200;
     }
-    .logo{font-size:22px;font-weight:800;letter-spacing:.5px;cursor:pointer;white-space:nowrap;user-select:none}
+    .logo{
+        font-size:20px;font-weight:900;letter-spacing:.5px;white-space:nowrap;
+        user-select:none;cursor:pointer;display:flex;align-items:center;gap:6px;
+    }
     .logo .wait{color:#fff}
-    .logo .russia{color:#000;background:#fff;padding:2px 7px;border-radius:5px;margin-left:3px}
-    .search{flex:1;max-width:400px}
-    .search input{
-        width:100%;background:var(--bg-main);border:1px solid var(--border-color);
-        color:#fff;padding:9px 13px;border-radius:8px;font-size:13px;outline:none;transition:.15s;
+    .logo .russia{color:#000;background:#fff;padding:2px 7px;border-radius:4px}
+    .top-search{flex:1;max-width:480px;position:relative}
+    .top-search input{
+        width:100%;background:var(--bg-input);border:1px solid var(--border);
+        color:var(--text-primary);padding:8px 12px 8px 34px;border-radius:20px;
+        font-size:13px;outline:none;transition:.2s;
     }
-    .search input:focus{border-color:var(--accent-red);box-shadow:0 0 0 3px rgba(255,59,59,.12)}
-    .user-menu{margin-left:auto;display:flex;align-items:center;gap:12px}
+    .top-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+    .top-search .icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px}
+    .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
     .btn-login{
-        background:var(--accent-red);color:#fff;padding:8px 16px;border-radius:8px;
-        font-weight:600;font-size:13px;cursor:pointer;border:none;transition:.15s;
+        background:var(--accent);color:#fff;padding:7px 16px;border-radius:20px;
+        font-weight:600;font-size:12.5px;border:none;transition:.2s;
     }
-    .btn-login:hover{background:var(--accent-red-h)}
-    .user-chip{display:flex;align-items:center;gap:9px;cursor:pointer;padding:4px 10px 4px 4px;border-radius:20px;transition:.15s}
-    .user-chip:hover{background:var(--bg-hover)}
-    .user-chip .name{font-size:13px;font-weight:600}
+    .btn-login:hover{background:var(--accent-hover)}
+    .user-chip{
+        display:flex;align-items:center;gap:9px;cursor:pointer;
+        padding:4px 12px 4px 4px;border-radius:20px;transition:.2s;
+    }
+    .user-chip:hover{background:var(--bg-card-hover)}
+    .user-chip .name{font-size:12.5px;font-weight:600;line-height:1.3}
     .user-chip .role{font-size:10px;color:var(--text-muted)}
 
-    /* ---------- АВАТАРЫ ---------- */
-    .avatar{
-        width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ff3b3b,#b32222);
-        display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0;
+    /* ============ НАВИГАЦИЯ (как в XenForo) ============ */
+    .nav-bar{
+        background:var(--bg-nav);border-bottom:1px solid var(--border);
+        padding:0 20px;height:42px;display:flex;align-items:center;gap:4px;
+        overflow-x:auto;position:sticky;top:52px;z-index:190;
     }
-    .avatar.big{width:56px;height:56px;font-size:22px}
+    .nav-bar::-webkit-scrollbar{height:0}
+    .nav-item{
+        padding:0 14px;height:42px;display:flex;align-items:center;
+        font-size:13px;font-weight:500;color:var(--text-secondary);
+        border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;
+    }
+    .nav-item:hover{color:var(--text-primary);background:rgba(255,255,255,.03)}
+    .nav-item.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-    /* ---------- ХЛЕБНЫЕ КРОШКИ ---------- */
-    .crumbs{
-        max-width:1000px;margin:0 auto;padding:14px 15px 0;font-size:12px;color:var(--text-muted);
-        display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    /* ============ ХЛЕБНЫЕ КРОШКИ ============ */
+    .breadcrumbs{
+        max-width:1100px;margin:0 auto;padding:14px 20px 0;
+        font-size:12px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center;
     }
-    .crumbs span.link{cursor:pointer;transition:.15s}
-    .crumbs span.link:hover{color:var(--accent-red)}
-    .crumbs .sep{opacity:.5}
+    .breadcrumbs .link{cursor:pointer;transition:.15s}
+    .breadcrumbs .link:hover{color:var(--accent)}
+    .breadcrumbs .sep{opacity:.4;margin:0 2px}
 
-    /* ---------- КОНТЕЙНЕР ---------- */
-    .container{max-width:1000px;margin:0 auto;padding:0 15px}
+    /* ============ КОНТЕЙНЕР ============ */
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
 
-    .category-title{
-        font-size:13px;font-weight:700;margin:26px 0 10px;color:var(--text-muted);
-        text-transform:uppercase;letter-spacing:1px;border-left:3px solid var(--accent-red);padding-left:9px;
+    /* ============ КАТЕГОРИИ (XenForo style) ============ */
+    .category-block{margin-top:20px}
+    .category-header{
+        background:linear-gradient(135deg,var(--bg-elev),var(--bg-card));
+        border:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+        padding:14px 18px;display:flex;align-items:center;gap:10px;
     }
+    .category-header .cat-icon{font-size:18px}
+    .category-header h2{font-size:15px;font-weight:700;letter-spacing:.3px}
+    .category-header .cat-desc{font-size:11.5px;color:var(--text-muted);margin-left:auto}
 
-    /* ---------- ПАНЕЛЬ ДЕЙСТВИЙ ---------- */
-    .action-bar{margin:16px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .btn-action{
-        background:var(--accent-red);color:#fff;border:none;padding:10px 18px;border-radius:8px;
-        font-weight:600;cursor:pointer;font-size:13.5px;transition:.15s;
+    .forum-list{
+        background:var(--bg-card);border:1px solid var(--border);border-top:none;
+        border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;
     }
-    .btn-action:hover{background:var(--accent-red-h);transform:translateY(-1px)}
-    .btn-ghost{
-        background:transparent;color:var(--text-muted);border:1px solid var(--border-color);
-        padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600;transition:.15s;
+    .forum-item{
+        display:flex;align-items:center;gap:14px;padding:14px 18px;
+        border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
     }
-    .btn-ghost:hover{border-color:var(--accent-red);color:#fff}
-    .muted-small{font-size:12px;color:var(--text-muted);margin-left:auto}
+    .forum-item:last-child{border-bottom:none}
+    .forum-item:hover{background:var(--bg-card-hover)}
+    .forum-icon{
+        width:46px;height:46px;border-radius:10px;background:var(--bg-elev);
+        border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+        font-size:21px;flex-shrink:0;
+    }
+    .forum-info{flex:1;min-width:0}
+    .forum-info h3{
+        font-size:14px;font-weight:600;margin-bottom:3px;
+        display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+    }
+    .forum-info p{font-size:12px;color:var(--text-muted);line-height:1.45}
+    .forum-stats{
+        text-align:right;font-size:11.5px;color:var(--text-muted);
+        min-width:100px;line-height:1.8;flex-shrink:0;
+    }
+    .forum-stats b{color:#c9ced4;font-weight:600}
 
-    /* ---------- КАРТОЧКИ РАЗДЕЛОВ ---------- */
-    .forum-card{
-        background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;
-        padding:15px;margin-bottom:9px;transition:.18s;display:flex;align-items:center;gap:14px;cursor:pointer;
-    }
-    .forum-card:hover{background:var(--bg-hover);border-color:#3a4050;transform:translateX(2px)}
-    .card-icon{
-        width:44px;height:44px;border-radius:10px;background:var(--bg-elev);border:1px solid var(--border-color);
-        display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
-    }
-    .card-info{flex:1;min-width:0}
-    .card-info h3{font-size:15px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-    .card-info p{font-size:12.5px;color:var(--text-muted);line-height:1.45}
-    .sub-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .tag{
-        font-size:10.5px;color:var(--text-muted);background:var(--bg-main);
-        border:1px solid var(--border-color);padding:3px 8px;border-radius:20px;
-    }
-    .stats{
-        text-align:right;font-size:12px;color:var(--text-muted);min-width:92px;line-height:1.7;flex-shrink:0;
-    }
-    .stats b{color:#dfe3e8;font-weight:600}
-
-    /* ---------- БЕЙДЖИ ---------- */
+    /* ============ БЕЙДЖИ ============ */
     .badge{
-        font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:5px;
+        font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:4px;
         text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;
     }
-    .badge-important{background:var(--accent-red);color:#fff}
+    .badge-important{background:var(--accent);color:#fff}
     .badge-new{background:var(--orange);color:#fff}
-    .badge-open{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.35)}
-    .badge-review{background:rgba(230,126,34,.15);color:var(--orange);border:1px solid rgba(230,126,34,.35)}
-    .badge-closed{background:rgba(155,161,166,.12);color:var(--text-muted);border:1px solid rgba(155,161,166,.3)}
-    .badge-ok{background:rgba(52,152,219,.15);color:var(--blue);border:1px solid rgba(52,152,219,.35)}
-    .badge-pin{background:rgba(155,89,182,.15);color:var(--purple);border:1px solid rgba(155,89,182,.35)}
+    .badge-open{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.3)}
+    .badge-review{background:rgba(230,126,34,.15);color:var(--orange);border:1px solid rgba(230,126,34,.3)}
+    .badge-closed{background:rgba(107,114,128,.15);color:var(--text-muted);border:1px solid rgba(107,114,128,.3)}
+    .badge-resolved{background:rgba(52,152,219,.15);color:var(--blue);border:1px solid rgba(52,152,219,.3)}
+    .badge-pin{background:rgba(155,89,182,.15);color:var(--purple);border:1px solid rgba(155,89,182,.3)}
+    .badge-template{background:rgba(241,196,15,.12);color:var(--yellow);border:1px solid rgba(241,196,15,.3)}
 
-    /* ---------- ЗАГОЛОВОК РАЗДЕЛА ---------- */
-    .section-head{
-        background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;
-        padding:18px 20px;margin-top:18px;
+    /* ============ СПИСОК ТЕМ (XenForo style) ============ */
+    .topic-list-header{
+        display:flex;align-items:center;gap:12px;padding:12px 18px;
+        background:var(--bg-elev);border-bottom:1px solid var(--border);
+        font-size:11px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.8px;color:var(--text-muted);
     }
-    .section-head h1{font-size:20px;font-weight:700;margin-bottom:6px}
-    .section-head p{font-size:13px;color:var(--text-muted);line-height:1.5}
+    .topic-list-header .col-main{flex:1}
+    .topic-list-header .col-stats{width:80px;text-align:center}
+    .topic-list-header .col-last{width:140px;text-align:right}
 
-    /* ---------- СПИСОК ТЕМ ---------- */
-    .topic-list{background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;overflow:hidden}
     .topic-row{
-        display:flex;align-items:center;gap:13px;padding:13px 15px;
-        border-bottom:1px solid var(--border-color);cursor:pointer;transition:.15s;
+        display:flex;align-items:center;gap:12px;padding:13px 18px;
+        border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
     }
     .topic-row:last-child{border-bottom:none}
-    .topic-row:hover{background:var(--bg-hover)}
-    .topic-main{flex:1;min-width:0}
-    .topic-title{font-size:14px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-    .topic-meta{font-size:11.5px;color:var(--text-muted)}
-    .topic-meta b{color:#c9ced4;font-weight:600}
-    .topic-stats{font-size:11.5px;color:var(--text-muted);text-align:center;min-width:70px;line-height:1.7;flex-shrink:0}
-    .topic-last{font-size:11px;color:var(--text-muted);text-align:right;min-width:104px;line-height:1.6;flex-shrink:0}
+    .topic-row:hover{background:var(--bg-card-hover)}
     .topic-avatar{
-        width:36px;height:36px;border-radius:9px;background:var(--bg-elev);border:1px solid var(--border-color);
-        display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--text-muted);flex-shrink:0;
+        width:38px;height:38px;border-radius:9px;background:var(--bg-elev);
+        border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+        font-weight:700;font-size:14px;color:var(--text-muted);flex-shrink:0;
     }
-
-    .empty{
-        background:var(--bg-card);border:1px dashed var(--border-color);border-radius:12px;
-        padding:34px;text-align:center;color:var(--text-muted);font-size:13.5px;
+    .topic-avatar.gold{background:linear-gradient(135deg,#f1c40f,#d4a017);color:#000;border-color:#d4a017}
+    .topic-avatar.red{background:linear-gradient(135deg,#e63946,#b71c2c);color:#fff;border-color:#b71c2c}
+    .topic-avatar.blue{background:linear-gradient(135deg,#3498db,#1a6fa8);color:#fff;border-color:#1a6fa8}
+    .topic-main{flex:1;min-width:0}
+    .topic-title{
+        font-size:13.5px;font-weight:600;margin-bottom:4px;
+        display:flex;align-items:center;gap:6px;flex-wrap:wrap;
     }
+    .topic-title .tag{
+        font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:3px;
+        background:var(--bg-elev);color:var(--text-secondary);
+    }
+    .topic-meta{font-size:11px;color:var(--text-muted)}
+    .topic-meta b{color:var(--text-secondary);font-weight:600}
+    .topic-stats{
+        font-size:11px;color:var(--text-muted);text-align:center;
+        min-width:80px;line-height:1.7;flex-shrink:0;
+    }
+    .topic-last{
+        font-size:11px;color:var(--text-muted);text-align:right;
+        min-width:140px;line-height:1.6;flex-shrink:0;
+    }
+    .topic-last b{color:var(--text-secondary);font-weight:600}
 
-    /* ---------- ТЕМА / СООБЩЕНИЯ ---------- */
-    .topic-head{margin-top:18px;padding-bottom:14px;border-bottom:1px solid var(--border-color)}
-    .topic-head h1{font-size:20px;font-weight:700;margin-bottom:9px;line-height:1.35}
-    .topic-head-meta{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .topic-head-meta b{color:#c9ced4}
+    /* ============ ТЕМА / ПОСТЫ ============ */
+    .topic-head{
+        margin-top:18px;padding-bottom:14px;border-bottom:1px solid var(--border);
+    }
+    .topic-head h1{font-size:19px;font-weight:700;margin-bottom:9px;line-height:1.35}
+    .topic-head-meta{
+        font-size:12px;color:var(--text-muted);display:flex;
+        align-items:center;gap:8px;flex-wrap:wrap;
+    }
+    .topic-head-meta b{color:var(--text-secondary)}
 
     .posts{display:flex;flex-direction:column;gap:10px;margin-top:14px}
     .post{
-        background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;
-        display:flex;overflow:hidden;
+        background:var(--bg-card);border:1px solid var(--border);
+        border-radius:var(--radius-lg);display:flex;overflow:hidden;
     }
     .post-side{
-        width:150px;flex-shrink:0;padding:16px 12px;text-align:center;
-        border-right:1px solid var(--border-color);background:rgba(0,0,0,.15);
+        width:160px;flex-shrink:0;padding:16px 12px;text-align:center;
+        border-right:1px solid var(--border);background:rgba(0,0,0,.15);
     }
-    .post-side .avatar{margin:0 auto 9px}
+    .post-side .avatar{
+        width:56px;height:56px;border-radius:50%;margin:0 auto 9px;
+        display:flex;align-items:center;justify-content:center;
+        font-weight:700;font-size:22px;color:#fff;
+        background:linear-gradient(135deg,#e63946,#b71c2c);
+    }
     .post-author{font-size:13px;font-weight:700;margin-bottom:3px;word-break:break-word}
-    .post-role{font-size:10.5px;color:var(--text-muted)}
+    .post-role{font-size:10.5px;color:var(--text-muted);margin-bottom:6px}
+    .post-badge{font-size:9px;padding:2px 6px;border-radius:3px;display:inline-block}
     .post-body{flex:1;padding:15px 18px;min-width:0}
-    .post-date{font-size:11px;color:var(--text-muted);margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid var(--border-color)}
-    .post-text{font-size:13.5px;line-height:1.65;color:#dfe3e8;word-wrap:break-word;white-space:pre-wrap}
-
-    .reply-box{margin-top:16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:15px}
-    .reply-box textarea{
-        width:100%;background:var(--bg-main);border:1px solid var(--border-color);color:#fff;
-        padding:12px;border-radius:9px;font-size:13.5px;height:110px;resize:vertical;outline:none;transition:.15s;
+    .post-date{
+        font-size:11px;color:var(--text-muted);margin-bottom:9px;
+        padding-bottom:9px;border-bottom:1px solid var(--border);
     }
-    .reply-box textarea:focus{border-color:var(--accent-red)}
+    .post-text{
+        font-size:13.5px;line-height:1.7;color:#d5d9de;
+        word-wrap:break-word;white-space:pre-wrap;
+    }
+
+    /* ============ ФОРМА ОТВЕТА ============ */
+    .reply-box{
+        margin-top:16px;background:var(--bg-card);border:1px solid var(--border);
+        border-radius:var(--radius-lg);padding:16px;
+    }
+    .reply-box textarea{
+        width:100%;background:var(--bg-input);border:1px solid var(--border);
+        color:var(--text-primary);padding:12px;border-radius:var(--radius);
+        font-size:13.5px;height:110px;resize:vertical;outline:none;transition:.15s;
+    }
+    .reply-box textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
     .reply-actions{display:flex;gap:10px;margin-top:11px;flex-wrap:wrap}
 
-    /* ---------- ПРАВИЛА ---------- */
-    .rules-content{
-        background:var(--bg-card);border:1px solid var(--border-color);padding:16px 18px;
-        border-radius:12px;margin-bottom:10px;font-size:13px;line-height:1.6;color:#dcdde1;
+    /* ============ ШАБЛОНЫ ЖАЛОБ ============ */
+    .template-notice{
+        background:rgba(241,196,15,.08);border:1px solid rgba(241,196,15,.25);
+        border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;
+        font-size:12px;color:var(--yellow);line-height:1.5;
     }
-    .rules-content h4{color:var(--accent-red);margin-bottom:9px;font-size:14px}
-    .rules-content ul{padding-left:20px;margin-top:5px}
-    .rules-content li{margin-bottom:6px}
+    .template-notice b{color:#fff}
 
-    /* ---------- МОДАЛЬНЫЕ ОКНА ---------- */
+    /* ============ КНОПКИ ============ */
+    .btn{
+        border:none;padding:9px 18px;border-radius:var(--radius);
+        font-weight:600;font-size:13px;transition:.15s;display:inline-flex;
+        align-items:center;gap:6px;
+    }
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
+    .btn-ghost{
+        background:transparent;color:var(--text-secondary);
+        border:1px solid var(--border);
+    }
+    .btn-ghost:hover{border-color:var(--accent);color:#fff}
+    .btn-sm{padding:6px 13px;font-size:12px}
+
+    .action-bar{margin:16px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .muted-small{font-size:12px;color:var(--text-muted);margin-left:auto}
+
+    /* ============ ПУСТОЕ СОСТОЯНИЕ ============ */
+    .empty{
+        background:var(--bg-card);border:1px dashed var(--border);
+        border-radius:var(--radius-lg);padding:38px;text-align:center;
+        color:var(--text-muted);font-size:13.5px;line-height:1.6;
+    }
+
+    /* ============ ПРАВИЛА ============ */
+    .rules-block{
+        background:var(--bg-card);border:1px solid var(--border);
+        border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:10px;
+        font-size:13px;line-height:1.65;color:#d5d9de;
+    }
+    .rules-block h4{color:var(--accent);margin-bottom:9px;font-size:14px}
+    .rules-block ul{padding-left:20px;margin-top:5px}
+    .rules-block li{margin-bottom:6px}
+
+    /* ============ МОДАЛЬНЫЕ ОКНА ============ */
     .modal{
-        display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(3px);
-        z-index:1000;justify-content:center;align-items:center;padding:16px;
+        display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);
+        backdrop-filter:blur(4px);z-index:1000;justify-content:center;
+        align-items:center;padding:16px;
     }
     .modal.active{display:flex;animation:fade .15s ease}
     @keyframes fade{from{opacity:0}to{opacity:1}}
     .modal-content{
-        background:var(--bg-card);border:1px solid var(--border-color);padding:22px;
-        border-radius:14px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;
-        animation:pop .18s ease;
+        background:var(--bg-card);border:1px solid var(--border);padding:22px;
+        border-radius:14px;width:100%;max-width:540px;max-height:90vh;
+        overflow-y:auto;animation:pop .18s ease;
     }
     @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
-    .modal-content h2{font-size:17px;margin-bottom:16px;font-weight:700}
+    .modal-content h2{font-size:16px;margin-bottom:16px;font-weight:700}
     .form-group{margin-bottom:13px}
-    .form-group label{display:block;font-size:11.5px;color:var(--text-muted);margin-bottom:6px;font-weight:600}
-    .form-group select,.form-group input,.form-group textarea{
-        width:100%;background:var(--bg-main);border:1px solid var(--border-color);color:#fff;
-        padding:11px;border-radius:8px;font-size:13.5px;outline:none;transition:.15s;font-family:inherit;
+    .form-group label{
+        display:block;font-size:11.5px;color:var(--text-muted);
+        margin-bottom:6px;font-weight:600;
     }
-    .form-group select:focus,.form-group input:focus,.form-group textarea:focus{border-color:var(--accent-red)}
-    .form-group textarea{height:110px;resize:vertical}
+    .form-group select,.form-group input,.form-group textarea{
+        width:100%;background:var(--bg-input);border:1px solid var(--border);
+        color:var(--text-primary);padding:11px;border-radius:var(--radius);
+        font-size:13.5px;outline:none;transition:.15s;font-family:inherit;
+    }
+    .form-group select:focus,.form-group input:focus,.form-group textarea:focus{
+        border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);
+    }
+    .form-group textarea{height:120px;resize:vertical}
     .modal-buttons{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
 
-    /* ---------- ТОСТ ---------- */
+    /* ============ ТОСТ ============ */
     .toast{
         position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);
-        background:var(--bg-elev);border:1px solid var(--border-color);border-left:3px solid var(--accent-red);
-        color:#fff;padding:13px 20px;border-radius:10px;font-size:13px;font-weight:500;
-        z-index:2000;opacity:0;transition:.28s cubic-bezier(.2,.8,.2,1);pointer-events:none;
-        box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;
+        background:var(--bg-elev);border:1px solid var(--border);
+        border-left:3px solid var(--accent);color:#fff;padding:13px 20px;
+        border-radius:10px;font-size:13px;font-weight:500;z-index:2000;
+        opacity:0;transition:.28s cubic-bezier(.2,.8,.2,1);pointer-events:none;
+        box-shadow:0 10px 30px rgba(0,0,0,.6);max-width:90vw;
     }
     .toast.show{transform:translate(-50%,0);opacity:1}
 
-    /* ---------- АДАПТИВ ---------- */
-    @media(max-width:720px){
-        .search{display:none}
-        .post-side{width:100%;border-right:none;border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:10px;text-align:left;padding:12px 15px}
-        .post-side .avatar{margin:0}
+    /* ============ ПОДВАЛ ============ */
+    .footer{
+        max-width:1100px;margin:30px auto 0;padding:20px;
+        border-top:1px solid var(--border);text-align:center;
+        font-size:11.5px;color:var(--text-muted);line-height:1.8;
+    }
+
+    /* ============ АДАПТИВ ============ */
+    @media(max-width:768px){
+        .top-search{display:none}
+        .nav-bar{top:52px}
+        .post-side{
+            width:100%;border-right:none;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;gap:10px;text-align:left;padding:12px 15px;
+        }
+        .post-side .avatar{width:40px;height:40px;font-size:16px;margin:0}
         .post{flex-direction:column}
         .post-role{margin-left:auto}
         .topic-last{display:none}
-        .forum-card{flex-wrap:wrap}
-        .stats{text-align:left;min-width:0;width:100%;display:flex;gap:14px;margin-top:6px}
-        .stats br{display:none}
+        .topic-stats{min-width:50px}
+        .forum-stats{min-width:0;text-align:left;display:flex;gap:12px;margin-top:4px}
+        .forum-stats br{display:none}
+        .forum-item{flex-wrap:wrap}
+        .topic-list-header .col-last{display:none}
     }
 </style>
 </head>
 <body>
 
-<header>
-    <div class="logo" onclick="goHome()"><span class="wait">Wait</span><span class="russia">Russia</span></div>
-    <div class="search">
-        <input id="searchInput" type="text" placeholder="Поиск по темам форума..." onkeydown="if(event.key==='Enter') doSearch()">
+<!-- ============ ВЕРХНЯЯ ПАНЕЛЬ ============ -->
+<div class="top-bar">
+    <div class="logo" onclick="goHome()">
+        <span class="wait">Wait</span><span class="russia">Russia</span>
     </div>
-    <div class="user-menu" id="userMenu"></div>
-</header>
+    <div class="top-search">
+        <span class="icon">🔍</span>
+        <input id="searchInput" type="text" placeholder="Поиск по форуму..."
+               onkeydown="if(event.key==='Enter') doSearch()">
+    </div>
+    <div class="top-right" id="userMenu"></div>
+</div>
 
-<div class="crumbs" id="crumbs"></div>
+<!-- ============ НАВИГАЦИЯ ============ -->
+<div class="nav-bar" id="navBar"></div>
+
+<!-- ============ ХЛЕБНЫЕ КРОШКИ ============ -->
+<div class="breadcrumbs" id="breadcrumbs"></div>
+
+<!-- ============ ОСНОВНОЙ КОНТЕНТ ============ -->
 <main class="container" id="app"></main>
 
-<!-- МОДАЛКА: СОЗДАНИЕ ТЕМЫ -->
+<!-- ============ ПОДВАЛ ============ -->
+<div class="footer">
+    Wait Russia © 2025 · Официальный форум проекта<br>
+    Все жалобы и заявки рассматриваются только через форум
+</div>
+
+<!-- ============ МОДАЛКА: СОЗДАНИЕ ТЕМЫ ============ -->
 <div class="modal" id="createModal">
     <div class="modal-content">
-        <h2>📝 Создать тему / Подать жалобу</h2>
+        <h2>📝 Создать тему</h2>
         <div class="form-group">
             <label>Раздел форума</label>
             <select id="topicCategory"></select>
+        </div>
+        <div class="form-group">
+            <label>Шаблон</label>
+            <select id="topicTemplate" onchange="applyTemplate()">
+                <option value="">— Без шаблона —</option>
+                <option value="complaint">Жалоба на игрока</option>
+                <option value="admin_complaint">Жалоба на администратора</option>
+                <option value="unban">Обжалование наказания</option>
+                <option value="leader_app">Заявление на лидера</option>
+                <option value="rp_bio">RP Биография</option>
+            </select>
         </div>
         <div class="form-group">
             <label>Заголовок темы</label>
             <input type="text" id="topicTitle" maxlength="120" placeholder="Например: DM в зелёной зоне | Nick_Name">
         </div>
         <div class="form-group">
-            <label>Описание / суть жалобы</label>
-            <textarea id="topicText" maxlength="4000" placeholder="Опишите подробно ситуацию, приложите доказательства (скриншоты / видео)..."></textarea>
+            <label>Описание / текст</label>
+            <textarea id="topicText" maxlength="5000" placeholder="Опишите ситуацию подробно..."></textarea>
         </div>
         <div class="modal-buttons">
-            <button class="btn-ghost" onclick="closeModal('createModal')">Отмена</button>
-            <button class="btn-action" onclick="submitTopic()">Опубликовать</button>
+            <button class="btn btn-ghost" onclick="closeModal('createModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="submitTopic()">Опубликовать</button>
         </div>
     </div>
 </div>
 
-<!-- МОДАЛКА: АВТОРИЗАЦИЯ -->
+<!-- ============ МОДАЛКА: АВТОРИЗАЦИЯ ============ -->
 <div class="modal" id="authModal">
     <div class="modal-content" style="max-width:400px">
         <h2>🔐 Вход на форум</h2>
         <div class="form-group">
             <label>Ваш игровой ник</label>
-            <input type="text" id="authName" maxlength="24" placeholder="Например: Ivan_Walker" onkeydown="if(event.key==='Enter') doLogin()">
+            <input type="text" id="authName" maxlength="24" placeholder="Например: Ivan_Walker"
+                   onkeydown="if(event.key==='Enter') doLogin()">
         </div>
         <div class="modal-buttons">
-            <button class="btn-ghost" onclick="closeModal('authModal')">Отмена</button>
-            <button class="btn-action" onclick="doLogin()">Войти</button>
+            <button class="btn btn-ghost" onclick="closeModal('authModal')">Отмена</button>
+            <button class="btn btn-primary" onclick="doLogin()">Войти</button>
         </div>
     </div>
 </div>
@@ -302,108 +445,21 @@
 
 <script>
 /* =========================================================
-   ХРАНИЛИЩЕ ДАННЫХ
+   ХРАНИЛИЩЕ
    ========================================================= */
-const LS_DB   = 'wr_forum_db_v1';
-const LS_USER = 'wr_forum_user_v1';
-const DB_VERSION = 1;
+const LS_DB   = 'wr_forum_db_v2';
+const LS_USER = 'wr_forum_user_v2';
+const DB_VERSION = 2;
 
 let DB = null;
 let user = null;
 
-/* --- фабрики --- */
-function makeTopic(id, title, author, text, opts = {}) {
-    const date = opts.date || Date.now();
-    return {
-        id, title, author, date,
-        status: opts.status || 'open',
-        pinned: !!opts.pinned,
-        views: opts.views || 0,
-        posts: [{ author, date, text, role: opts.role || 'Игрок' }]
-    };
-}
-
-function makeSub(id, title, desc, icon, baseT, baseM) {
-    return { id, kind:'forum', title, desc, icon, baseTopics: baseT, baseMessages: baseM, topics: [] };
-}
-
-function makeServer(id, title, desc, icon, base) {
-    return {
-        id, kind:'server', title, desc, icon,
-        subs: [
-            makeSub(id+'-players', 'Жалобы на игроков',
-                'Нарушения со стороны игроков: DM, TK, MG, NonRP, обман.', '⚔️', base[0], base[1]),
-            makeSub(id+'-admins', 'Жалобы на администрацию',
-                'Неправомерные действия администраторов сервера.', '🛡️', base[2], base[3]),
-            makeSub(id+'-unban', 'Обжалование наказаний',
-                'Заявки на снятие блокировки аккаунта / деморгана.', '🔓', base[4], base[5]),
-            makeSub(id+'-leaders', 'Заявления на пост лидера',
-                'Заявки на лидерские должности государственных фракций.', '👑', base[6], base[7])
-        ]
-    };
-}
-
-/* --- сид данных --- */
-function seed() {
-    const now = Date.now();
-    const H = 3600 * 1000;
-
-    const news    = { id:'news', kind:'forum', title:'Новости и информация', desc:'Официальные обновления, глобальные события проекта Wait Russia.', icon:'📰', badge:'Важно', badgeClass:'badge-important', baseTopics:310, baseMessages:4600, topics:[] };
-    const tech    = { id:'tech', kind:'forum', title:'Технический раздел', desc:'Ошибки игры, баги, проблемы с привязкой аккаунтов Gmail / Telegram.', icon:'🛠️', baseTopics:8, baseMessages:20, topics:[] };
-    const suggest = { id:'suggest', kind:'forum', title:'Предложения по улучшению', desc:'Ваши идеи по картам, автомобилям и системам модерирования.', icon:'💡', badge:'Новое', badgeClass:'badge-new', baseTopics:139000, baseMessages:1900000, topics:[] };
-
-    const red      = makeServer('red',      'Сервер №1 | RED',      'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🔴', [15200,48000, 9400,26000, 6200,15000, 3000,7000]);
-    const green    = makeServer('green',    'Сервер №2 | GREEN',    'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🟢', [12500,32000, 8100,18000, 5200,9500,  2500,4500]);
-    const blue     = makeServer('blue',     'Сервер №3 | BLUE',     'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🔵', [20100,60000, 13300,33000, 8400,17000, 4600,9000]);
-    const belgorod = makeServer('belgorod', 'Сервер BELGOROD',      'Технические баги, ошибки привязок Telegram / Gmail и жалобы.', '🏰', [0,0, 0,0, 0,0, 0,0]);
-
-    /* --- живые примеры тем --- */
-    news.topics.push(
-        makeTopic('t-n1', 'Обновление 4.7 — новые автомобили и правки баланса',
-            'Wait Russia', 'Встречайте обновление 4.7! Добавлены 6 новых автомобилей, переработан баланс оружия и исправлено 43 бага. Полный список изменений — во вложении.',
-            { status:'closed', pinned:true, views:24800, date: now - 72*H, role:'Администрация' }),
-        makeTopic('t-n2', 'Технические работы 25 числа с 03:00 до 06:00',
-            'Wait Russia', 'В связи с обновлением ядра серверов возможны кратковременные отключения. Приносим извинения за неудобства.',
-            { status:'closed', pinned:true, views:9600, date: now - 20*H, role:'Администрация' })
-    );
-
-    red.subs[0].topics.push(
-        makeTopic('t-r1', 'DM в зелёной зоне | Nick_Criminal',
-            'Ivan_Walker', 'Игрок Nick_Criminal открыл огонь по мне возле больницы Лос-Сантоса без какой-либо RP-причины. Прикладываю видео с биндером.',
-            { status:'review', views:342, date: now - 5*H }),
-        makeTopic('t-r2', 'NonRP обман при сделке | Seller_One',
-            'Maria_Stone', 'Договорились о продаже машины, я перевёл деньги, но игрок вышел из игры и не отдал транспорт. Скриншоты переписки внутри.',
-            { status:'open', views:128, date: now - 2*H })
-    );
-
-    red.subs[1].topics.push(
-        makeTopic('t-r3', 'Жалоба на администратора Tim_Admin',
-            'Oleg_Fox', 'Администратор выдал деморган 120 минут без объяснения причины и отказался предоставить доказательства. Прошу разобраться.',
-            { status:'review', views:890, date: now - 9*H })
-    );
-
-    belgorod.subs[0].topics.push(
-        makeTopic('t-b1', 'Не приходит код подтверждения на Gmail',
-            'Test_User', 'При привязке Gmail письмо с кодом не приходит уже второй день. Проверял папку "Спам" — пусто. Помогите!',
-            { status:'open', views:56, date: now - 1*H })
-    );
-
-    return {
-        version: DB_VERSION,
-        groups: [
-            { title:'Основной раздел', items:[ news, tech, suggest ] },
-            { title:'Игровые серверы', items:[ red, green, blue, belgorod ] }
-        ]
-    };
-}
-
-/* --- загрузка / сохранение --- */
 function loadDB() {
     try {
         const raw = localStorage.getItem(LS_DB);
         if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && parsed.version === DB_VERSION) { DB = parsed.data; return; }
+            const p = JSON.parse(raw);
+            if (p && p.version === DB_VERSION) { DB = p.data; return; }
         }
     } catch (e) {}
     DB = seed();
@@ -423,45 +479,130 @@ function saveUser() {
 }
 
 /* =========================================================
+   СИД ДАННЫХ (структура как в Black Russia)
+   ========================================================= */
+function makeTopic(id, title, author, text, opts = {}) {
+    return {
+        id, title, author, date: opts.date || Date.now(),
+        status: opts.status || 'open', pinned: !!opts.pinned,
+        views: opts.views || 0, prefix: opts.prefix || '',
+        posts: [{ author, date: opts.date || Date.now(), text, role: opts.role || 'Игрок' }]
+    };
+}
+
+function makeForum(id, title, desc, icon, baseT, baseM) {
+    return { id, kind:'forum', title, desc, icon, baseTopics: baseT, baseMessages: baseM, topics: [] };
+}
+
+function makeServer(id, title, desc, icon, base) {
+    return {
+        id, kind:'server', title, desc, icon,
+        subs: [
+            makeForum(id+'-players',  'Жалобы на игроков',    'DM, TK, MG, NonRP, обман и другие нарушения от игроков.', '⚔️', base[0], base[1]),
+            makeForum(id+'-admins',   'Жалобы на администрацию','Неправомерные действия администраторов сервера.', '🛡️', base[2], base[3]),
+            makeForum(id+'-unban',    'Обжалование наказаний', 'Заявки на снятие блокировки / деморгана.', '🔓', base[4], base[5]),
+            makeForum(id+'-leaders',  'Заявления на лидеров',  'Заявки на лидерские должности государственных фракций.', '👑', base[6], base[7]),
+            makeForum(id+'-rp',       'RP Биографии',          'Биографии персонажей, одобренные администрацией.', '📖', base[8], base[9]),
+            makeForum(id+'-org',      'Организации',           'Заявки на вступление в ОПГ, госструктуры, кланы.', '🏛️', base[10], base[11])
+        ]
+    };
+}
+
+function seed() {
+    const now = Date.now();
+    const H = 3600 * 1000;
+
+    const news    = makeForum('news', 'Новости и информация', 'Официальные обновления, события проекта Wait Russia.', '📰', 340, 5200);
+    const guides  = makeForum('guides', 'Гайды и туториалы', 'Настройка лаунчера, прокачка, фикс багов, полезные советы.', '📚', 128, 3400);
+    const suggest = makeForum('suggest', 'Предложения по улучшению', 'Ваши идеи по картам, автомобилям и системам.', '💡', 890, 12400);
+    const off    = makeForum('off', 'Оффтопик', 'Общение, стримы, турниры. Не для жалоб и заявок.', '💬', 2100, 45000);
+
+    news.badge = 'Важно'; news.badgeClass = 'badge-important';
+    suggest.badge = 'Новое'; suggest.badgeClass = 'badge-new';
+
+    const red      = makeServer('red',      'Сервер №1 | RED',      'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🔴', [15200,48000, 9400,26000, 6200,15000, 3000,7000, 1200,4500, 800,3200]);
+    const green    = makeServer('green',    'Сервер №2 | GREEN',    'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🟢', [12500,32000, 8100,18000, 5200,9500,  2500,4500, 980,3200, 650,2100]);
+    const blue     = makeServer('blue',     'Сервер №3 | BLUE',     'Госслужбы, ОПГ, RP-ситуации, жалобы и заявления.', '🔵', [20100,60000, 13300,33000, 8400,17000, 4600,9000, 1800,6000, 1100,4000]);
+    const belgorod = makeServer('belgorod', 'Сервер BELGOROD',      'Технические баги, ошибки привязок и жалобы.', '🏰', [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]);
+
+    /* Примеры тем */
+    news.topics.push(
+        makeTopic('t-n1', 'Обновление 4.7 — новые автомобили и правки баланса',
+            'Wait Russia', 'Встречайте обновление 4.7! Добавлены 6 новых автомобилей, переработан баланс оружия и исправлено 43 бага.',
+            { status:'closed', pinned:true, views:24800, date: now - 72*H, role:'Администрация', prefix:'ОБНОВЛЕНИЕ' }),
+        makeTopic('t-n2', 'Технические работы 25 числа с 03:00 до 06:00',
+            'Wait Russia', 'В связи с обновлением ядра серверов возможны кратковременные отключения.',
+            { status:'closed', pinned:true, views:9600, date: now - 20*H, role:'Администрация', prefix:'ВАЖНО' })
+    );
+
+    red.subs[0].topics.push(
+        makeTopic('t-r1', 'DM в зелёной зоне | Nick_Criminal',
+            'Ivan_Walker', 'Игрок Nick_Criminal открыл огонь по мне возле больницы Лос-Сантоса без RP-причины.',
+            { status:'review', views:342, date: now - 5*H, prefix:'ЖАЛОБА' }),
+        makeTopic('t-r2', 'NonRP обман при сделке | Seller_One',
+            'Maria_Stone', 'Договорились о продаже машины, я перевёл деньги, но игрок вышел из игры.',
+            { status:'open', views:128, date: now - 2*H, prefix:'ЖАЛОБА' })
+    );
+
+    red.subs[1].topics.push(
+        makeTopic('t-r3', 'Жалоба на администратора Tim_Admin',
+            'Oleg_Fox', 'Администратор выдал деморган 120 минут без объяснения причины.',
+            { status:'review', views:890, date: now - 9*H, prefix:'ЖАЛОБА' })
+    );
+
+    belgorod.subs[0].topics.push(
+        makeTopic('t-b1', 'Не приходит код подтверждения на Gmail',
+            'Test_User', 'При привязке Gmail письмо с кодом не приходит уже второй день.',
+            { status:'open', views:56, date: now - 1*H, prefix:'БАГ' })
+    );
+
+    return {
+        version: DB_VERSION,
+        groups: [
+            { title:'Основной раздел', icon:'🏠', desc:'Новости, гайды, предложения', items:[ news, guides, suggest ] },
+            { title:'Игровые серверы', icon:'🎮', desc:'Жалобы, заявки, RP-разделы', items:[ red, green, blue, belgorod ] },
+            { title:'Развлечения', icon:'🎉', desc:'Общение вне игры', items:[ off ] }
+        ]
+    };
+}
+
+/* =========================================================
    СОСТОЯНИЕ И РОУТИНГ
    ========================================================= */
 const state = { page:'home', serverId:null, forumId:null, topicId:null, query:'' };
 
-function goHome()      { state.page='home';   state.serverId=null; state.forumId=null; state.topicId=null; render(); window.scrollTo(0,0); }
-function goRules()     { state.page='rules';  state.serverId=null; state.forumId=null; state.topicId=null; render(); window.scrollTo(0,0); }
-function goServer(id)  { state.page='server'; state.serverId=id;   state.forumId=null; state.topicId=null; render(); window.scrollTo(0,0); }
+function goHome()     { state.page='home'; state.serverId=null; state.forumId=null; state.topicId=null; render(); scrollTop(); }
+function goRules()    { state.page='rules'; state.serverId=null; state.forumId=null; state.topicId=null; render(); scrollTop(); }
+function goServer(id) { state.page='server'; state.serverId=id; state.forumId=null; state.topicId=null; render(); scrollTop(); }
 
 function goForum(id) {
     const r = findForum(id);
-    state.page = 'forum';
-    state.forumId = id;
+    state.page = 'forum'; state.forumId = id;
     state.serverId = (r && r.server) ? r.server.id : null;
     state.topicId = null;
-    render(); window.scrollTo(0,0);
+    render(); scrollTop();
 }
 
 function goTopic(fid, tid) {
     const r = findForum(fid);
     if (!r) return;
-    state.page = 'topic';
-    state.forumId = fid;
-    state.topicId = tid;
+    state.page = 'topic'; state.forumId = fid; state.topicId = tid;
     state.serverId = r.server ? r.server.id : null;
     const t = r.forum.topics.find(x => x.id === tid);
     if (t) { t.views++; saveDB(); }
-    render(); window.scrollTo(0,0);
+    render(); scrollTop();
 }
+
+function scrollTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
 
 /* =========================================================
-   ПОИСК ПО ДАННЫМ
+   ПОИСК
    ========================================================= */
 function getServer(id) {
-    for (const g of DB.groups)
-        for (const it of g.items)
-            if (it.kind === 'server' && it.id === id) return it;
+    for (const g of DB.groups) for (const it of g.items)
+        if (it.kind === 'server' && it.id === id) return it;
     return null;
 }
-
 function findForum(id) {
     for (const g of DB.groups) {
         for (const it of g.items) {
@@ -474,15 +615,12 @@ function findForum(id) {
     }
     return null;
 }
-
 function allForums() {
     const list = [];
-    for (const g of DB.groups) {
-        for (const it of g.items) {
-            if (it.kind === 'forum') list.push({ id: it.id, label: it.title, group: g.title });
-            else if (it.kind === 'server')
-                for (const s of it.subs) list.push({ id: s.id, label: it.title + ' — ' + s.title, group: g.title });
-        }
+    for (const g of DB.groups) for (const it of g.items) {
+        if (it.kind === 'forum') list.push({ id: it.id, label: it.title, group: g.title });
+        else if (it.kind === 'server')
+            for (const s of it.subs) list.push({ id: s.id, label: it.title + ' — ' + s.title, group: g.title });
     }
     return list;
 }
@@ -491,9 +629,8 @@ function allForums() {
    УТИЛИТЫ
    ========================================================= */
 function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-        { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
-    ));
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 function fmt(n) {
     if (n >= 1000000) return (n/1000000).toFixed(1).replace('.0','') + 'M';
@@ -507,31 +644,45 @@ function formatDate(ts) {
 function forumStats(f) {
     let msgs = 0;
     for (const t of f.topics) msgs += t.posts.length;
-    return { t: (f.baseTopics || 0) + f.topics.length, m: (f.baseMessages || 0) + msgs };
+    return { t: (f.baseTopics||0) + f.topics.length, m: (f.baseMessages||0) + msgs };
 }
 function sortTopics(list) {
-    return list.slice().sort((a, b) => {
+    return list.slice().sort((a,b) => {
         if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-        const la = a.posts[a.posts.length-1].date;
-        const lb = b.posts[b.posts.length-1].date;
-        return lb - la;
+        return b.posts[b.posts.length-1].date - a.posts[a.posts.length-1].date;
     });
 }
 function statusBadge(s) {
-    if (s === 'closed')   return '<span class="badge badge-closed">Закрыто</span>';
-    if (s === 'review')   return '<span class="badge badge-review">На рассмотрении</span>';
-    if (s === 'resolved') return '<span class="badge badge-ok">Решено</span>';
+    if (s==='closed')   return '<span class="badge badge-closed">Закрыто</span>';
+    if (s==='review')   return '<span class="badge badge-review">На рассмотрении</span>';
+    if (s==='resolved') return '<span class="badge badge-resolved">Решено</span>';
     return '<span class="badge badge-open">Открыто</span>';
 }
 function toast(msg) {
     const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(el._t);
-    el._t = setTimeout(() => el.classList.remove('show'), 2600);
+    el.textContent = msg; el.classList.add('show');
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2600);
 }
-function uid(p) {
-    return (p || 't') + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+function uid(p) { return (p||'t') + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* =========================================================
+   ШАБЛОНЫ ЖАЛОБ (как в Black Russia)
+   ========================================================= */
+const TEMPLATES = {
+    complaint: `[b]Ваш IG-ник:[/b] \n[b]Ник обвиняемого:[/b] \n[b]Суть нарушения:[/b] \n[b]Сервер:[/b] \n[b]Время события (UTC+3):[/b] \n[b]Доказательства:[/b] \n• Ссылка на видео/скриншот: \n• /timestamp: \n[b]Запрошенная санкция:[/b] \n[b]Подпись:[/b] /sign `,
+    admin_complaint: `[b]Ваш IG-ник:[/b] \n[b]Ник администратора:[/b] \n[b]Должность:[/b] \n[b]Суть нарушения:[/b] \n[b]Сервер:[/b] \n[b]Время события (UTC+3):[/b] \n[b]Доказательства:[/b] \n[b]Подпись:[/b] /sign `,
+    unban: `[b]Ваш IG-ник:[/b] \n[b]Причина блокировки:[/b] \n[b]Срок наказания:[/b] \n[b]Администратор:[/b] \n[b]Сервер:[/b] \n[b]Почему наказание несправедливо:[/b] \n[b]Доказательства:[/b] \n[b]Подпись:[/b] /sign `,
+    leader_app: `[b]Ваш IG-ник:[/b] \n[b]Желаемая должность:[/b] \n[b]Сервер:[/b] \n[b]Онлайн в день:[/b] \n[b]Опыт лидерства:[/b] \n[b]План развития фракции:[/b] \n[b]Подпись:[/b] /sign `,
+    rp_bio: `[b]Имя персонажа:[/b] \n[b]Возраст:[/b] \n[b]Национальность:[/b] \n[b]История персонажа:[/b] \n[b]Характер:[/b] \n[b]Семья:[/b] \n[b]Цели в игре:[/b] `
+};
+
+function applyTemplate() {
+    const tpl = document.getElementById('topicTemplate').value;
+    const ta = document.getElementById('topicText');
+    if (tpl && TEMPLATES[tpl]) {
+        ta.value = TEMPLATES[tpl];
+        ta.focus();
+    }
 }
 
 /* =========================================================
@@ -539,7 +690,8 @@ function uid(p) {
    ========================================================= */
 function render() {
     renderUserMenu();
-    renderCrumbs();
+    renderNav();
+    renderBreadcrumbs();
     const app = document.getElementById('app');
     switch (state.page) {
         case 'home':   app.innerHTML = viewHome();   break;
@@ -556,11 +708,13 @@ function renderUserMenu() {
     const el = document.getElementById('userMenu');
     if (user) {
         el.innerHTML = `
-            <div class="user-chip" onclick="logout()" title="Нажмите, чтобы выйти">
-                <div class="avatar">${esc((user.name[0]||'?').toUpperCase())}</div>
+            <div class="user-chip" onclick="logout()" title="Выйти">
+                <div class="avatar" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#e63946,#b71c2c);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff">
+                    ${esc((user.name[0]||'?').toUpperCase())}
+                </div>
                 <div>
                     <div class="name">${esc(user.name)}</div>
-                    <div class="role">${esc(user.role || 'Игрок')} · выйти</div>
+                    <div class="role">${esc(user.role||'Игрок')} · выйти</div>
                 </div>
             </div>`;
     } else {
@@ -568,73 +722,94 @@ function renderUserMenu() {
     }
 }
 
-function renderCrumbs() {
-    const el = document.getElementById('crumbs');
+function renderNav() {
+    const el = document.getElementById('navBar');
+    const items = [
+        { label:'🏠 Главная',     action:'goHome()',    page:'home' },
+        { label:'📜 Правила',     action:'goRules()',   page:'rules' },
+        { label:'🔴 RED',         action:"goServer('red')",      page:'server', sid:'red' },
+        { label:'🟢 GREEN',       action:"goServer('green')",    page:'server', sid:'green' },
+        { label:'🔵 BLUE',        action:"goServer('blue')",     page:'server', sid:'blue' },
+        { label:'🏰 BELGOROD',    action:"goServer('belgorod')", page:'server', sid:'belgorod' }
+    ];
+    el.innerHTML = items.map(it => {
+        const active = state.page===it.page && (!it.sid || state.serverId===it.sid);
+        return `<div class="nav-item${active?' active':''}" onclick="${it.action}">${it.label}</div>`;
+    }).join('');
+}
+
+function renderBreadcrumbs() {
+    const el = document.getElementById('breadcrumbs');
     const parts = [`<span class="link" onclick="goHome()">Главная</span>`];
 
     if (state.page === 'rules') {
-        parts.push(`<span class="sep">/</span><span>Правила проекта</span>`);
+        parts.push(`<span class="sep">›</span><span>Правила проекта</span>`);
     } else if (state.page === 'search') {
-        parts.push(`<span class="sep">/</span><span>Поиск: «${esc(state.query)}»</span>`);
+        parts.push(`<span class="sep">›</span><span>Поиск: «${esc(state.query)}»</span>`);
     } else if (state.page === 'server') {
         const s = getServer(state.serverId);
-        if (s) parts.push(`<span class="sep">/</span><span>${esc(s.title)}</span>`);
+        if (s) parts.push(`<span class="sep">›</span><span>${esc(s.title)}</span>`);
     } else if (state.page === 'forum' || state.page === 'topic') {
         const r = findForum(state.forumId);
         if (r) {
-            if (r.server) {
-                parts.push(`<span class="sep">/</span><span class="link" onclick="goServer('${r.server.id}')">${esc(r.server.title)}</span>`);
-            }
-            parts.push(`<span class="sep">/</span><span class="link" onclick="goForum('${r.forum.id}')">${esc(r.forum.title)}</span>`);
+            if (r.server) parts.push(`<span class="sep">›</span><span class="link" onclick="goServer('${r.server.id}')">${esc(r.server.title)}</span>`);
+            parts.push(`<span class="sep">›</span><span class="link" onclick="goForum('${r.forum.id}')">${esc(r.forum.title)}</span>`);
             if (state.page === 'topic') {
                 const t = r.forum.topics.find(x => x.id === state.topicId);
-                if (t) parts.push(`<span class="sep">/</span><span>${esc(t.title.length > 42 ? t.title.slice(0,42) + '…' : t.title)}</span>`);
+                if (t) parts.push(`<span class="sep">›</span><span>${esc(t.title.length>42?t.title.slice(0,42)+'…':t.title)}</span>`);
             }
         }
     }
     el.innerHTML = parts.join(' ');
 }
 
-/* ---------- ГЛАВНАЯ ---------- */
+/* ---------- ГЛАВНАЯ (XenForo style) ---------- */
 function viewHome() {
     let h = `<div class="action-bar">
-        <button class="btn-action" onclick="openCreate()">📝 Создать тему / Подать жалобу</button>
-        <button class="btn-ghost" onclick="goRules()">📜 Правила проекта</button>
+        <button class="btn btn-primary" onclick="openCreate()">📝 Создать тему</button>
+        <button class="btn btn-ghost" onclick="goRules()">📜 Правила проекта</button>
+        <span class="muted-small">Всего разделов: ${allForums().length}</span>
     </div>`;
 
     for (const g of DB.groups) {
-        h += `<div class="category-title">${esc(g.title)}</div>`;
+        h += `<div class="category-block">
+            <div class="category-header">
+                <span class="cat-icon">${g.icon}</span>
+                <h2>${esc(g.title)}</h2>
+                <span class="cat-desc">${esc(g.desc)}</span>
+            </div>
+            <div class="forum-list">`;
         for (const it of g.items) {
-            h += (it.kind === 'server') ? serverCard(it) : forumCard(it);
+            h += (it.kind === 'server') ? serverItem(it) : forumItem(it);
         }
+        h += `</div></div>`;
     }
     return h;
 }
 
-function serverCard(srv) {
+function serverItem(srv) {
     let t = 0, m = 0;
     for (const s of srv.subs) { const st = forumStats(s); t += st.t; m += st.m; }
-    return `<div class="forum-card" onclick="goServer('${srv.id}')">
-        <div class="card-icon">${srv.icon || '🎮'}</div>
-        <div class="card-info">
+    return `<div class="forum-item" onclick="goServer('${srv.id}')">
+        <div class="forum-icon">${srv.icon}</div>
+        <div class="forum-info">
             <h3>${esc(srv.title)}</h3>
             <p>${esc(srv.desc)}</p>
-            <div class="sub-tags">${srv.subs.map(s => `<span class="tag">${esc(s.title)}</span>`).join('')}</div>
         </div>
-        <div class="stats">Темы: <b>${fmt(t)}</b><br>Сообщ: <b>${fmt(m)}</b></div>
+        <div class="forum-stats">Темы: <b>${fmt(t)}</b><br>Сообщ: <b>${fmt(m)}</b></div>
     </div>`;
 }
 
-function forumCard(f) {
+function forumItem(f) {
     const st = forumStats(f);
-    const badge = f.badge ? `<span class="badge ${f.badgeClass || 'badge-new'}">${esc(f.badge)}</span>` : '';
-    return `<div class="forum-card" onclick="goForum('${f.id}')">
-        <div class="card-icon">${f.icon || '💬'}</div>
-        <div class="card-info">
+    const badge = f.badge ? `<span class="badge ${f.badgeClass||'badge-new'}">${esc(f.badge)}</span>` : '';
+    return `<div class="forum-item" onclick="goForum('${f.id}')">
+        <div class="forum-icon">${f.icon}</div>
+        <div class="forum-info">
             <h3>${esc(f.title)} ${badge}</h3>
             <p>${esc(f.desc)}</p>
         </div>
-        <div class="stats">Темы: <b>${fmt(st.t)}</b><br>Сообщ: <b>${fmt(st.m)}</b></div>
+        <div class="forum-stats">Темы: <b>${fmt(st.t)}</b><br>Сообщ: <b>${fmt(st.m)}</b></div>
     </div>`;
 }
 
@@ -643,17 +818,20 @@ function viewServer() {
     const srv = getServer(state.serverId);
     if (!srv) return `<div class="empty">Раздел не найден</div>`;
 
-    let h = `<div class="section-head">
-        <h1>${srv.icon || ''} ${esc(srv.title)}</h1>
-        <p>${esc(srv.desc)}</p>
-    </div>`;
-    h += `<div class="action-bar"><button class="btn-action" onclick="openCreate()">📝 Создать тему</button></div>`;
-    h += `<div class="category-title">Подразделы</div>`;
-    for (const s of srv.subs) h += forumCard(s);
+    let h = `<div class="category-block">
+        <div class="category-header">
+            <span class="cat-icon">${srv.icon}</span>
+            <h2>${esc(srv.title)}</h2>
+            <span class="cat-desc">${esc(srv.desc)}</span>
+        </div>
+        <div class="forum-list">`;
+    for (const s of srv.subs) h += forumItem(s);
+    h += `</div></div>`;
+    h += `<div class="action-bar"><button class="btn btn-primary" onclick="openCreate()">📝 Создать тему</button></div>`;
     return h;
 }
 
-/* ---------- СТРАНИЦА ПОДРАЗДЕЛА ---------- */
+/* ---------- СТРАНИЦА ФОРУМА ---------- */
 function viewForum() {
     const r = findForum(state.forumId);
     if (!r) return `<div class="empty">Раздел не найден</div>`;
@@ -661,39 +839,50 @@ function viewForum() {
     const st = forumStats(f);
     const topics = sortTopics(f.topics);
 
-    let h = `<div class="section-head">
-        <h1>${f.icon || ''} ${esc(f.title)}</h1>
-        <p>${esc(f.desc)}</p>
-    </div>`;
+    let h = `<div class="category-block">
+        <div class="category-header">
+            <span class="cat-icon">${f.icon}</span>
+            <h2>${esc(f.title)}</h2>
+            <span class="cat-desc">${esc(f.desc)}</span>
+        </div>`;
 
     h += `<div class="action-bar">
-        <button class="btn-action" onclick="openCreate('${f.id}')">📝 Создать тему</button>
+        <button class="btn btn-primary" onclick="openCreate('${f.id}')">📝 Создать тему</button>
         <span class="muted-small">Тем: ${fmt(st.t)} · Сообщений: ${fmt(st.m)}</span>
     </div>`;
 
     if (!topics.length) {
         h += `<div class="empty">В этом разделе пока нет тем.<br>Станьте первым, кто её создаст!</div>`;
     } else {
-        h += `<div class="topic-list">` + topics.map(t => topicRow(t, f.id)).join('') + `</div>`;
+        h += `<div class="forum-list">
+            <div class="topic-list-header">
+                <div class="col-main">Тема</div>
+                <div class="col-stats">Ответы</div>
+                <div class="col-last">Последний</div>
+            </div>`;
+        h += topics.map(t => topicRow(t, f.id)).join('');
+        h += `</div>`;
     }
+    h += `</div>`;
     return h;
 }
 
 function topicRow(t, fid) {
     const last = t.posts[t.posts.length - 1];
-    const pin = t.pinned ? `<span class="badge badge-pin">📌 Закреплено</span>` : '';
+    const pin = t.pinned ? `<span class="badge badge-pin">📌</span>` : '';
+    const prefix = t.prefix ? `<span class="tag">${esc(t.prefix)}</span>` : '';
     return `<div class="topic-row" onclick="goTopic('${fid}','${t.id}')">
-        <div class="topic-avatar">${esc((t.author[0] || '?').toUpperCase())}</div>
+        <div class="topic-avatar${t.pinned?' gold':''}">${esc((t.author[0]||'?').toUpperCase())}</div>
         <div class="topic-main">
-            <div class="topic-title">${pin}${statusBadge(t.status)} ${esc(t.title)}</div>
+            <div class="topic-title">${pin}${statusBadge(t.status)} ${prefix}${esc(t.title)}</div>
             <div class="topic-meta">Автор: <b>${esc(t.author)}</b> · ${formatDate(t.date)}</div>
         </div>
         <div class="topic-stats">
-            <div>${t.posts.length} отв.</div>
+            <div>${t.posts.length}</div>
             <div>${fmt(t.views)} 👁</div>
         </div>
         <div class="topic-last">
-            <div>${esc(last.author)}</div>
+            <div><b>${esc(last.author)}</b></div>
             <div>${formatDate(last.date)}</div>
         </div>
     </div>`;
@@ -706,8 +895,10 @@ function viewTopic() {
     const t = r.forum.topics.find(x => x.id === state.topicId);
     if (!t) return `<div class="empty">Тема не найдена</div>`;
 
+    const prefix = t.prefix ? `<span class="badge badge-template">${esc(t.prefix)}</span>` : '';
+
     let h = `<div class="topic-head">
-        <h1>${esc(t.title)}</h1>
+        <h1>${prefix}${esc(t.title)}</h1>
         <div class="topic-head-meta">
             ${statusBadge(t.status)}
             <span>Автор: <b>${esc(t.author)}</b></span>
@@ -720,12 +911,12 @@ function viewTopic() {
     t.posts.forEach((p, i) => {
         h += `<div class="post">
             <div class="post-side">
-                <div class="avatar big">${esc((p.author[0] || '?').toUpperCase())}</div>
+                <div class="avatar">${esc((p.author[0]||'?').toUpperCase())}</div>
                 <div class="post-author">${esc(p.author)}</div>
-                <div class="post-role">${esc(p.role || 'Игрок')}</div>
+                <div class="post-role">${esc(p.role||'Игрок')}</div>
             </div>
             <div class="post-body">
-                <div class="post-date">#${i + 1} · ${formatDate(p.date)}</div>
+                <div class="post-date">#${i+1} · ${formatDate(p.date)}</div>
                 <div class="post-text">${esc(p.text)}</div>
             </div>
         </div>`;
@@ -739,8 +930,8 @@ function viewTopic() {
         h += `<div class="reply-box">
             <textarea id="replyText" placeholder="Напишите ваш ответ..."></textarea>
             <div class="reply-actions">
-                <button class="btn-action" onclick="submitReply()">Отправить ответ</button>
-                ${canClose ? `<button class="btn-ghost" onclick="closeTopic()">🔒 Закрыть тему</button>` : ''}
+                <button class="btn btn-primary" onclick="submitReply()">Отправить ответ</button>
+                ${canClose ? `<button class="btn btn-ghost" onclick="closeTopic()">🔒 Закрыть тему</button>` : ''}
             </div>
         </div>`;
     }
@@ -750,14 +941,15 @@ function viewTopic() {
 /* ---------- ПРАВИЛА ---------- */
 function viewRules() {
     return `
-    <div class="section-head" style="margin-top:18px">
-        <h1>📜 Правила проекта Wait Russia</h1>
-        <p>Незнание правил не освобождает от ответственности. Ознакомьтесь внимательно перед игрой.</p>
+    <div class="category-block" style="margin-top:18px">
+        <div class="category-header">
+            <span class="cat-icon">📜</span>
+            <h2>Правила проекта Wait Russia</h2>
+            <span class="cat-desc">Обязательно к ознакомлению</span>
+        </div>
     </div>
 
-    <div class="category-title">Общие правила</div>
-
-    <div class="rules-content">
+    <div class="rules-block">
         <h4>📌 1. Общие правила серверов</h4>
         <ul>
             <li><strong>DM (DeathMatch)</strong> — убийство или нанесение урона без причины запрещено. (Деморган 60–120 мин).</li>
@@ -768,7 +960,7 @@ function viewRules() {
         </ul>
     </div>
 
-    <div class="rules-content">
+    <div class="rules-block">
         <h4>📌 2. Правила для государственных структур</h4>
         <ul>
             <li>Запрещено проводить задержания без РП-отыгровок (овсет биндера обязателен).</li>
@@ -777,7 +969,7 @@ function viewRules() {
         </ul>
     </div>
 
-    <div class="rules-content">
+    <div class="rules-block">
         <h4>📌 3. Правила для криминальных организаций (ОПГ)</h4>
         <ul>
             <li>Нападение на Воинскую Часть (В/Ч) разрешено составом от 3-х человек с масками и оружием.</li>
@@ -786,17 +978,18 @@ function viewRules() {
         </ul>
     </div>
 
-    <div class="rules-content">
+    <div class="rules-block">
         <h4>📌 4. Правила форума</h4>
         <ul>
             <li>Запрещён флуд, оффтоп и создание дублирующих тем.</li>
             <li>Жалоба без доказательств (скриншот / видео) рассматриваться не будет.</li>
             <li>Оскорбления в адрес игроков и администрации — блокировка форумного аккаунта.</li>
+            <li>Используйте шаблоны жалоб — иначе тема будет закрыта без рассмотрения.</li>
         </ul>
     </div>
 
     <div class="action-bar">
-        <button class="btn-ghost" onclick="goHome()">← На главную</button>
+        <button class="btn btn-ghost" onclick="goHome()">← На главную</button>
     </div>`;
 }
 
@@ -804,55 +997,46 @@ function viewRules() {
 function doSearch() {
     const q = document.getElementById('searchInput').value.trim();
     if (q.length < 2) { toast('Введите минимум 2 символа'); return; }
-    state.page = 'search';
-    state.query = q;
-    render();
-    window.scrollTo(0,0);
+    state.page = 'search'; state.query = q;
+    render(); scrollTop();
 }
 
 function viewSearch() {
     const q = state.query.toLowerCase();
     const results = [];
-
-    for (const g of DB.groups) {
-        for (const it of g.items) {
-            const forums = it.kind === 'server' ? it.subs : (it.kind === 'forum' ? [it] : []);
-            for (const f of forums) {
-                for (const t of f.topics) {
-                    const hay = (t.title + ' ' + t.posts.map(p => p.text).join(' ')).toLowerCase();
-                    if (hay.includes(q)) results.push({ forum: f, topic: t });
-                }
-            }
+    for (const g of DB.groups) for (const it of g.items) {
+        const forums = it.kind === 'server' ? it.subs : (it.kind === 'forum' ? [it] : []);
+        for (const f of forums) for (const t of f.topics) {
+            const hay = (t.title + ' ' + t.posts.map(p => p.text).join(' ')).toLowerCase();
+            if (hay.includes(q)) results.push({ forum: f, topic: t });
         }
     }
 
-    let h = `<div class="section-head" style="margin-top:18px">
-        <h1>🔍 Результаты поиска</h1>
-        <p>По запросу «${esc(state.query)}» найдено тем: <b>${results.length}</b></p>
+    let h = `<div class="category-block" style="margin-top:18px">
+        <div class="category-header">
+            <span class="cat-icon">🔍</span>
+            <h2>Результаты поиска</h2>
+            <span class="cat-desc">Найдено: ${results.length}</span>
+        </div>
     </div>`;
 
     if (!results.length) {
-        h += `<div class="empty" style="margin-top:14px">Ничего не найдено. Попробуйте изменить запрос.</div>`;
+        h += `<div class="empty">Ничего не найдено. Попробуйте изменить запрос.</div>`;
     } else {
-        h += `<div class="category-title">Найденные темы</div><div class="topic-list">`;
+        h += `<div class="forum-list">`;
         h += results.map(r => topicRow(r.topic, r.forum.id)).join('');
         h += `</div>`;
     }
-    h += `<div class="action-bar"><button class="btn-ghost" onclick="goHome()">← На главную</button></div>`;
+    h += `<div class="action-bar"><button class="btn btn-ghost" onclick="goHome()">← На главную</button></div>`;
     return h;
 }
 
 /* =========================================================
    МОДАЛЬНЫЕ ОКНА
    ========================================================= */
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
-}
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-/* Закрытие по клику на фон + Esc */
 document.querySelectorAll('.modal').forEach(m => {
     m.addEventListener('mousedown', e => { if (e.target === m) m.classList.remove('active'); });
 });
@@ -862,11 +1046,7 @@ document.addEventListener('keydown', e => {
 
 /* ---------- СОЗДАНИЕ ТЕМЫ ---------- */
 function openCreate(presetForumId) {
-    if (!user) {
-        toast('Войдите, чтобы создать тему');
-        openModal('authModal');
-        return;
-    }
+    if (!user) { toast('Войдите, чтобы создать тему'); openModal('authModal'); return; }
     const sel = document.getElementById('topicCategory');
     const forums = allForums();
     const groups = {};
@@ -875,17 +1055,15 @@ function openCreate(presetForumId) {
     let html = '';
     for (const gName in groups) {
         html += `<optgroup label="${esc(gName)}">`;
-        groups[gName].forEach(f => {
-            html += `<option value="${f.id}">${esc(f.label)}</option>`;
-        });
+        groups[gName].forEach(f => { html += `<option value="${f.id}">${esc(f.label)}</option>`; });
         html += `</optgroup>`;
     }
     sel.innerHTML = html;
-
     if (presetForumId) sel.value = presetForumId;
 
     document.getElementById('topicTitle').value = '';
     document.getElementById('topicText').value = '';
+    document.getElementById('topicTemplate').value = '';
     openModal('createModal');
 }
 
@@ -895,6 +1073,7 @@ function submitTopic() {
     const fid   = document.getElementById('topicCategory').value;
     const title = document.getElementById('topicTitle').value.trim();
     const text  = document.getElementById('topicText').value.trim();
+    const tpl   = document.getElementById('topicTemplate').value;
 
     if (title.length < 4)  { toast('Заголовок слишком короткий (мин. 4 символа)'); return; }
     if (text.length < 10)  { toast('Описание слишком короткое (мин. 10 символов)'); return; }
@@ -902,29 +1081,25 @@ function submitTopic() {
     const r = findForum(fid);
     if (!r) { toast('Раздел не найден'); return; }
 
+    const prefixMap = { complaint:'ЖАЛОБА', admin_complaint:'ЖАЛОБА', unban:'ОБЖАЛОВАНИЕ', leader_app:'ЗАЯВКА', rp_bio:'RP БИО' };
+
     const topic = {
-        id: uid('t'),
-        title,
-        author: user.name,
-        date: Date.now(),
-        status: 'review',
-        pinned: false,
-        views: 0,
+        id: uid('t'), title, author: user.name, date: Date.now(),
+        status: 'review', pinned: false, views: 0,
+        prefix: prefixMap[tpl] || '',
         posts: [{ author: user.name, date: Date.now(), text, role: user.role || 'Игрок' }]
     };
 
     r.forum.topics.unshift(topic);
     saveDB();
     closeModal('createModal');
-
     goTopic(r.forum.id, topic.id);
     toast('✅ Тема создана и отправлена на рассмотрение');
 }
 
-/* ---------- ОТВЕТ В ТЕМЕ ---------- */
+/* ---------- ОТВЕТ ---------- */
 function submitReply() {
     if (!user) { toast('Войдите, чтобы отвечать'); openModal('authModal'); return; }
-
     const r = findForum(state.forumId);
     if (!r) return;
     const t = r.forum.topics.find(x => x.id === state.topicId);
@@ -936,11 +1111,9 @@ function submitReply() {
     if (text.length < 2) { toast('Введите текст ответа'); return; }
 
     t.posts.push({ author: user.name, date: Date.now(), text, role: user.role || 'Игрок' });
-    saveDB();
-    render();
+    saveDB(); render();
     toast('💬 Ответ опубликован');
-
-    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 60);
+    setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior:'smooth' }), 60);
 }
 
 /* ---------- ЗАКРЫТИЕ ТЕМЫ ---------- */
@@ -949,9 +1122,7 @@ function closeTopic() {
     if (!r) return;
     const t = r.forum.topics.find(x => x.id === state.topicId);
     if (!t) return;
-    t.status = 'closed';
-    saveDB();
-    render();
+    t.status = 'closed'; saveDB(); render();
     toast('🔒 Тема закрыта');
 }
 
@@ -963,19 +1134,15 @@ function doLogin() {
 
     user = {
         name,
-        role: (name.toLowerCase() === 'admin' || name.toLowerCase() === 'waitrussia')
+        role: (name.toLowerCase()==='admin' || name.toLowerCase()==='waitrussia')
             ? 'Администрация' : 'Игрок'
     };
-    saveUser();
-    closeModal('authModal');
-    render();
+    saveUser(); closeModal('authModal'); render();
     toast('👋 Добро пожаловать, ' + name + '!');
 }
 
 function logout() {
-    user = null;
-    saveUser();
-    render();
+    user = null; saveUser(); render();
     toast('Вы вышли из аккаунта');
 }
 
