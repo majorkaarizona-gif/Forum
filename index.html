@@ -6,375 +6,386 @@
 <title>Black Russia — Официальный форум</title>
 <style>
 /* ============================================================
-   RESET & BASE
+   XENFORO 2.x — BLACK RUSSIA STYLE REPLICA
+   Основано на UI.X Dark с кастомными оттенками BR
    ============================================================ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-    font-family: 'Segoe UI', 'Roboto', Tahoma, sans-serif;
-    background: #0e0e0e;
-    color: #c5c5c5;
-    font-size: 14px;
-    line-height: 1.55;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: #0d0d0d;
+    color: #c4c4c4;
+    font-size: 13px;
+    line-height: 1.5;
     min-height: 100vh;
-    overflow-x: hidden;
 }
-a { color: #ff5c9e; text-decoration: none; transition: color 0.15s; }
+a { color: #e85d9e; text-decoration: none; }
 a:hover { color: #fff; }
 button { font-family: inherit; cursor: pointer; }
 input, textarea, select { font-family: inherit; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #141414; }
-::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #ff5c9e; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #e85d9e; }
 
 /* ============================================================
-   CSS VARIABLES
+   ПЕРЕМЕННЫЕ (реальные цвета BR-стиля)
    ============================================================ */
 :root {
-    --accent: #ff5c9e;
-    --accent-hover: #ff8ab8;
-    --accent-dim: rgba(255, 92, 158, 0.15);
-    --accent-border: rgba(255, 92, 158, 0.4);
-    --bg-body: #0e0e0e;
-    --bg-panel: #161616;
-    --bg-panel-alt: #1c1c1c;
-    --bg-header: #111111;
-    --bg-input: #0a0a0a;
-    --border: #262626;
-    --border-light: #303030;
-    --text: #c5c5c5;
-    --text-muted: #6e6e6e;
-    --text-bright: #f0f0f0;
-    --success: #4caf50;
-    --danger: #e74c3c;
-    --warning: #f39c12;
-    --online: #2ecc71;
+    --br-accent: #e85d9e;
+    --br-accent-hover: #ff7ab8;
+    --br-accent-dim: rgba(232, 93, 158, 0.12);
+    --br-accent-border: rgba(232, 93, 158, 0.35);
+    --br-bg: #0d0d0d;
+    --br-bg-panel: #151515;
+    --br-bg-panel-alt: #1b1b1b;
+    --br-bg-header: #101010;
+    --br-bg-input: #0a0a0a;
+    --br-border: #252525;
+    --br-border-light: #2e2e2e;
+    --br-text: #c4c4c4;
+    --br-text-muted: #666;
+    --br-text-bright: #eee;
+    --br-success: #4caf50;
+    --br-danger: #e74c3c;
+    --br-warning: #f39c12;
+    --br-online: #2ecc71;
+    --br-role-admin: #e74c3c;
+    --br-role-mod: #3498db;
+    --br-role-helper: #2ecc71;
+    --br-role-player: #95a5a6;
+    --br-role-leader: #f39c12;
 }
-body.theme-dark { --accent: #7c8cff; --accent-hover: #a0aaff; --accent-dim: rgba(124,140,255,0.15); --accent-border: rgba(124,140,255,0.4); }
-body.theme-green { --accent: #2ecc71; --accent-hover: #58e08f; --accent-dim: rgba(46,204,113,0.15); --accent-border: rgba(46,204,113,0.4); }
-body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgba(255,0,255,0.15); --accent-border: rgba(255,0,255,0.4); }
 
 /* ============================================================
-   HEADER
+   TOP BAR (как на XenForo)
    ============================================================ */
-.top-bar {
-    background: #0a0a0a;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text-muted);
+.br-topbar {
+    background: #080808;
+    border-bottom: 1px solid var(--br-border);
+    font-size: 11px;
+    color: var(--br-text-muted);
 }
-.top-bar-inner {
-    max-width: 1300px;
+.br-topbar-inner {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 6px 16px;
+    padding: 5px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.top-bar a { color: var(--text-muted); }
-.top-bar a:hover { color: var(--accent); }
+.br-topbar a { color: var(--br-text-muted); }
+.br-topbar a:hover { color: var(--br-accent); }
 
-.header {
-    background: var(--bg-header);
-    border-bottom: 1px solid var(--border);
+/* ============================================================
+   HEADER
+   ============================================================ */
+.br-header {
+    background: var(--br-bg-header);
+    border-bottom: 1px solid var(--br-border);
     position: sticky;
     top: 0;
     z-index: 1000;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
-.header-inner {
-    max-width: 1300px;
+.br-header-inner {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 15px;
     display: flex;
     align-items: center;
-    height: 54px;
-    gap: 16px;
+    height: 50px;
+    gap: 14px;
 }
-.logo {
+.br-logo {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
     cursor: pointer;
 }
-.logo-mark {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 6px;
+.br-logo-mark {
+    width: 30px; height: 30px;
+    background: var(--br-accent);
+    border-radius: 5px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
+    font-size: 15px;
     color: #fff;
     font-weight: 900;
+    letter-spacing: -1px;
 }
-.logo em { color: var(--accent); font-style: normal; }
+.br-logo em { color: var(--br-accent); font-style: normal; }
 
-.nav-main { display: flex; gap: 2px; margin-left: 12px; flex: 1; }
-.nav-main a {
-    padding: 8px 12px;
-    border-radius: 4px;
-    color: #999;
-    font-size: 13px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-.nav-main a:hover, .nav-main a.active {
-    background: var(--accent-dim);
-    color: var(--accent);
-}
-
-.search-box {
-    position: relative;
-    width: 220px;
-}
-.search-box input {
-    width: 100%;
-    padding: 7px 34px 7px 12px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: #fff;
-    font-size: 12px;
-    outline: none;
-}
-.search-box input:focus { border-color: var(--accent-border); }
-.search-box button {
-    position: absolute; right: 3px; top: 50%;
-    transform: translateY(-50%);
-    background: transparent; border: none;
-    color: var(--text-muted); font-size: 14px;
-    padding: 4px 7px;
-}
-.search-box button:hover { color: var(--accent); }
-
-.header-right { display: flex; gap: 6px; align-items: center; }
-.btn {
-    padding: 7px 14px;
-    border-radius: 4px;
-    border: 1px solid var(--accent-border);
-    background: var(--accent-dim);
-    color: var(--accent);
+/* Навигация — как табы XenForo */
+.br-nav { display: flex; gap: 1px; margin-left: 10px; flex: 1; }
+.br-nav a {
+    padding: 7px 11px;
+    border-radius: 3px;
+    color: #888;
     font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+.br-nav a:hover, .br-nav a.active {
+    background: var(--br-accent-dim);
+    color: var(--br-accent);
+}
+
+/* Поиск */
+.br-search {
+    position: relative;
+    width: 200px;
+}
+.br-search input {
+    width: 100%;
+    padding: 6px 30px 6px 10px;
+    background: var(--br-bg-input);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    color: #fff;
+    font-size: 11px;
+    outline: none;
+}
+.br-search input:focus { border-color: var(--br-accent-border); }
+.br-search button {
+    position: absolute; right: 2px; top: 50%;
+    transform: translateY(-50%);
+    background: transparent; border: none;
+    color: var(--br-text-muted); font-size: 13px;
+    padding: 3px 6px;
+}
+.br-search button:hover { color: var(--br-accent); }
+
+.br-header-actions { display: flex; gap: 5px; align-items: center; }
+.br-btn {
+    padding: 6px 12px;
+    border-radius: 3px;
+    border: 1px solid var(--br-accent-border);
+    background: var(--br-accent-dim);
+    color: var(--br-accent);
+    font-size: 11px;
+    font-weight: 700;
     transition: all 0.15s;
     white-space: nowrap;
 }
-.btn:hover { background: var(--accent); color: #fff; }
-.btn-plain {
+.br-btn:hover { background: var(--br-accent); color: #fff; }
+.br-btn-ghost {
     background: transparent;
-    border-color: var(--border);
-    color: #999;
+    border-color: var(--br-border);
+    color: #888;
 }
-.btn-plain:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
-.btn-red { border-color: rgba(231,76,60,0.4); color: #e74c3c; background: rgba(231,76,60,0.1); }
-.btn-red:hover { background: #e74c3c; color: #fff; }
+.br-btn-ghost:hover { border-color: var(--br-accent-border); color: var(--br-accent); background: var(--br-accent-dim); }
 
-.user-chip {
-    display: flex; align-items: center; gap: 7px;
-    padding: 5px 10px;
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+.br-user-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 9px;
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
     cursor: pointer;
 }
-.user-chip:hover { border-color: var(--accent-border); }
-.user-chip .av {
-    width: 24px; height: 24px; border-radius: 50%;
-    background: var(--accent);
+.br-user-chip:hover { border-color: var(--br-accent-border); }
+.br-user-chip .av {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--br-accent);
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: #fff;
+    font-size: 10px; font-weight: 700; color: #fff;
 }
-.user-chip .nm { font-size: 12px; color: var(--text-bright); }
+.br-user-chip .nm { font-size: 11px; color: var(--br-text-bright); }
 
 /* ============================================================
    LAYOUT
    ============================================================ */
-.wrap {
-    max-width: 1300px;
+.br-wrap {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 14px;
     display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 16px;
+    grid-template-columns: 1fr 270px;
+    gap: 14px;
 }
-@media (max-width: 980px) {
-    .wrap { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .nav-main { display: none; }
-    .search-box { width: 150px; }
+@media (max-width: 960px) {
+    .br-wrap { grid-template-columns: 1fr; }
+    .br-sidebar { display: none; }
+    .br-nav { display: none; }
+    .br-search { width: 130px; }
 }
 
 /* ============================================================
    BREADCRUMB
    ============================================================ */
-.crumbs {
-    padding: 10px 14px;
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 14px;
-    font-size: 12px;
-    color: var(--text-muted);
+.br-crumbs {
+    padding: 9px 13px;
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: var(--br-text-muted);
 }
-.crumbs a { color: var(--accent); }
+.br-crumbs a { color: var(--br-accent); }
 
 /* ============================================================
-   SERVER BAR
+   SERVER SELECTOR (как на реальном форуме)
    ============================================================ */
-.server-bar {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
+.br-server-bar {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    padding: 11px 13px;
+    margin-bottom: 12px;
 }
-.server-bar h3 {
-    font-size: 11px;
-    color: var(--text-muted);
+.br-server-bar h3 {
+    font-size: 10px;
+    color: var(--br-text-muted);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 10px;
+    letter-spacing: 1.3px;
+    margin-bottom: 9px;
+    font-weight: 700;
 }
-.server-list {
+.br-server-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
 }
-.srv {
-    padding: 6px 12px;
-    background: var(--bg-panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: #999;
-    font-size: 11px;
-    font-weight: 600;
+.br-srv {
+    padding: 5px 10px;
+    background: var(--br-bg-panel-alt);
+    border: 1px solid var(--br-border);
+    border-radius: 2px;
+    color: #888;
+    font-size: 10px;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
+    letter-spacing: 0.3px;
 }
-.srv:hover, .srv.on {
-    border-color: var(--accent-border);
-    color: var(--accent);
-    background: var(--accent-dim);
+.br-srv:hover, .br-srv.on {
+    border-color: var(--br-accent-border);
+    color: var(--br-accent);
+    background: var(--br-accent-dim);
 }
 
 /* ============================================================
-   FORUM BLOCKS
+   FORUM BLOCKS (XenForo nodeList)
    ============================================================ */
-.block {
-    margin-bottom: 14px;
-}
-.block-head {
+.br-block { margin-bottom: 12px; }
+.br-block-head {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
+    gap: 7px;
+    padding: 9px 13px;
     background: linear-gradient(90deg, #1a1a1a, #141414);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 4px 4px 0 0;
-    font-size: 13px;
+    border: 1px solid var(--br-border);
+    border-left: 3px solid var(--br-accent);
+    border-radius: 3px 3px 0 0;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--text-bright);
+    color: var(--br-text-bright);
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.7px;
 }
-.block-head .ic { color: var(--accent); font-size: 15px; }
+.br-block-head .ic { color: var(--br-accent); font-size: 14px; }
 
-.block-body {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
+.br-block-body {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
     border-top: none;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 3px 3px;
     overflow: hidden;
 }
 
-.node {
+/* XenForo node */
+.br-node {
     display: grid;
-    grid-template-columns: 42px 1fr 130px 150px;
-    gap: 12px;
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: 38px 1fr 120px 140px;
+    gap: 11px;
+    padding: 11px 13px;
+    border-bottom: 1px solid var(--br-border);
     align-items: center;
     cursor: pointer;
     transition: background 0.12s;
 }
-.node:last-child { border-bottom: none; }
-.node:hover { background: rgba(255,92,158,0.04); }
+.br-node:last-child { border-bottom: none; }
+.br-node:hover { background: rgba(232,93,158,0.04); }
 
-.node-ico {
-    width: 40px; height: 40px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-    border: 1px solid var(--border-light);
+.br-node-ico {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #282828, #1a1a1a);
+    border: 1px solid var(--br-border-light);
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
 }
-.node-info h4 { font-size: 13px; color: var(--text-bright); margin-bottom: 3px; font-weight: 600; }
-.node-info h4 a { color: var(--text-bright); }
-.node-info h4 a:hover { color: var(--accent); }
-.node-info p { font-size: 11px; color: var(--text-muted); }
-.subs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
-.subs span {
-    font-size: 10px; padding: 1px 7px;
-    background: var(--bg-panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: #888;
+.br-node-info h4 { font-size: 12px; color: var(--br-text-bright); margin-bottom: 2px; font-weight: 600; }
+.br-node-info h4 a { color: var(--br-text-bright); }
+.br-node-info h4 a:hover { color: var(--br-accent); }
+.br-node-info p { font-size: 10px; color: var(--br-text-muted); }
+.br-subs { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.br-subs span {
+    font-size: 9px; padding: 1px 6px;
+    background: var(--br-bg-panel-alt);
+    border: 1px solid var(--br-border);
+    border-radius: 7px;
+    color: #777;
 }
-.subs span:hover { border-color: var(--accent-border); color: var(--accent); }
+.br-subs span:hover { border-color: var(--br-accent-border); color: var(--br-accent); }
 
-.node-stats { font-size: 11px; color: var(--text-muted); line-height: 1.7; }
-.node-stats b { color: var(--accent); font-weight: 600; }
-.node-last { font-size: 11px; color: var(--text-muted); text-align: right; line-height: 1.6; }
-.node-last a { color: var(--text-bright); display: block; }
-.node-last a:hover { color: var(--accent); }
+.br-node-stats { font-size: 10px; color: var(--br-text-muted); line-height: 1.6; }
+.br-node-stats b { color: var(--br-accent); font-weight: 600; }
+.br-node-last { font-size: 10px; color: var(--br-text-muted); text-align: right; line-height: 1.5; }
+.br-node-last a { color: var(--br-text-bright); display: block; }
+.br-node-last a:hover { color: var(--br-accent); }
 
 /* ============================================================
    THREAD LIST
    ============================================================ */
-.thread-tools {
-    display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+.br-thread-tools {
+    display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
 }
-.thread-tools .btn { font-size: 11px; padding: 6px 12px; }
+.br-thread-tools .br-btn { font-size: 10px; padding: 5px 10px; }
 
-.threads {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+.br-threads {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
     overflow: hidden;
 }
-.thread {
+.br-thread {
     display: grid;
-    grid-template-columns: 46px 1fr 80px 80px 140px;
-    gap: 10px;
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: 42px 1fr 70px 70px 130px;
+    gap: 9px;
+    padding: 10px 13px;
+    border-bottom: 1px solid var(--br-border);
     align-items: center;
     cursor: pointer;
     transition: background 0.12s;
 }
-.thread:last-child { border-bottom: none; }
-.thread:hover { background: rgba(255,92,158,0.04); }
+.br-thread:last-child { border-bottom: none; }
+.br-thread:hover { background: rgba(232,93,158,0.04); }
 
-.t-av {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: linear-gradient(135deg, #333, #222);
+.br-t-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #303030, #202020);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #fff; font-size: 14px;
-    border: 2px solid var(--border-light);
+    font-weight: 700; color: #fff; font-size: 13px;
+    border: 2px solid var(--br-border-light);
 }
-.t-body h4 { font-size: 13px; color: var(--text-bright); margin-bottom: 2px; font-weight: 600; }
-.t-body h4 a { color: var(--text-bright); }
-.t-body h4 a:hover { color: var(--accent); }
-.t-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.br-t-body h4 { font-size: 12px; color: var(--br-text-bright); margin-bottom: 2px; font-weight: 600; }
+.br-t-body h4 a { color: var(--br-text-bright); }
+.br-t-body h4 a:hover { color: var(--br-accent); }
+.br-t-meta { font-size: 10px; color: var(--br-text-muted); display: flex; gap: 7px; flex-wrap: wrap; }
 
-.pref {
-    display: inline-block; padding: 1px 7px;
-    border-radius: 3px; font-size: 10px; font-weight: 700;
-    text-transform: uppercase; margin-right: 5px; vertical-align: middle;
+/* Префиксы как на BR */
+.br-pref {
+    display: inline-block; padding: 1px 6px;
+    border-radius: 2px; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; margin-right: 4px; vertical-align: middle;
+    letter-spacing: 0.3px;
 }
 .p-jal { background: #c0392b; color: #fff; }
 .p-zay { background: #2980b9; color: #fff; }
@@ -382,132 +393,140 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
 .p-teh { background: #27ae60; color: #fff; }
 .p-vazh { background: #e67e22; color: #fff; }
 .p-closed { background: #444; color: #aaa; }
+.p-otkaz { background: #7f8c8d; color: #fff; }
 
-.t-num { text-align: center; font-size: 11px; color: var(--text-muted); }
-.t-num b { display: block; font-size: 15px; color: var(--accent); font-weight: 700; }
-.t-last { font-size: 11px; color: var(--text-muted); text-align: right; }
-.t-last a { color: var(--text-bright); }
-.t-last a:hover { color: var(--accent); }
+.br-t-num { text-align: center; font-size: 10px; color: var(--br-text-muted); }
+.br-t-num b { display: block; font-size: 14px; color: var(--br-accent); font-weight: 700; }
+.br-t-last { font-size: 10px; color: var(--br-text-muted); text-align: right; }
+.br-t-last a { color: var(--br-text-bright); }
+.br-t-last a:hover { color: var(--br-accent); }
 
 /* ============================================================
-   POSTS
+   POSTS (XenForo message)
    ============================================================ */
-.post {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 10px;
+.br-post {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    margin-bottom: 8px;
     overflow: hidden;
 }
-.post-head {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 14px;
-    background: var(--bg-panel-alt);
-    border-bottom: 1px solid var(--border);
+.br-post-head {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 13px;
+    background: var(--br-bg-panel-alt);
+    border-bottom: 1px solid var(--br-border);
 }
-.p-av {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: linear-gradient(135deg, #333, #222);
+.br-p-av {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #303030, #202020);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #fff; font-size: 13px;
-    border: 2px solid var(--border-light);
+    font-weight: 700; color: #fff; font-size: 12px;
+    border: 2px solid var(--br-border-light);
 }
-.p-auth strong { display: block; color: var(--text-bright); font-size: 12px; }
-.p-auth span { font-size: 10px; color: var(--text-muted); }
-.p-date { margin-left: auto; font-size: 10px; color: var(--text-muted); }
-.post-body {
-    padding: 14px; font-size: 13px; line-height: 1.65; color: var(--text);
+.br-p-auth strong { display: block; color: var(--br-text-bright); font-size: 11px; }
+.br-p-auth span { font-size: 9px; color: var(--br-text-muted); }
+.br-p-date { margin-left: auto; font-size: 9px; color: var(--br-text-muted); }
+.br-post-body {
+    padding: 13px; font-size: 12px; line-height: 1.6; color: var(--br-text);
 }
-.post-body b { color: var(--text-bright); }
-.post-body blockquote {
-    border-left: 3px solid var(--accent);
-    padding: 7px 12px; margin: 8px 0;
-    background: rgba(255,92,158,0.05);
-    border-radius: 0 4px 4px 0;
-    color: #999; font-size: 12px;
+.br-post-body b { color: var(--br-text-bright); }
+.br-post-body blockquote {
+    border-left: 3px solid var(--br-accent);
+    padding: 6px 10px; margin: 7px 0;
+    background: rgba(232,93,158,0.05);
+    border-radius: 0 3px 3px 0;
+    color: #888; font-size: 11px;
 }
-.post-foot {
-    padding: 8px 14px;
-    border-top: 1px solid var(--border);
-    display: flex; gap: 6px;
+.br-post-foot {
+    padding: 7px 13px;
+    border-top: 1px solid var(--br-border);
+    display: flex; gap: 5px;
 }
-.post-foot button {
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 3px; padding: 3px 9px;
-    color: var(--text-muted); font-size: 10px;
+.br-post-foot button {
+    background: transparent; border: 1px solid var(--br-border);
+    border-radius: 2px; padding: 3px 8px;
+    color: var(--br-text-muted); font-size: 9px;
 }
-.post-foot button:hover { border-color: var(--accent-border); color: var(--accent); }
+.br-post-foot button:hover { border-color: var(--br-accent-border); color: var(--br-accent); }
+
+/* Роли */
+.role-admin { color: var(--br-role-admin); font-weight: 600; }
+.role-mod { color: var(--br-role-mod); font-weight: 600; }
+.role-helper { color: var(--br-role-helper); font-weight: 600; }
+.role-leader { color: var(--br-role-leader); font-weight: 600; }
+.role-player { color: var(--br-role-player); }
 
 /* ============================================================
    REPLY BOX
    ============================================================ */
-.reply {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 14px;
-    margin-top: 16px;
+.br-reply {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    padding: 13px;
+    margin-top: 14px;
 }
-.reply h3 {
-    color: var(--accent); font-size: 12px;
-    text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 8px;
+.br-reply h3 {
+    color: var(--br-accent); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1.1px;
+    margin-bottom: 7px; font-weight: 700;
 }
-.reply textarea {
-    width: 100%; min-height: 90px;
-    padding: 10px; background: var(--bg-input);
-    border: 1px solid var(--border); border-radius: 4px;
-    color: #fff; font-size: 13px; resize: vertical; outline: none;
+.br-reply textarea {
+    width: 100%; min-height: 80px;
+    padding: 9px; background: var(--br-bg-input);
+    border: 1px solid var(--br-border); border-radius: 3px;
+    color: #fff; font-size: 12px; resize: vertical; outline: none;
 }
-.reply textarea:focus { border-color: var(--accent-border); }
-.reply-acts { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+.br-reply textarea:focus { border-color: var(--br-accent-border); }
+.br-reply-acts { display: flex; gap: 7px; margin-top: 7px; justify-content: flex-end; }
 
 /* ============================================================
    SIDEBAR
    ============================================================ */
-.sidebar { display: flex; flex-direction: column; gap: 12px; }
-.wid {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+.br-sidebar { display: flex; flex-direction: column; gap: 11px; }
+.br-wid {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
     overflow: hidden;
 }
-.wid-head {
-    padding: 9px 12px;
+.br-wid-head {
+    padding: 8px 11px;
     background: linear-gradient(90deg, #1a1a1a, #141414);
-    border-bottom: 1px solid var(--border);
-    color: var(--text-bright);
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.8px;
-    display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--br-border);
+    color: var(--br-text-bright);
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    display: flex; align-items: center; gap: 5px;
 }
-.wid-head .ic { color: var(--accent); }
-.wid-body { padding: 10px 12px; }
+.br-wid-head .ic { color: var(--br-accent); }
+.br-wid-body { padding: 9px 11px; }
 
-.stat { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; border-bottom: 1px dashed var(--border); }
-.stat:last-child { border-bottom: none; }
-.stat span { color: var(--text-muted); }
-.stat b { color: var(--accent); }
+.br-stat { display: flex; justify-content: space-between; padding: 4px 0; font-size: 11px; border-bottom: 1px dashed var(--br-border); }
+.br-stat:last-child { border-bottom: none; }
+.br-stat span { color: var(--br-text-muted); }
+.br-stat b { color: var(--br-accent); }
 
-.online { display: flex; flex-direction: column; gap: 7px; }
-.on { display: flex; align-items: center; gap: 7px; font-size: 11px; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--online); box-shadow: 0 0 5px var(--online); }
-.on span { color: #aaa; }
-.on .role { font-size: 9px; color: var(--accent); margin-left: auto; }
+.br-online { display: flex; flex-direction: column; gap: 6px; }
+.br-on { display: flex; align-items: center; gap: 6px; font-size: 10px; }
+.br-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--br-online); box-shadow: 0 0 4px var(--br-online); }
+.br-on span { color: #999; }
+.br-on .role { font-size: 8px; margin-left: auto; }
 
-.feed { padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 11px; }
-.feed:last-child { border-bottom: none; }
-.feed a { color: var(--text-bright); }
-.feed a:hover { color: var(--accent); }
-.feed small { display: block; color: var(--text-muted); margin-top: 1px; }
+.br-feed { padding: 6px 0; border-bottom: 1px dashed var(--br-border); font-size: 10px; }
+.br-feed:last-child { border-bottom: none; }
+.br-feed a { color: var(--br-text-bright); }
+.br-feed a:hover { color: var(--br-accent); }
+.br-feed small { display: block; color: var(--br-text-muted); margin-top: 1px; }
 
-.themes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-.th {
-    height: 26px; border-radius: 4px; border: 2px solid transparent;
+.br-themes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.br-th {
+    height: 24px; border-radius: 3px; border: 2px solid transparent;
     cursor: pointer; transition: all 0.15s;
 }
-.th:hover, .th.on { border-color: #fff; transform: scale(1.06); }
-.th-pink { background: linear-gradient(135deg, #660066, #ff5c9e); }
+.br-th:hover, .br-th.on { border-color: #fff; transform: scale(1.05); }
+.th-pink { background: linear-gradient(135deg, #660066, #e85d9e); }
 .th-dark { background: linear-gradient(135deg, #004488, #7c8cff); }
 .th-green { background: linear-gradient(135deg, #006622, #2ecc71); }
 .th-cyber { background: linear-gradient(135deg, #ff00ff, #00ffff); }
@@ -515,143 +534,143 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
 /* ============================================================
    MODAL
    ============================================================ */
-.overlay {
+.br-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     display: none; align-items: center; justify-content: center;
     z-index: 2000;
 }
-.overlay.on { display: flex; }
-.modal {
-    background: var(--bg-panel);
-    border: 1px solid var(--accent-border);
-    border-radius: 6px;
-    padding: 22px;
-    width: 92%; max-width: 400px;
-    animation: mIn 0.2s ease;
+.br-overlay.on { display: flex; }
+.br-modal {
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-accent-border);
+    border-radius: 5px;
+    padding: 20px;
+    width: 92%; max-width: 380px;
+    animation: mIn 0.18s ease;
 }
-@keyframes mIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
-.modal h2 { color: #fff; font-size: 18px; margin-bottom: 14px; text-align: center; }
-.modal h2 em { color: var(--accent); font-style: normal; }
-.fld { margin-bottom: 10px; }
-.fld label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-.fld input, .fld textarea, .fld select {
-    width: 100%; padding: 9px 11px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: #fff; font-size: 13px; outline: none;
+@keyframes mIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+.br-modal h2 { color: #fff; font-size: 16px; margin-bottom: 12px; text-align: center; }
+.br-modal h2 em { color: var(--br-accent); font-style: normal; }
+.br-fld { margin-bottom: 9px; }
+.br-fld label { display: block; font-size: 10px; color: var(--br-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.br-fld input, .br-fld textarea, .br-fld select {
+    width: 100%; padding: 8px 10px;
+    background: var(--br-bg-input);
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    color: #fff; font-size: 12px; outline: none;
 }
-.fld input:focus, .fld textarea:focus { border-color: var(--accent-border); }
-.modal-acts { display: flex; gap: 8px; margin-top: 14px; }
-.modal-acts .btn { flex: 1; }
+.br-fld input:focus, .br-fld textarea:focus { border-color: var(--br-accent-border); }
+.br-modal-acts { display: flex; gap: 7px; margin-top: 12px; }
+.br-modal-acts .br-btn { flex: 1; }
 
 /* ============================================================
    TOAST
    ============================================================ */
-.toast {
-    position: fixed; bottom: 20px; right: 20px;
-    background: var(--bg-panel);
-    border: 1px solid var(--accent-border);
-    border-left: 3px solid var(--accent);
-    border-radius: 4px;
-    padding: 11px 16px;
-    color: #fff; font-size: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+.br-toast {
+    position: fixed; bottom: 18px; right: 18px;
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-accent-border);
+    border-left: 3px solid var(--br-accent);
+    border-radius: 3px;
+    padding: 10px 14px;
+    color: #fff; font-size: 11px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
     z-index: 3000;
     transform: translateX(120%);
-    transition: transform 0.3s ease;
+    transition: transform 0.28s ease;
 }
-.toast.show { transform: translateX(0); }
+.br-toast.show { transform: translateX(0); }
 
 /* ============================================================
    PAGINATION
    ============================================================ */
-.pages { display: flex; justify-content: center; gap: 5px; margin: 16px 0; }
-.pages button {
-    padding: 5px 11px;
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: #999; font-size: 11px;
+.br-pages { display: flex; justify-content: center; gap: 4px; margin: 14px 0; }
+.br-pages button {
+    padding: 4px 10px;
+    background: var(--br-bg-panel);
+    border: 1px solid var(--br-border);
+    border-radius: 2px;
+    color: #888; font-size: 10px;
 }
-.pages button:hover, .pages button.on {
-    background: var(--accent-dim);
-    border-color: var(--accent-border);
-    color: var(--accent);
+.br-pages button:hover, .br-pages button.on {
+    background: var(--br-accent-dim);
+    border-color: var(--br-accent-border);
+    color: var(--br-accent);
 }
 
 /* ============================================================
    FOOTER
    ============================================================ */
-.foot {
-    margin-top: 30px;
-    padding: 20px 16px;
-    background: var(--bg-panel);
-    border-top: 1px solid var(--border);
+.br-foot {
+    margin-top: 25px;
+    padding: 18px 15px;
+    background: var(--br-bg-panel);
+    border-top: 1px solid var(--br-border);
     text-align: center;
-    font-size: 11px;
-    color: var(--text-muted);
+    font-size: 10px;
+    color: var(--br-text-muted);
 }
-.foot a { color: var(--accent); }
-.foot-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+.br-foot a { color: var(--br-accent); }
+.br-foot-links { display: flex; justify-content: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
 
 .hide { display: none !important; }
 
 /* ============================================================
-   NOTIF BELL
+   BELL
    ============================================================ */
-.bell {
+.br-bell {
     position: relative;
     background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 6px 9px;
-    color: #999; font-size: 15px;
+    border: 1px solid var(--br-border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    color: #888; font-size: 14px;
 }
-.bell:hover { border-color: var(--accent-border); color: var(--accent); }
-.bell .cnt {
-    position: absolute; top: -5px; right: -5px;
-    background: var(--danger); color: #fff;
-    font-size: 9px; font-weight: 700;
-    padding: 1px 4px; border-radius: 8px;
-    min-width: 15px; text-align: center;
+.br-bell:hover { border-color: var(--br-accent-border); color: var(--br-accent); }
+.br-bell .cnt {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--br-danger); color: #fff;
+    font-size: 8px; font-weight: 700;
+    padding: 1px 3px; border-radius: 7px;
+    min-width: 14px; text-align: center;
 }
 </style>
 </head>
-<body class="theme-pink">
+<body>
 
 <!-- TOP BAR -->
-<div class="top-bar">
-    <div class="top-bar-inner">
+<div class="br-topbar">
+    <div class="br-topbar-inner">
         <div>Официальный форум проекта <a href="#">Black Russia</a></div>
-        <div><a href="#">Правила</a> · <a href="#">Помощь</a> · <a href="#">Discord</a></div>
+        <div><a href="#">Правила</a> · <a href="#">Помощь</a> · <a href="#">Discord</a> · <a href="#">Telegram</a></div>
     </div>
 </div>
 
 <!-- HEADER -->
-<header class="header">
-    <div class="header-inner">
-        <div class="logo" onclick="go('home')">
-            <div class="logo-mark">BR</div>
+<header class="br-header">
+    <div class="br-header-inner">
+        <div class="br-logo" onclick="go('home')">
+            <div class="br-logo-mark">BR</div>
             <div>Black <em>Russia</em></div>
         </div>
-        <nav class="nav-main">
+        <nav class="br-nav">
             <a href="#" onclick="go('home'); return false;" class="active">Форум</a>
             <a href="#" onclick="toast('Раздел «Правила» в разработке'); return false;">Правила</a>
             <a href="#" onclick="toast('Раздел «Донат» в разработке'); return false;">Донат</a>
             <a href="#" onclick="toast('Раздел «Поддержка» в разработке'); return false;">Поддержка</a>
             <a href="#" onclick="toast('Раздел «Гайды» в разработке'); return false;">Гайды</a>
         </nav>
-        <div class="search-box">
+        <div class="br-search">
             <input type="text" id="srch" placeholder="Поиск по форуму..." onkeydown="if(event.key==='Enter')doSearch()">
             <button onclick="doSearch()">🔍</button>
         </div>
-        <div class="header-right">
-            <button class="bell" onclick="toast('У вас 3 новых уведомления')">🔔<span class="cnt">3</span></button>
-            <button class="btn btn-plain" id="btnLogin" onclick="openM('mLogin')">Вход</button>
-            <button class="btn" id="btnReg" onclick="openM('mReg')">Регистрация</button>
-            <div class="user-chip hide" id="userChip" onclick="logout()">
+        <div class="br-header-actions">
+            <button class="br-bell" onclick="toast('У вас 3 новых уведомления')">🔔<span class="cnt">3</span></button>
+            <button class="br-btn br-btn-ghost" id="btnLogin" onclick="openM('mLogin')">Вход</button>
+            <button class="br-btn" id="btnReg" onclick="openM('mReg')">Регистрация</button>
+            <div class="br-user-chip hide" id="userChip" onclick="logout()">
                 <div class="av" id="uAv">U</div>
                 <span class="nm" id="uName">Гость</span>
             </div>
@@ -660,201 +679,266 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
 </header>
 
 <!-- MAIN -->
-<div class="wrap">
+<div class="br-wrap">
     <main>
-        <div class="crumbs" id="crumbs">
+        <div class="br-crumbs" id="crumbs">
             <a href="#" onclick="go('home'); return false;">Главная</a> › <span>Форум</span>
         </div>
 
-        <!-- SERVER BAR -->
-        <div class="server-bar" id="serverBar">
+        <!-- SERVER SELECTOR -->
+        <div class="br-server-bar" id="serverBar">
             <h3>Выберите сервер</h3>
-            <div class="server-list" id="serverList"></div>
+            <div class="br-server-list" id="serverList"></div>
         </div>
 
         <!-- HOME VIEW -->
         <div id="viewHome">
-            <!-- Жалобы -->
-            <div class="block">
-                <div class="block-head"><span class="ic">⚖️</span> Жалобы</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('Жалобы на игроков')">
-                        <div class="node-ico">🎮</div>
-                        <div class="node-info">
+            <!-- Суд / Жалобы -->
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">⚖️</span> Суд / Жалобы</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('Жалобы на игроков')">
+                        <div class="br-node-ico">🎮</div>
+                        <div class="br-node-info">
                             <h4><a>Жалобы на игроков</a></h4>
                             <p>Нарушения правил со стороны других игроков</p>
                         </div>
-                        <div class="node-stats">Тем: <b>12 458</b><br>Ответов: <b>98 231</b></div>
-                        <div class="node-last"><a>Petrovich</a><span>2 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>12 458</b><br>Ответов: <b>98 231</b></div>
+                        <div class="br-node-last"><a>Petrovich</a><span>2 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Жалобы на администрацию')">
-                        <div class="node-ico">🛡️</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Жалобы на администрацию')">
+                        <div class="br-node-ico">🛡️</div>
+                        <div class="br-node-info">
                             <h4><a>Жалобы на администрацию</a></h4>
                             <p>Неправомерные действия со стороны админов</p>
                         </div>
-                        <div class="node-stats">Тем: <b>3 214</b><br>Ответов: <b>19 887</b></div>
-                        <div class="node-last"><a>Admin_Kate</a><span>15 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>3 214</b><br>Ответов: <b>19 887</b></div>
+                        <div class="br-node-last"><a>Admin_Kate</a><span>15 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Жалобы на лидеров')">
-                        <div class="node-ico">👑</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Жалобы на лидеров')">
+                        <div class="br-node-ico">👑</div>
+                        <div class="br-node-info">
                             <h4><a>Жалобы на лидеров</a></h4>
                             <p>Нарушения со стороны лидеров фракций</p>
                         </div>
-                        <div class="node-stats">Тем: <b>1 098</b><br>Ответов: <b>7 654</b></div>
-                        <div class="node-last"><a>Mafia_Boss</a><span>32 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>1 098</b><br>Ответов: <b>7 654</b></div>
+                        <div class="br-node-last"><a>Mafia_Boss</a><span>32 мин назад</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Государственные организации -->
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">🏛️</span> Государственные организации</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('ФСБ')">
+                        <div class="br-node-ico">🕵️</div>
+                        <div class="br-node-info">
+                            <h4><a>ФСБ — Федеральная служба безопасности</a></h4>
+                            <p>Жалобы на сотрудников, заявления, внутренние правила</p>
+                            <div class="br-subs"><span>Жалобы</span><span>Заявления</span><span>Правила</span></div>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>890</b><br>Ответов: <b>5 120</b></div>
+                        <div class="br-node-last"><a>FSB_Leader</a><span>5 мин назад</span></div>
+                    </div>
+                    <div class="br-node" onclick="openForum('ГИБДД')">
+                        <div class="br-node-ico">🚔</div>
+                        <div class="br-node-info">
+                            <h4><a>ГИБДД — Государственная инспекция безопасности дорожного движения</a></h4>
+                            <p>Жалобы на инспекторов, заявления, правила</p>
+                            <div class="br-subs"><span>Жалобы на сотрудников</span><span>Заявления</span></div>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>1 234</b><br>Ответов: <b>7 890</b></div>
+                        <div class="br-node-last"><a>GIBDD_Leader</a><span>1 мин назад</span></div>
+                    </div>
+                    <div class="br-node" onclick="openForum('УМВД')">
+                        <div class="br-node-ico">👮</div>
+                        <div class="br-node-info">
+                            <h4><a>УМВД — Управление Министерства внутренних дел</a></h4>
+                            <p>Жалобы, заявления, правила фракции</p>
+                            <div class="br-subs"><span>Жалобы</span><span>Заявления</span></div>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>765</b><br>Ответов: <b>4 321</b></div>
+                        <div class="br-node-last"><a>UMVD_Leader</a><span>12 мин назад</span></div>
+                    </div>
+                    <div class="br-node" onclick="openForum('Армия')">
+                        <div class="br-node-ico">🎖️</div>
+                        <div class="br-node-info">
+                            <h4><a>Армия — Вооружённые силы</a></h4>
+                            <p>Жалобы, заявления, устав</p>
+                            <div class="br-subs"><span>Жалобы</span><span>Заявления</span></div>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>543</b><br>Ответов: <b>3 210</b></div>
+                        <div class="br-node-last"><a>Army_General</a><span>20 мин назад</span></div>
+                    </div>
+                    <div class="br-node" onclick="openForum('СМИ')">
+                        <div class="br-node-ico">📰</div>
+                        <div class="br-node-info">
+                            <h4><a>СМИ — Средства массовой информации</a></h4>
+                            <p>Новости, объявления, жалобы</p>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>234</b><br>Ответов: <b>1 890</b></div>
+                        <div class="br-node-last"><a>SMI_Editor</a><span>45 мин назад</span></div>
+                    </div>
+                    <div class="br-node" onclick="openForum('ФСИН')">
+                        <div class="br-node-ico">⛓️</div>
+                        <div class="br-node-info">
+                            <h4><a>ФСИН — Федеральная служба исполнения наказаний</a></h4>
+                            <p>Жалобы, заявления, правила тюрьмы</p>
+                        </div>
+                        <div class="br-node-stats">Тем: <b>321</b><br>Ответов: <b>2 100</b></div>
+                        <div class="br-node-last"><a>FSIN_Chief</a><span>1 час назад</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Заявления -->
-            <div class="block">
-                <div class="block-head"><span class="ic">📝</span> Заявления</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('Заявления на пост лидера')">
-                        <div class="node-ico">🏆</div>
-                        <div class="node-info">
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">📝</span> Заявления</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('Заявления на пост лидера')">
+                        <div class="br-node-ico">🏆</div>
+                        <div class="br-node-info">
                             <h4><a>Заявления на пост лидера</a></h4>
                             <p>Подача заявок на лидерские должности</p>
                         </div>
-                        <div class="node-stats">Тем: <b>4 512</b><br>Ответов: <b>28 001</b></div>
-                        <div class="node-last"><a>Candidate_X</a><span>5 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>4 512</b><br>Ответов: <b>28 001</b></div>
+                        <div class="br-node-last"><a>Candidate_X</a><span>5 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Заявления в организации')">
-                        <div class="node-ico">🎖️</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Заявления в организации')">
+                        <div class="br-node-ico">🎖️</div>
+                        <div class="br-node-info">
                             <h4><a>Заявления в организации</a></h4>
                             <p>Вступление в ГИБДД, ФСБ, Армию, МВД</p>
                         </div>
-                        <div class="node-stats">Тем: <b>8 990</b><br>Ответов: <b>45 123</b></div>
-                        <div class="node-last"><a>Recruit_01</a><span>1 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>8 990</b><br>Ответов: <b>45 123</b></div>
+                        <div class="br-node-last"><a>Recruit_01</a><span>1 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Заявления на разбан')">
-                        <div class="node-ico">🔓</div>
-                        <div class="node-info">
-                            <h4><a>Заявления на разбан</a></h4>
+                    <div class="br-node" onclick="openForum('Обжалование наказаний')">
+                        <div class="br-node-ico">🔓</div>
+                        <div class="br-node-info">
+                            <h4><a>Обжалование наказаний (разбан)</a></h4>
                             <p>Обжалование блокировок аккаунта</p>
                         </div>
-                        <div class="node-stats">Тем: <b>2 231</b><br>Ответов: <b>11 098</b></div>
-                        <div class="node-last"><a>UnbanMe</a><span>8 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>2 231</b><br>Ответов: <b>11 098</b></div>
+                        <div class="br-node-last"><a>UnbanMe</a><span>8 мин назад</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- RP -->
-            <div class="block">
-                <div class="block-head"><span class="ic">🎭</span> Role Play</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('RP-биографии')">
-                        <div class="node-ico">📖</div>
-                        <div class="node-info">
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">🎭</span> Role Play</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('RP-биографии')">
+                        <div class="br-node-ico">📖</div>
+                        <div class="br-node-info">
                             <h4><a>RP-биографии</a></h4>
                             <p>Истории ваших персонажей</p>
                         </div>
-                        <div class="node-stats">Тем: <b>15 220</b><br>Ответов: <b>67 445</b></div>
-                        <div class="node-last"><a>StoryTeller</a><span>3 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>15 220</b><br>Ответов: <b>67 445</b></div>
+                        <div class="br-node-last"><a>StoryTeller</a><span>3 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('RP-ситуации')">
-                        <div class="node-ico">🎬</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('RP-ситуации')">
+                        <div class="br-node-ico">🎬</div>
+                        <div class="br-node-info">
                             <h4><a>RP-ситуации</a></h4>
                             <p>Обсуждение отыгровок и сценариев</p>
                         </div>
-                        <div class="node-stats">Тем: <b>3 876</b><br>Ответов: <b>22 100</b></div>
-                        <div class="node-last"><a>RolePlayer</a><span>12 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>3 876</b><br>Ответов: <b>22 100</b></div>
+                        <div class="br-node-last"><a>RolePlayer</a><span>12 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Фракции и кланы')">
-                        <div class="node-ico">🛡️</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Фракции и кланы')">
+                        <div class="br-node-ico">🛡️</div>
+                        <div class="br-node-info">
                             <h4><a>Фракции и кланы</a></h4>
                             <p>Создание и обсуждение фракций</p>
-                            <div class="subs">
-                                <span>ГИБДД</span><span>ФСБ</span><span>Армия</span><span>МВД</span><span>СМИ</span>
+                            <div class="br-subs">
+                                <span>ГИБДД</span><span>ФСБ</span><span>Армия</span><span>МВД</span><span>СМИ</span><span>ФСИН</span>
                             </div>
                         </div>
-                        <div class="node-stats">Тем: <b>1 442</b><br>Ответов: <b>9 876</b></div>
-                        <div class="node-last"><a>ClanLeader</a><span>20 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>1 442</b><br>Ответов: <b>9 876</b></div>
+                        <div class="br-node-last"><a>ClanLeader</a><span>20 мин назад</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Технический -->
-            <div class="block">
-                <div class="block-head"><span class="ic">⚙️</span> Технический раздел</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('Баги и ошибки')">
-                        <div class="node-ico">🐛</div>
-                        <div class="node-info">
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">⚙️</span> Технический раздел</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('Баги и ошибки')">
+                        <div class="br-node-ico">🐛</div>
+                        <div class="br-node-info">
                             <h4><a>Баги и ошибки</a></h4>
                             <p>Сообщения о найденных багах</p>
                         </div>
-                        <div class="node-stats">Тем: <b>5 998</b><br>Ответов: <b>18 223</b></div>
-                        <div class="node-last"><a>BugHunter</a><span>6 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>5 998</b><br>Ответов: <b>18 223</b></div>
+                        <div class="br-node-last"><a>BugHunter</a><span>6 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Предложения')">
-                        <div class="node-ico">💡</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Предложения по улучшению')">
+                        <div class="br-node-ico">💡</div>
+                        <div class="br-node-info">
                             <h4><a>Предложения по улучшению</a></h4>
                             <p>Идеи для развития сервера</p>
                         </div>
-                        <div class="node-stats">Тем: <b>2 776</b><br>Ответов: <b>14 009</b></div>
-                        <div class="node-last"><a>IdeaMaker</a><span>45 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>2 776</b><br>Ответов: <b>14 009</b></div>
+                        <div class="br-node-last"><a>IdeaMaker</a><span>45 мин назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Техподдержка')">
-                        <div class="node-ico">🔧</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Техподдержка')">
+                        <div class="br-node-ico">🔧</div>
+                        <div class="br-node-info">
                             <h4><a>Техподдержка</a></h4>
                             <p>Проблемы с аккаунтом и покупками</p>
                         </div>
-                        <div class="node-stats">Тем: <b>1 554</b><br>Ответов: <b>8 890</b></div>
-                        <div class="node-last"><a>Helper_01</a><span>10 мин назад</span></div>
+                        <div class="br-node-stats">Тем: <b>1 554</b><br>Ответов: <b>8 890</b></div>
+                        <div class="br-node-last"><a>Helper_01</a><span>10 мин назад</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Правила и информация -->
-            <div class="block">
-                <div class="block-head"><span class="ic">📜</span> Правила и информация</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('Общие правила')">
-                        <div class="node-ico">📕</div>
-                        <div class="node-info">
+            <!-- Правила -->
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">📜</span> Правила и информация</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('Общие правила')">
+                        <div class="br-node-ico">📕</div>
+                        <div class="br-node-info">
                             <h4><a>Общие правила серверов</a></h4>
                             <p>Основные правила проекта</p>
                         </div>
-                        <div class="node-stats">Тем: <b>85</b><br>Ответов: <b>1 200</b></div>
-                        <div class="node-last"><a>Admin_Max</a><span>1 день назад</span></div>
+                        <div class="br-node-stats">Тем: <b>85</b><br>Ответов: <b>1 200</b></div>
+                        <div class="br-node-last"><a>Admin_Max</a><span>1 день назад</span></div>
                     </div>
-                    <div class="node" onclick="openForum('Гайды для новичков')">
-                        <div class="node-ico">📘</div>
-                        <div class="node-info">
+                    <div class="br-node" onclick="openForum('Гайды для новичков')">
+                        <div class="br-node-ico">📘</div>
+                        <div class="br-node-info">
                             <h4><a>Гайды для новичков</a></h4>
                             <p>Команды, наказания, список админов</p>
                         </div>
-                        <div class="node-stats">Тем: <b>120</b><br>Ответов: <b>3 450</b></div>
-                        <div class="node-last"><a>Tutor</a><span>2 дня назад</span></div>
+                        <div class="br-node-stats">Тем: <b>120</b><br>Ответов: <b>3 450</b></div>
+                        <div class="br-node-last"><a>Tutor</a><span>2 дня назад</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Оффтопик -->
-            <div class="block">
-                <div class="block-head"><span class="ic">💬</span> Оффтопик</div>
-                <div class="block-body">
-                    <div class="node" onclick="openForum('Оффтопик')">
-                        <div class="node-ico">🎉</div>
-                        <div class="node-info">
+            <div class="br-block">
+                <div class="br-block-head"><span class="ic">💬</span> Оффтопик</div>
+                <div class="br-block-body">
+                    <div class="br-node" onclick="openForum('Оффтопик')">
+                        <div class="br-node-ico">🎉</div>
+                        <div class="br-node-info">
                             <h4><a>Оффтопик</a></h4>
                             <p>Общение, стримы, турниры</p>
                         </div>
-                        <div class="node-stats">Тем: <b>5 120</b><br>Ответов: <b>88 000</b></div>
-                        <div class="node-last"><a>Chatter</a><span>30 сек назад</span></div>
+                        <div class="br-node-stats">Тем: <b>5 120</b><br>Ответов: <b>88 000</b></div>
+                        <div class="br-node-last"><a>Chatter</a><span>30 сек назад</span></div>
                     </div>
                 </div>
             </div>
 
-            <div class="pages">
+            <div class="br-pages">
                 <button class="on">1</button>
                 <button onclick="toast('Страница 2')">2</button>
                 <button onclick="toast('Страница 3')">3</button>
@@ -864,100 +948,100 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
 
         <!-- FORUM VIEW -->
         <div id="viewForum" class="hide">
-            <div class="thread-tools">
-                <button class="btn" onclick="openM('mNewThread')">✏️ Создать тему</button>
-                <button class="btn btn-plain" onclick="toast('Сортировка: по дате')">📅 По дате</button>
-                <button class="btn btn-plain" onclick="toast('Сортировка: по ответам')">💬 По ответам</button>
-                <button class="btn btn-plain" onclick="toast('Фильтр: открытые')">🔓 Открытые</button>
+            <div class="br-thread-tools">
+                <button class="br-btn" onclick="openM('mNewThread')">✏️ Создать тему</button>
+                <button class="br-btn br-btn-ghost" onclick="toast('Сортировка: по дате')">📅 По дате</button>
+                <button class="br-btn br-btn-ghost" onclick="toast('Сортировка: по ответам')">💬 По ответам</button>
+                <button class="br-btn br-btn-ghost" onclick="toast('Фильтр: открытые')">🔓 Открытые</button>
             </div>
-            <div class="threads" id="threadList"></div>
+            <div class="br-threads" id="threadList"></div>
         </div>
 
         <!-- THREAD VIEW -->
         <div id="viewThread" class="hide">
-            <div class="thread-tools">
-                <button class="btn btn-plain" onclick="goForum(currentForum)">← Назад к темам</button>
-                <button class="btn btn-plain" onclick="toast('Тема добавлена в закладки')">⭐ В закладки</button>
-                <button class="btn btn-plain" onclick="toast('Жалоба отправлена модератору')">🚨 Пожаловаться</button>
+            <div class="br-thread-tools">
+                <button class="br-btn br-btn-ghost" onclick="goForum(currentForum)">← Назад к темам</button>
+                <button class="br-btn br-btn-ghost" onclick="toast('Тема добавлена в закладки')">⭐ В закладки</button>
+                <button class="br-btn br-btn-ghost" onclick="toast('Жалоба отправлена модератору')">🚨 Пожаловаться</button>
             </div>
             <div id="postsBox"></div>
-            <div class="reply">
+            <div class="br-reply">
                 <h3>Ответить в теме</h3>
                 <textarea id="replyText" placeholder="Напишите ваш ответ..."></textarea>
-                <div class="reply-acts">
-                    <button class="btn btn-plain" onclick="document.getElementById('replyText').value=''">Очистить</button>
-                    <button class="btn" onclick="submitReply()">Отправить ответ</button>
+                <div class="br-reply-acts">
+                    <button class="br-btn br-btn-ghost" onclick="document.getElementById('replyText').value=''">Очистить</button>
+                    <button class="br-btn" onclick="submitReply()">Отправить ответ</button>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="wid">
-            <div class="wid-head"><span class="ic">📊</span> Статистика</div>
-            <div class="wid-body">
-                <div class="stat"><span>Тем:</span><b>45 231</b></div>
-                <div class="stat"><span>Сообщений:</span><b>298 445</b></div>
-                <div class="stat"><span>Участников:</span><b>87 220</b></div>
-                <div class="stat"><span>Онлайн:</span><b>1 342</b></div>
-                <div class="stat"><span>Гостей:</span><b>3 209</b></div>
+    <aside class="br-sidebar">
+        <div class="br-wid">
+            <div class="br-wid-head"><span class="ic">📊</span> Статистика</div>
+            <div class="br-wid-body">
+                <div class="br-stat"><span>Тем:</span><b>45 231</b></div>
+                <div class="br-stat"><span>Сообщений:</span><b>298 445</b></div>
+                <div class="br-stat"><span>Участников:</span><b>87 220</b></div>
+                <div class="br-stat"><span>Онлайн:</span><b>1 342</b></div>
+                <div class="br-stat"><span>Гостей:</span><b>3 209</b></div>
             </div>
         </div>
 
-        <div class="wid">
-            <div class="wid-head"><span class="ic">🟢</span> Сейчас онлайн</div>
-            <div class="wid-body">
-                <div class="online">
-                    <div class="on"><span class="dot"></span><span>Admin_Max</span><span class="role">Админ</span></div>
-                    <div class="on"><span class="dot"></span><span>Moderator_Kate</span><span class="role">Модератор</span></div>
-                    <div class="on"><span class="dot"></span><span>Helper_01</span><span class="role">Хелпер</span></div>
-                    <div class="on"><span class="dot"></span><span>PlayerX</span><span class="role">Игрок</span></div>
-                    <div class="on"><span class="dot"></span><span>Mafia_Boss</span><span class="role">Игрок</span></div>
-                    <div class="on"><span class="dot"></span><span>RolePlayer</span><span class="role">Игрок</span></div>
+        <div class="br-wid">
+            <div class="br-wid-head"><span class="ic">🟢</span> Сейчас онлайн</div>
+            <div class="br-wid-body">
+                <div class="br-online">
+                    <div class="br-on"><span class="br-dot"></span><span>Admin_Max</span><span class="role role-admin">Админ</span></div>
+                    <div class="br-on"><span class="br-dot"></span><span>Moderator_Kate</span><span class="role role-mod">Модератор</span></div>
+                    <div class="br-on"><span class="br-dot"></span><span>Helper_01</span><span class="role role-helper">Хелпер</span></div>
+                    <div class="br-on"><span class="br-dot"></span><span>PlayerX</span><span class="role role-player">Игрок</span></div>
+                    <div class="br-on"><span class="br-dot"></span><span>Mafia_Boss</span><span class="role role-player">Игрок</span></div>
+                    <div class="br-on"><span class="br-dot"></span><span>RolePlayer</span><span class="role role-player">Игрок</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="wid">
-            <div class="wid-head"><span class="ic">🔥</span> Последние события</div>
-            <div class="wid-body">
-                <div class="feed"><a>Petrovich</a> создал тему «Жалоба на игрока X»<small>2 мин назад</small></div>
-                <div class="feed"><a>Admin_Kate</a> ответила в «Жалоба на администратора»<small>5 мин назад</small></div>
-                <div class="feed"><a>Recruit_01</a> подал заявку в ГИБДД<small>8 мин назад</small></div>
-                <div class="feed"><a>StoryTeller</a> опубликовал RP-биографию<small>12 мин назад</small></div>
-                <div class="feed"><a>BugHunter</a> сообщил о баге<small>18 мин назад</small></div>
+        <div class="br-wid">
+            <div class="br-wid-head"><span class="ic">🔥</span> Последние события</div>
+            <div class="br-wid-body">
+                <div class="br-feed"><a>Petrovich</a> создал тему «Жалоба на игрока X»<small>2 мин назад</small></div>
+                <div class="br-feed"><a>Admin_Kate</a> ответила в «Жалоба на администратора»<small>5 мин назад</small></div>
+                <div class="br-feed"><a>Recruit_01</a> подал заявку в ГИБДД<small>8 мин назад</small></div>
+                <div class="br-feed"><a>StoryTeller</a> опубликовал RP-биографию<small>12 мин назад</small></div>
+                <div class="br-feed"><a>BugHunter</a> сообщил о баге<small>18 мин назад</small></div>
             </div>
         </div>
 
-        <div class="wid">
-            <div class="wid-head"><span class="ic">🎨</span> Смена темы</div>
-            <div class="wid-body">
-                <div class="themes">
-                    <div class="th th-pink on" onclick="setTheme('theme-pink',this)"></div>
-                    <div class="th th-dark" onclick="setTheme('theme-dark',this)"></div>
-                    <div class="th th-green" onclick="setTheme('theme-green',this)"></div>
-                    <div class="th th-cyber" onclick="setTheme('theme-cyber',this)"></div>
+        <div class="br-wid">
+            <div class="br-wid-head"><span class="ic">🎨</span> Смена темы</div>
+            <div class="br-wid-body">
+                <div class="br-themes">
+                    <div class="br-th th-pink on" onclick="setTheme('theme-pink',this)"></div>
+                    <div class="br-th th-dark" onclick="setTheme('theme-dark',this)"></div>
+                    <div class="br-th th-green" onclick="setTheme('theme-green',this)"></div>
+                    <div class="br-th th-cyber" onclick="setTheme('theme-cyber',this)"></div>
                 </div>
             </div>
         </div>
 
-        <div class="wid">
-            <div class="wid-head"><span class="ic">🏆</span> Топ пользователей</div>
-            <div class="wid-body">
-                <div class="stat"><span>1. Admin_Max</span><b>12 445</b></div>
-                <div class="stat"><span>2. Moderator_Kate</span><b>8 990</b></div>
-                <div class="stat"><span>3. Helper_01</span><b>6 231</b></div>
-                <div class="stat"><span>4. PlayerX</span><b>4 512</b></div>
-                <div class="stat"><span>5. Mafia_Boss</span><b>3 098</b></div>
+        <div class="br-wid">
+            <div class="br-wid-head"><span class="ic">🏆</span> Топ пользователей</div>
+            <div class="br-wid-body">
+                <div class="br-stat"><span>1. Admin_Max</span><b>12 445</b></div>
+                <div class="br-stat"><span>2. Moderator_Kate</span><b>8 990</b></div>
+                <div class="br-stat"><span>3. Helper_01</span><b>6 231</b></div>
+                <div class="br-stat"><span>4. PlayerX</span><b>4 512</b></div>
+                <div class="br-stat"><span>5. Mafia_Boss</span><b>3 098</b></div>
             </div>
         </div>
     </aside>
 </div>
 
 <!-- FOOTER -->
-<footer class="foot">
-    <div class="foot-links">
+<footer class="br-foot">
+    <div class="br-foot-links">
         <a href="#" onclick="toast('Правила'); return false;">Правила</a>
         <a href="#" onclick="toast('Конфиденциальность'); return false;">Конфиденциальность</a>
         <a href="#" onclick="toast('Соглашение'); return false;">Соглашение</a>
@@ -968,36 +1052,36 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
 </footer>
 
 <!-- MODALS -->
-<div class="overlay" id="mLogin">
-    <div class="modal">
+<div class="br-overlay" id="mLogin">
+    <div class="br-modal">
         <h2>Вход в <em>Black Russia</em></h2>
-        <div class="fld"><label>Никнейм</label><input type="text" id="lName" placeholder="Введите никнейм"></div>
-        <div class="fld"><label>Пароль</label><input type="password" id="lPass" placeholder="Введите пароль"></div>
-        <div class="modal-acts">
-            <button class="btn btn-plain" onclick="closeM('mLogin')">Отмена</button>
-            <button class="btn" onclick="doLogin()">Войти</button>
+        <div class="br-fld"><label>Никнейм</label><input type="text" id="lName" placeholder="Введите никнейм"></div>
+        <div class="br-fld"><label>Пароль</label><input type="password" id="lPass" placeholder="Введите пароль"></div>
+        <div class="br-modal-acts">
+            <button class="br-btn br-btn-ghost" onclick="closeM('mLogin')">Отмена</button>
+            <button class="br-btn" onclick="doLogin()">Войти</button>
         </div>
     </div>
 </div>
 
-<div class="overlay" id="mReg">
-    <div class="modal">
+<div class="br-overlay" id="mReg">
+    <div class="br-modal">
         <h2>Регистрация на <em>Black Russia</em></h2>
-        <div class="fld"><label>Никнейм</label><input type="text" id="rName" placeholder="Придумайте никнейм"></div>
-        <div class="fld"><label>Email</label><input type="email" id="rEmail" placeholder="your@email.com"></div>
-        <div class="fld"><label>Пароль</label><input type="password" id="rPass" placeholder="Минимум 6 символов"></div>
-        <div class="modal-acts">
-            <button class="btn btn-plain" onclick="closeM('mReg')">Отмена</button>
-            <button class="btn" onclick="doRegister()">Создать аккаунт</button>
+        <div class="br-fld"><label>Никнейм</label><input type="text" id="rName" placeholder="Придумайте никнейм"></div>
+        <div class="br-fld"><label>Email</label><input type="email" id="rEmail" placeholder="your@email.com"></div>
+        <div class="br-fld"><label>Пароль</label><input type="password" id="rPass" placeholder="Минимум 6 символов"></div>
+        <div class="br-modal-acts">
+            <button class="br-btn br-btn-ghost" onclick="closeM('mReg')">Отмена</button>
+            <button class="br-btn" onclick="doRegister()">Создать аккаунт</button>
         </div>
     </div>
 </div>
 
-<div class="overlay" id="mNewThread">
-    <div class="modal" style="max-width:560px;">
+<div class="br-overlay" id="mNewThread">
+    <div class="br-modal" style="max-width:540px;">
         <h2>Создать новую <em>тему</em></h2>
-        <div class="fld"><label>Заголовок темы</label><input type="text" id="ntTitle" placeholder="Введите заголовок"></div>
-        <div class="fld">
+        <div class="br-fld"><label>Заголовок темы</label><input type="text" id="ntTitle" placeholder="Введите заголовок"></div>
+        <div class="br-fld">
             <label>Префикс</label>
             <select id="ntPrefix">
                 <option value="p-jal">Жалоба</option>
@@ -1007,28 +1091,33 @@ body.theme-cyber { --accent: #ff00ff; --accent-hover: #ff66ff; --accent-dim: rgb
                 <option value="p-vazh">Важно</option>
             </select>
         </div>
-        <div class="fld"><label>Сообщение</label><textarea id="ntBody" placeholder="Опишите вашу проблему или идею..." style="min-height:110px;"></textarea></div>
-        <div class="modal-acts">
-            <button class="btn btn-plain" onclick="closeM('mNewThread')">Отмена</button>
-            <button class="btn" onclick="createThread()">Создать</button>
+        <div class="br-fld"><label>Сообщение</label><textarea id="ntBody" placeholder="Опишите вашу проблему или идею..." style="min-height:100px;"></textarea></div>
+        <div class="br-modal-acts">
+            <button class="br-btn br-btn-ghost" onclick="closeM('mNewThread')">Отмена</button>
+            <button class="br-btn" onclick="createThread()">Создать</button>
         </div>
     </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="br-toast" id="toast"></div>
 
 <script>
 /* ============================================================
-   DATA
+   ДАННЫЕ — РЕАЛЬНЫЕ СЕРВЕРА BLACK RUSSIA
    ============================================================ */
 const SERVERS = [
-    'RED (1)', 'GREEN (2)', 'BLUE (3)', 'YELLOW (4)', 'ORANGE (5)',
-    'PURPLE (6)', 'LIME (7)', 'PINK (8)', 'CHERRY (9)', 'BLACK (10)',
-    'INDIGO (11)', 'WHITE (12)', 'CRIMSON (13)', 'PLATINUM (14)', 'DIAMOND (15)'
+    'SA:MP Mobile 01', 'SA:MP Mobile 02', 'SA:MP Mobile 03',
+    'PC 01', 'PC 02', 'PC 03', 'PC 04',
+    'RAGE:MP 01', 'RAGE:MP 02', 'RAGE:MP 03',
+    'CRMP 01', 'CRMP 02',
+    'IZHEVSK (85)', 'SURGUT (86)'
 ];
-let CURRENT_SERVER = 'CHERRY (9)';
+let CURRENT_SERVER = 'SA:MP Mobile 01';
 
+/* ============================================================
+   ТЕМЫ (на основе реальных разделов BR)
+   ============================================================ */
 const THREADS = {
     'Жалобы на игроков': [
         { id: 1, pref: 'p-jal', title: 'Жалоба на игрока Petrovich — DM в мирной зоне', author: 'Victim_01', rep: 12, views: 345, last: 'Admin_Kate', time: '2 мин назад' },
@@ -1044,6 +1133,26 @@ const THREADS = {
     'Жалобы на лидеров': [
         { id: 21, pref: 'p-jal', title: 'Жалоба на лидера ГИБДД — коррупция', author: 'Citizen_01', rep: 18, views: 445, last: 'Admin_Kate', time: '30 мин назад' }
     ],
+    'ФСБ': [
+        { id: 201, pref: 'p-jal', title: 'Жалоба на сотрудника ФСБ — превышение полномочий', author: 'Citizen_X', rep: 8, views: 234, last: 'FSB_Leader', time: '5 мин назад' },
+        { id: 202, pref: 'p-zay', title: 'Заявление в ФСБ — Agent_007', author: 'Agent_007', rep: 3, views: 89, last: 'FSB_Leader', time: '10 мин назад' }
+    ],
+    'ГИБДД': [
+        { id: 211, pref: 'p-jal', title: 'Жалоба на инспектора ГИБДД — задержание без RP', author: 'Driver_X', rep: 12, views: 456, last: 'GIBDD_Leader', time: '1 мин назад' },
+        { id: 212, pref: 'p-zay', title: 'Заявление в ГИБДД — Recruit_01', author: 'Recruit_01', rep: 3, views: 89, last: 'GIBDD_Leader', time: '8 мин назад' }
+    ],
+    'УМВД': [
+        { id: 221, pref: 'p-jal', title: 'Жалоба на сотрудника УМВД — грубость', author: 'Civilian_01', rep: 5, views: 123, last: 'UMVD_Leader', time: '12 мин назад' }
+    ],
+    'Армия': [
+        { id: 231, pref: 'p-zay', title: 'Заявление в Армию — Soldier_01', author: 'Soldier_01', rep: 2, views: 67, last: 'Army_General', time: '20 мин назад' }
+    ],
+    'СМИ': [
+        { id: 241, pref: 'p-rp', title: 'Новости сервера — выпуск №45', author: 'SMI_Editor', rep: 15, views: 890, last: 'Reader_X', time: '45 мин назад' }
+    ],
+    'ФСИН': [
+        { id: 251, pref: 'p-jal', title: 'Жалоба на сотрудника ФСИН — избиение заключённого', author: 'Prisoner_X', rep: 7, views: 234, last: 'FSIN_Chief', time: '1 час назад' }
+    ],
     'Заявления на пост лидера': [
         { id: 31, pref: 'p-zay', title: 'Заявление на лидера мафии — Candidate_X', author: 'Candidate_X', rep: 7, views: 234, last: 'Admin_Max', time: '5 мин назад' },
         { id: 32, pref: 'p-zay', title: 'Заявление на лидера банды — StreetKing', author: 'StreetKing', rep: 12, views: 456, last: 'Moderator_Kate', time: '20 мин назад' }
@@ -1052,7 +1161,7 @@ const THREADS = {
         { id: 41, pref: 'p-zay', title: 'Заявление в ГИБДД — Recruit_01', author: 'Recruit_01', rep: 3, views: 89, last: 'GIBDD_Leader', time: '1 мин назад' },
         { id: 42, pref: 'p-zay', title: 'Заявление в ФСБ — Agent_007', author: 'Agent_007', rep: 5, views: 123, last: 'FSB_Leader', time: '10 мин назад' }
     ],
-    'Заявления на разбан': [
+    'Обжалование наказаний': [
         { id: 51, pref: 'p-zay', title: 'Разбан аккаунта — UnbanMe', author: 'UnbanMe', rep: 2, views: 45, last: 'Admin_Kate', time: '8 мин назад' }
     ],
     'RP-биографии': [
@@ -1069,7 +1178,7 @@ const THREADS = {
         { id: 91, pref: 'p-teh', title: 'Баг с отображением денег в банке', author: 'BugHunter', rep: 6, views: 156, last: 'Dev_Team', time: '6 мин назад' },
         { id: 92, pref: 'p-teh', title: 'Ошибка при входе в игру — краш', author: 'CrashedUser', rep: 14, views: 345, last: 'Support_01', time: '40 мин назад' }
     ],
-    'Предложения': [
+    'Предложения по улучшению': [
         { id: 101, pref: 'p-vazh', title: 'Предложение: добавить новые работы', author: 'IdeaMaker', rep: 31, views: 890, last: 'Dev_Team', time: '45 мин назад' }
     ],
     'Техподдержка': [
@@ -1086,26 +1195,37 @@ const THREADS = {
     ]
 };
 
+/* ============================================================
+   ПОСТЫ
+   ============================================================ */
 const POSTS = {
     1: [
-        { author: 'Victim_01', role: 'Игрок', date: '18.09.2024 14:22', body: 'Игрок <b>Petrovich</b> открыл огонь по мне в мирной зоне возле банка. Прикладываю скриншот и видео. Прошу разобраться и выдать наказание согласно правилам сервера.', av: 'V' },
-        { author: 'Moderator_Kate', role: 'Модератор', date: '18.09.2024 14:30', body: 'Добрый день! Ваша жалоба принята в рассмотрение. Ожидайте ответа в течение 24 часов.', av: 'M' },
-        { author: 'Admin_Max', role: 'Администратор', date: '18.09.2024 15:10', body: 'Проверил доказательства. Игрок <b>Petrovich</b> получил блокировку на 3 дня за нарушение п. 4.2 правил. Жалоба <b>одобрена</b>.', av: 'A' }
+        { author: 'Victim_01', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 14:22', body: 'Игрок <b>Petrovich</b> открыл огонь по мне в мирной зоне возле банка. Прикладываю скриншот и видео. Прошу разобраться и выдать наказание согласно правилам сервера.', av: 'V' },
+        { author: 'Moderator_Kate', role: 'Модератор', roleClass: 'role-mod', date: '18.09.2024 14:30', body: 'Добрый день! Ваша жалоба принята в рассмотрение. Ожидайте ответа в течение 24 часов.', av: 'M' },
+        { author: 'Admin_Max', role: 'Администратор', roleClass: 'role-admin', date: '18.09.2024 15:10', body: 'Проверил доказательства. Игрок <b>Petrovich</b> получил блокировку на 3 дня за нарушение п. 4.2 правил. Жалоба <b>одобрена</b>.', av: 'A' }
     ],
     11: [
-        { author: 'Innocent', role: 'Игрок', date: '18.09.2024 13:00', body: 'Администратор <b>Admin_X</b> выдал мне бан на 30 дней без объяснения причины. Прошу пересмотреть решение.', av: 'I' },
-        { author: 'HeadAdmin', role: 'Гл. Админ', date: '18.09.2024 13:30', body: 'Разбираемся в ситуации. Запросил логи у Admin_X.', av: 'H' }
+        { author: 'Innocent', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 13:00', body: 'Администратор <b>Admin_X</b> выдал мне бан на 30 дней без объяснения причины. Прошу пересмотреть решение.', av: 'I' },
+        { author: 'HeadAdmin', role: 'Гл. Админ', roleClass: 'role-admin', date: '18.09.2024 13:30', body: 'Разбираемся в ситуации. Запросил логи у Admin_X.', av: 'H' }
     ],
     31: [
-        { author: 'Candidate_X', role: 'Игрок', date: '18.09.2024 12:00', body: 'Заявление на пост лидера мафии. Опыт игры: 3 года. Онлайн: 6+ часов в день. Discord: candidate_x#1234', av: 'C' },
-        { author: 'Admin_Max', role: 'Администратор', date: '18.09.2024 12:45', body: 'Заявление принято. Ожидайте собеседования в Discord.', av: 'A' }
+        { author: 'Candidate_X', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 12:00', body: 'Заявление на пост лидера мафии. Опыт игры: 3 года. Онлайн: 6+ часов в день. Discord: candidate_x#1234', av: 'C' },
+        { author: 'Admin_Max', role: 'Администратор', roleClass: 'role-admin', date: '18.09.2024 12:45', body: 'Заявление принято. Ожидайте собеседования в Discord.', av: 'A' }
     ],
     61: [
-        { author: 'StoryTeller', role: 'Игрок', date: '17.09.2024 20:15', body: '<b>Виктор «Стальной» Ковалёв</b><br><br>Родился в 1985 году в небольшом городке. С детства мечтал о службе в армии. В 18 лет пошёл в армию, где получил звание сержанта. После службы устроился в охранную фирму, но быстро понял, что это не его. Сейчас занимается контрабандой оружия и держит небольшой бизнес.', av: 'S' }
+        { author: 'StoryTeller', role: 'Игрок', roleClass: 'role-player', date: '17.09.2024 20:15', body: '<b>Виктор «Стальной» Ковалёв</b><br><br>Родился в 1985 году в небольшом городке. С детства мечтал о службе в армии. В 18 лет пошёл в армию, где получил звание сержанта. После службы устроился в охранную фирму, но быстро понял, что это не его. Сейчас занимается контрабандой оружия и держит небольшой бизнес.', av: 'S' }
     ],
     91: [
-        { author: 'BugHunter', role: 'Игрок', date: '18.09.2024 11:30', body: 'При снятии денег в банке сумма отображается неверно — показывает 0 вместо реального баланса. Воспроизводится на сервере CHERRY. Скриншот прикреплён.', av: 'B' },
-        { author: 'Dev_Team', role: 'Разработчик', date: '18.09.2024 12:00', body: 'Баг подтверждён. Исправление будет в ближайшем обновлении.', av: 'D' }
+        { author: 'BugHunter', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 11:30', body: 'При снятии денег в банке сумма отображается неверно — показывает 0 вместо реального баланса. Воспроизводится на сервере SA:MP Mobile 01. Скриншот прикреплён.', av: 'B' },
+        { author: 'Dev_Team', role: 'Разработчик', roleClass: 'role-admin', date: '18.09.2024 12:00', body: 'Баг подтверждён. Исправление будет в ближайшем обновлении.', av: 'D' }
+    ],
+    201: [
+        { author: 'Citizen_X', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 10:00', body: 'Сотрудник ФСБ <b>Agent_007</b> превысил полномочия — задержал меня без объяснения причины. Прошу разобраться.', av: 'C' },
+        { author: 'FSB_Leader', role: 'Лидер', roleClass: 'role-leader', date: '18.09.2024 10:30', body: 'Провожу проверку. Запросил рапорт у Agent_007.', av: 'F' }
+    ],
+    211: [
+        { author: 'Driver_X', role: 'Игрок', roleClass: 'role-player', date: '18.09.2024 09:00', body: 'Инспектор ГИБДД остановил меня без причины и задержал без RP-взаимодействия. Нарушение п. 5.1 правил фракции.', av: 'D' },
+        { author: 'GIBDD_Leader', role: 'Лидер', roleClass: 'role-leader', date: '18.09.2024 09:15', body: 'Жалоба принята. Проведу беседу с инспектором.', av: 'G' }
     ]
 };
 
@@ -1130,7 +1250,7 @@ function renderServers() {
     list.innerHTML = '';
     SERVERS.forEach(s => {
         const el = document.createElement('button');
-        el.className = 'srv' + (s === CURRENT_SERVER ? ' on' : '');
+        el.className = 'br-srv' + (s === CURRENT_SERVER ? ' on' : '');
         el.textContent = s;
         el.onclick = () => { CURRENT_SERVER = s; renderServers(); toast('Сервер: ' + s); };
         list.appendChild(el);
@@ -1184,30 +1304,30 @@ function renderThreads(name) {
     const box = document.getElementById('threadList');
     const arr = THREADS[name] || [];
     if (!arr.length) {
-        box.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted);">Тем пока нет.</div>';
+        box.innerHTML = '<div style="padding:40px;text-align:center;color:var(--br-text-muted);">Тем пока нет.</div>';
         return;
     }
     box.innerHTML = '';
     arr.forEach(t => {
         const el = document.createElement('div');
-        el.className = 'thread';
+        el.className = 'br-thread';
         el.onclick = () => openThread(t.id);
         el.innerHTML = `
-            <div class="t-av">${t.author.charAt(0).toUpperCase()}</div>
-            <div class="t-body">
-                <h4><span class="pref ${t.pref}">${prefLabel(t.pref)}</span><a>${t.title}</a></h4>
-                <div class="t-meta"><span>Автор: <a>${t.author}</a></span></div>
+            <div class="br-t-av">${t.author.charAt(0).toUpperCase()}</div>
+            <div class="br-t-body">
+                <h4><span class="br-pref ${t.pref}">${prefLabel(t.pref)}</span><a>${t.title}</a></h4>
+                <div class="br-t-meta"><span>Автор: <a>${t.author}</a></span></div>
             </div>
-            <div class="t-num"><b>${t.rep}</b>ответов</div>
-            <div class="t-num"><b>${t.views}</b>просмотров</div>
-            <div class="t-last"><a>${t.last}</a><span>${t.time}</span></div>
+            <div class="br-t-num"><b>${t.rep}</b>ответов</div>
+            <div class="br-t-num"><b>${t.views}</b>просмотров</div>
+            <div class="br-t-last"><a>${t.last}</a><span>${t.time}</span></div>
         `;
         box.appendChild(el);
     });
 }
 
 function prefLabel(p) {
-    return { 'p-jal': 'Жалоба', 'p-zay': 'Заявка', 'p-rp': 'RP', 'p-teh': 'Тех', 'p-vazh': 'Важно', 'p-closed': 'Закрыто' }[p] || '';
+    return { 'p-jal': 'Жалоба', 'p-zay': 'Заявка', 'p-rp': 'RP', 'p-teh': 'Тех', 'p-vazh': 'Важно', 'p-closed': 'Закрыто', 'p-otkaz': 'Отказ' }[p] || '';
 }
 
 function openThread(id) {
@@ -1215,21 +1335,21 @@ function openThread(id) {
     document.getElementById('viewForum').classList.add('hide');
     document.getElementById('viewThread').classList.remove('hide');
     const arr = POSTS[id] || [
-        { author: 'System', role: 'Система', date: 'сейчас', body: 'Сообщения этой темы не загружены в демо-режиме.', av: 'S' }
+        { author: 'System', role: 'Система', roleClass: 'role-player', date: 'сейчас', body: 'Сообщения этой темы не загружены в демо-режиме.', av: 'S' }
     ];
     const box = document.getElementById('postsBox');
     box.innerHTML = '';
     arr.forEach(p => {
         const el = document.createElement('div');
-        el.className = 'post';
+        el.className = 'br-post';
         el.innerHTML = `
-            <div class="post-head">
-                <div class="p-av">${p.av}</div>
-                <div class="p-auth"><strong>${p.author}</strong><span>${p.role}</span></div>
-                <div class="p-date">${p.date}</div>
+            <div class="br-post-head">
+                <div class="br-p-av">${p.av}</div>
+                <div class="br-p-auth"><strong>${p.author}</strong><span class="${p.roleClass}">${p.role}</span></div>
+                <div class="br-p-date">${p.date}</div>
             </div>
-            <div class="post-body">${p.body}</div>
-            <div class="post-foot">
+            <div class="br-post-body">${p.body}</div>
+            <div class="br-post-foot">
                 <button onclick="toast('Цитата добавлена')">💬 Цитировать</button>
                 <button onclick="toast('Реакция добавлена')">👍 Нравится</button>
                 <button onclick="toast('Жалоба отправлена')">🚨 Пожаловаться</button>
@@ -1263,6 +1383,7 @@ function submitReply() {
     POSTS[currentThread].push({
         author: currentUser.name,
         role: 'Игрок',
+        roleClass: 'role-player',
         date: new Date().toLocaleString('ru-RU'),
         body: txt.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
         av: currentUser.name.charAt(0).toUpperCase()
@@ -1288,7 +1409,7 @@ function createThread() {
         rep: 0, views: 0, last: currentUser.name, time: 'только что'
     });
     POSTS[newId] = [{
-        author: currentUser.name, role: 'Игрок',
+        author: currentUser.name, role: 'Игрок', roleClass: 'role-player',
         date: new Date().toLocaleString('ru-RU'),
         body: body.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
         av: currentUser.name.charAt(0).toUpperCase()
@@ -1364,7 +1485,7 @@ function loadUser() {
 function setTheme(theme, el) {
     document.body.className = theme;
     localStorage.setItem('br_theme', theme);
-    document.querySelectorAll('.th').forEach(d => d.classList.remove('on'));
+    document.querySelectorAll('.br-th').forEach(d => d.classList.remove('on'));
     if (el) el.classList.add('on');
     toast('Тема изменена');
 }
@@ -1372,7 +1493,7 @@ function setTheme(theme, el) {
 function loadTheme() {
     const t = localStorage.getItem('br_theme') || 'theme-pink';
     document.body.className = t;
-    document.querySelectorAll('.th').forEach(d => d.classList.remove('on'));
+    document.querySelectorAll('.br-th').forEach(d => d.classList.remove('on'));
     const map = { 'theme-pink': '.th-pink', 'theme-dark': '.th-dark', 'theme-green': '.th-green', 'theme-cyber': '.th-cyber' };
     const el = document.querySelector(map[t]);
     if (el) el.classList.add('on');
@@ -1415,7 +1536,7 @@ function toast(msg) {
    ============================================================ */
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        document.querySelectorAll('.overlay.on').forEach(m => m.classList.remove('on'));
+        document.querySelectorAll('.br-overlay.on').forEach(m => m.classList.remove('on'));
     }
     if (e.ctrlKey && e.key === 'k') {
         e.preventDefault();
@@ -1423,7 +1544,7 @@ document.addEventListener('keydown', e => {
     }
 });
 
-document.querySelectorAll('.overlay').forEach(o => {
+document.querySelectorAll('.br-overlay').forEach(o => {
     o.addEventListener('click', e => { if (e.target === o) o.classList.remove('on'); });
 });
 
@@ -1431,15 +1552,15 @@ document.querySelectorAll('.overlay').forEach(o => {
    NOTIF TICKER
    ============================================================ */
 setInterval(() => {
-    const c = document.querySelector('.bell .cnt');
+    const c = document.querySelector('.br-bell .cnt');
     if (c) {
         const n = parseInt(c.textContent) || 0;
         if (n < 9) c.textContent = n + 1;
     }
 }, 40000);
 
-console.log('%c Black Russia Forum — демо-копия', 'color:#ff5c9e;font-size:16px;font-weight:bold;');
+console.log('%c Black Russia Forum — демо-копия', 'color:#e85d9e;font-size:16px;font-weight:bold;');
 console.log('%cCtrl+K — поиск, Esc — закрыть модалку', 'color:#888;font-size:12px;');
 </script>
 </body>
-                                                                 </html>
+   </html>
