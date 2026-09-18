@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus RolePlay | Официальный форум</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .dark-theme { background-color: #121214; color: #e1e1e6; }
+        .card-bg { background-color: #202024; }
+        .border-custom { border-color: #323238; }
+    </style>
+</head>
+<body class="dark-theme min-h-screen flex flex-col font-sans">
+
+    <!-- ХЭДЕР -->
+    <header class="card-bg border-b border-custom py-4 px-6 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <span class="bg-red-600 text-white font-black px-3 py-1 rounded text-lg tracking-wider">NEXUS</span>
+            <span class="text-xl font-bold tracking-tight">RP FORUM <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded text-zinc-300">Offline v1.0</span></span>
+        </div>
+        <div id="user-menu" class="flex items-center space-x-4">
+            <!-- Динамически заменяется скриптом -->
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="flex-grow container mx-auto px-4 py-6 max-w-5xl">
+        
+        <!-- Хлебные крошки / Навигация -->
+        <div class="flex justify-between items-center mb-6">
+            <div id="breadcrumbs" class="text-sm text-zinc-400">
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span>
+            </div>
+            <div id="action-btn-container"></div>
+        </div>
+
+        <!-- КОНТЕЙНЕР ДИНАМИЧЕСКИХ СТРАНИЦ -->
+        <div id="app-content"></div>
+
+    </main>
+
+    <!-- ФУТЕР -->
+    <footer class="card-bg border-t border-custom py-4 text-center text-xs text-zinc-500">
+        Nexus RolePlay © 2026. Все права защищены (Offline Mode).
+    </footer>
+
+    <!-- МОДАЛЬНЫЕ ОКНА (Вход / Регистрация) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/70 hidden flex justify-center items-center z-50">
+        <div class="card-bg border border-custom p-6 rounded-xl w-96 shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-3 right-3 text-zinc-400 hover:text-white">&times;</button>
+            <h2 id="modal-title" class="text-xl font-bold mb-4">Авторизация</h2>
+            <div id="modal-error" class="text-red-500 text-sm mb-3 hidden"></div>
+            <div class="space-y-3">
+                <input type="text" id="auth-username" placeholder="Имя пользователя (Nick_Name)" class="w-full bg-zinc-900 border border-custom rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500">
+                <input type="password" id="auth-password" placeholder="Пароль" class="w-full bg-zinc-900 border border-custom rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500">
+                <button onclick="handleAuthSubmit()" id="modal-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded text-sm transition">Войти</button>
+            </div>
+            <div class="mt-4 text-center text-xs text-zinc-400">
+                <span id="switch-auth-text">Нет аккаунта?</span> <span onclick="toggleAuthMode()" class="text-red-500 cursor-pointer hover:underline" id="switch-auth-btn">Зарегистрироваться</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- СКРИПТ ЛОГИКИ -->
+    <script>
+        // Инициализация базы данных в localStorage, если её нет
+        if (!localStorage.getItem('forum_users')) {
+            localStorage.setItem('forum_users', JSON.stringify([]));
+        }
+        if (!localStorage.getItem('forum_logged_in')) {
+            localStorage.setItem('forum_logged_in', null);
+        }
+        if (!localStorage.getItem('forum_categories')) {
+            const defaultCategories = [
+                { id: 1, name: 'Важные новости и правила', desc: 'Официальная информация проекта, обновления и свод правил.', icon: '📢' },
+                { id: 2, name: 'Технический раздел', desc: 'Ошибки, баги, проблемы с донатом и входом в игру.', icon: '🛠️' },
+                { id: 3, name: 'Жалобы на администрацию', desc: 'Раздел для обжалования наказаний от игровых помощников и администраторов.', icon: '⚖️' },
+                { id: 4, name: 'Игровые обсуждения', desc: 'Общение игроков на любые темы, связанные с сервером.', icon: '💬' }
+            ];
+            localStorage.setItem('forum_categories', JSON.stringify(defaultCategories));
+        }
+        if (!localStorage.getItem('forum_threads')) {
+            localStorage.setItem('forum_threads', JSON.stringify([
+                { id: 1, catId: 1, title: 'Правила сервера [Обязательно к прочтению]', author: 'System_Admin', date: '18.09.2026', content: 'Добро пожаловать на проект! Запрещено: DM, TK, SK, Оскорбление родных.', replies: [] },
+                { id: 2, catId: 2, title: 'Не привязывается Telegram после обновы', author: 'Majorka_Bounty', date: '18.09.2026', content: 'Помогите, после утреннего патча бот в телеграме не принимает код подтверждения!', replies: [
+                    { author: 'Technical_Support', date: '18.09.2026', text: 'Перезапустите лаунчер и повторите попытку через 10 минут.' }
+                ]}
+            ]));
+        }
+
+        let isRegisterMode = false;
+
+        // Обновление шапки профиля
+        function updateHeader() {
+            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const menu = document.getElementById('user-menu');
+            
+            if (loggedUser) {
+                menu.innerHTML = `
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="openProfile('${loggedUser.username}')">
+                        <div class="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center font-bold text-white uppercase">${loggedUser.username[0]}</div>
+                        <div class="text-left hidden sm:block">
+                            <div class="text-sm font-bold leading-tight">${loggedUser.username}</div>
+                            <div class="text-xs text-red-400">Игрок</div>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded text-zinc-300 transition">Выйти</button>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <button onclick="openAuthModal(false)" class="text-xs bg-red-600 hover:bg-red-700 font-bold px-4 py-2 rounded text-white transition">Войти</button>
+                    <button onclick="openAuthModal(true)" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded text-zinc-300 transition">Регистрация</button>
+                `;
+            }
+        }
+
+        // Рендер главной страницы (Категории)
+        function showHome() {
+            document.getElementById('breadcrumbs').innerHTML = '<span class="text-zinc-200">Главная страница</span>';
+            document.getElementById('action-btn-container').innerHTML = '';
+            
+            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const container = document.getElementById('app-content');
+            
+            let html = '<div class="space-y-4">';
+            categories.forEach(cat => {
+                html += `
+                    <div onclick="openCategory(${cat.id})" class="card-bg border border-custom p-4 rounded-xl hover:border-red-500 cursor-pointer transition flex items-center space-x-4">
+                        <div class="text-3xl">${cat.icon}</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-zinc-100 hover:text-red-400 transition">${cat.name}</h3>
+                            <p class="text-xs text-zinc-400">${cat.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Открытие категории (Список тем)
+        function openCategory(catId) {
+            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const cat = categories.find(c => c.id === catId);
+            const threads = JSON.parse(localStorage.getItem('forum_threads')).filter(t => t.catId === catId);
+            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+
+            document.getElementById('breadcrumbs').innerHTML = `
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> 
+                <span class="mx-2">/</span> 
+                <span class="text-zinc-200">${cat.name}</span>
+            `;
+
+            document.getElementById('action-btn-container').innerHTML = loggedUser ? 
+                `<button onclick="openCreateThread(${catId})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded transition">+ Создать тему</button>` : 
+                `<span class="text-xs text-zinc-500">Войдите, чтобы создавать темы</span>`;
+
+            const container = document.getElementById('app-content');
+            let html = '<div class="space-y-3">';
+            
+            if (threads.length === 0) {
+                html += '<div class="card-bg p-6 text-center text-zinc-500 rounded-xl">В этом разделе пока нет тем. Создайте первую!</div>';
+            } else {
+                threads.forEach(t => {
+                    html += `
+                        <div onclick="openThread(${t.id})" class="card-bg border border-custom p-4 rounded-xl hover:border-zinc-500 cursor-pointer transition flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-zinc-100 hover:text-red-400 text-sm md:text-base">${t.title}</h4>
+                                <div class="text-xs text-zinc-400 mt-1">Автор: <span class="text-zinc-300 font-semibold">${t.author}</span> • ${t.date}</div>
+                            </div>
+                            <div class="text-xs bg-zinc-800 px-3 py-1 rounded text-zinc-400">${t.replies.length} ответа(-ов)</div>
+                        </div>
+                    `;
+                });
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Открытие конкретной темы и сообщений
+        function openThread(threadId) {
+            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const thread = threads.find(t => t.id === threadId);
+            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const cat = categories.find(c => c.id === thread.catId);
+            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+
+            document.getElementById('breadcrumbs').innerHTML = `
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2">/</span>
+                <span class="text-zinc-200 truncate max-w-xs inline-block align-bottom">${thread.title}</span>
+            `;
+            document.getElementById('action-btn-container').innerHTML = '';
+
+            const container = document.getElementById('app-content');
+            let html = `
+                <div class="space-y-4">
+                    <!-- Шапка темы (Первое сообщение) -->
+                    <div class="card-bg border border-custom p-5 rounded-xl">
+                        <h2 class="text-xl font-bold text-zinc-100 mb-2">${thread.title}</h2>
+                        <div class="flex items-center space-x-2 pb-3 mb-3 border-b border-custom text-xs text-zinc-400">
+                            <span class="text-red-400 font-bold cursor-pointer" onclick="openProfile('${thread.author}')">${thread.author}</span>
+                            <span>•</span>
+                            <span>${thread.date}</span>
+                        </div>
+                        <p class="text-zinc-300 text-sm whitespace-pre-wrap">${thread.content}</p>
+                    </div>
+
+                    <!-- Ответы -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider">Ответы (${thread.replies.length})</h3>
+            `;
+
+            if (thread.replies.length === 0) {
+                html += '<div class="text-xs text-zinc-500 card-bg p-4 rounded-xl">Пока никто не оставил ответ. Будьте первыми!</div>';
+            } else {
+                thread.replies.forEach(r => {
+                    html += `
+                        <div class="card-bg border border-custom p-4 rounded-xl ml-0 md:ml-6">
+                            <div class="flex justify-between items-center mb-2 text-xs">
+                                <span class="font-bold text-red-400 cursor-pointer" onclick="openProfile('${r.author}')">${r.author}</span>
+                                <span class="text-zinc-500">${r.date}</span>
+                            </div>
+                            <p class="text-sm text-zinc-300 whitespace-pre-wrap">${r.text}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+
+            // Форма отправки ответа
+            if (loggedUser) {
+                html += `
+                    <div class="card-bg border border-custom p-4 rounded-xl mt-6">
+                        <h4 class="text-sm font-bold mb-2">Написать ответ</h4>
+                        <textarea id="reply-text" rows="3" placeholder="Введите ваш текст..." class="w-full bg-zinc-900 border border-custom rounded p-3 text-sm focus:outline-none focus:border-red-500 text-zinc-200 mb-2"></textarea>
+                        <button onclick="submitReply(${thread.id})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded transition">Отправить ответ</button>
+                    </div>
+                `;
+            } else {
+                html += `<div class="text-center text-xs text-zinc-500 py-4">Чтобы писать ответы, пожалуйста, <span onclick="openAuthModal(false)" class="text-red-500 cursor-pointer underline">войдите в аккаунт</span>.</div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // Создание новой темы (Модальное окно/Форма)
+        function openCreateThread(catId) {
+            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const cat = categories.find(c => c.id === catId);
+
+            document.getElementById('breadcrumbs').innerHTML = `
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2">/</span>
+                <span class="text-zinc-200">Создание темы</span>
+            `;
+            document.getElementById('action-btn-container').innerHTML = '';
+
+            document.getElementById('app-content').innerHTML = `
+                <div class="card-bg border border-custom p-6 rounded-xl max-w-2xl mx-auto space-y-4">
+                    <h2 class="text-xl font-bold">Создать новую тему в разделе: ${cat.name}</h2>
+                    <div>
+                        <label class="block text-xs text-zinc-400 mb-1">Заголовок темы</label>
+                        <input type="text" id="new-thread-title" placeholder="Например: Обжалование наказания / Баг интерфейса" class="w-full bg-zinc-900 border border-custom rounded p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-zinc-400 mb-1">Описание / Суть</label>
+                        <textarea id="new-thread-content" rows="6" placeholder="Подробно опишите суть вашей темы..." class="w-full bg-zinc-900 border border-custom rounded p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-red-500"></textarea>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button onclick="saveNewThread(${catId})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded transition">Опубликовать</button>
+                        <button onclick="openCategory(${catId})" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs px-4 py-2.5 rounded transition">Отмена</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveNewThread(catId) {
+            const title = document.getElementById('new-thread-title').value.trim();
+            const content = document.getElementById('new-thread-content').value.trim();
+            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+
+            if (!title || !content) {
+                alert('Заполните все поля!');
+                return;
+            }
+
+            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const newThread = {
+                id: Date.now(),
+                catId: catId,
+                title: title,
+                author: loggedUser.username,
+                date: new Date().toLocaleDateString(),
+                content: content,
+                replies: []
+            };
+
+            threads.unshift(newThread);
+            localStorage.setItem('forum_threads', JSON.stringify(threads));
+            openCategory(catId);
+        }
+
+        // Отправка ответа в тему
+        function submitReply(threadId) {
+            const text = document.getElementById('reply-text').value.trim();
+            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+
+            if (!text) return;
+
+            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const thread = threads.find(t => t.id === threadId);
+            
+            thread.replies.push({
+                author: loggedUser.username,
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                text: text
+            });
+
+            localStorage.setItem('forum_threads', JSON.stringify(threads));
+            openThread(threadId);
+        }
+
+        // Просмотр профиля игрока
+        function openProfile(username) {
+            const users = JSON.parse(localStorage.getItem('forum_users'));
+            let user = users.find(u => u.username === username);
+            
+            // Если дефолтный юзер (например System_Admin)
+            if (!user) {
+                user = { username: username, role: 'Администратор', joined: '15.01.2026' };
+            }
+
+            document.getElementById('breadcrumbs').innerHTML = `
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
+                <span class="text-zinc-200">Профиль: ${user.username}</span>
+            `;
+            document.getElementById('action-btn-container').innerHTML = '';
+
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="card-bg border border-custom p-6 rounded-xl max-w-xl mx-auto flex items-center space-x-6">
+                    <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center font-black text-3xl text-white uppercase">${user.username[0]}</div>
+                    <div class="space-y-1">
+                        <h2 class="text-2xl font-bold text-zinc-100">${user.username}</h2>
+                        <p class="text-xs text-red-400 font-bold uppercase tracking-wider">${user.role || 'Игрок сервера'}</p>
+                        <p class="text-xs text-zinc-400">На форуме с: ${user.joined || '01.09.2026'}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Модальное окно Авторизации/Регистрации
+        function openAuthModal(register) {
+            isRegisterMode = register;
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('modal-title').innerText = register ? 'Регистрация аккаунта' : 'Вход на форум';
+            document.getElementById('modal-submit-btn').innerText = register ? 'Зарегистрироваться' : 'Войти';
+            document.getElementById('switch-auth-text').innerText = register ? 'Уже есть аккаунт?' : 'Нет аккаунта?';
+            document.getElementById('switch-auth-btn').innerText = register ? 'Войти' : 'Зарегистрироваться';
+            document.getElementById('modal-error').classList.add('hidden');
+            document.getElementById('auth-username').value = '';
+            document.getElementById('auth-password').value = '';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            openAuthModal(!isRegisterMode);
+        }
+
+        function handleAuthSubmit() {
+            const username = document.getElementById('auth-username').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const errorDiv = document.getElementById('modal-error');
+
+            if (!username || !password) {
+                errorDiv.innerText = 'Заполните все поля!';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('forum_users'));
+
+            if (isRegisterMode) {
+                const existing = users.find(u => u.username === username);
+                if (existing) {
+                    errorDiv.innerText = 'Такое имя уже занято!';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+                const newUser = { username, password, role: 'Игрок', joined: new Date().toLocaleDateString() };
+                users.push(newUser);
+                localStorage.setItem('forum_users', JSON.stringify(users));
+                localStorage.setItem('forum_logged_in', JSON.stringify(newUser));
+            } else {
+                const user = users.find(u => u.username === username && u.password === password);
+                if (!user) {
+                    errorDiv.innerText = 'Неверный логин или пароль!';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+                localStorage.setItem('forum_logged_in', JSON.stringify(user));
+            }
+
+            closeAuthModal();
+            updateHeader();
+            showHome();
+        }
+
+        function logout() {
+            localStorage.setItem('forum_logged_in', null);
+            updateHeader();
+            showHome();
+        }
+
+        // Первичный запуск при загрузке страницы
+        window.onload = function() {
+            updateHeader();
+            showHome();
+        };
+    </script>
+</body>
+</html>
+
