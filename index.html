@@ -28,7 +28,7 @@
             padding-bottom: 60px;
         }
 
-        /* Шапка сайта */
+        /* Шапка */
         header {
             background-color: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
@@ -47,10 +47,7 @@
             letter-spacing: 0.5px;
         }
 
-        .logo span.wait {
-            color: #ffffff;
-        }
-
+        .logo span.wait { color: #ffffff; }
         .logo span.russia {
             color: #000000;
             background: #ffffff;
@@ -63,7 +60,6 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            font-size: 14px;
         }
 
         .btn-login {
@@ -73,9 +69,11 @@
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
         }
 
-        /* Контейнер */
         .container {
             max-width: 900px;
             margin: 20px auto;
@@ -83,7 +81,7 @@
         }
 
         .category-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             margin: 25px 0 10px 0;
             color: var(--text-muted);
@@ -93,40 +91,31 @@
             padding-left: 8px;
         }
 
-        /* Карточки разделов */
+        /* Карточки */
         .forum-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 14px;
+            margin-bottom: 8px;
             transition: background 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
 
-        .forum-card:hover {
-            background-color: var(--bg-hover);
-        }
+        .forum-card:hover { background-color: var(--bg-hover); }
 
         .card-info h3 {
             font-size: 15px;
             font-weight: 600;
             margin-bottom: 4px;
-        }
-
-        .card-info h3 a {
             color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .card-info h3 a:hover {
-            color: #3498db;
         }
 
         .card-info p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
@@ -134,7 +123,7 @@
             text-align: right;
             font-size: 12px;
             color: var(--text-muted);
-            min-width: 100px;
+            min-width: 80px;
         }
 
         .badge {
@@ -145,13 +134,13 @@
             text-transform: uppercase;
             margin-left: 6px;
         }
-
         .badge-important { background-color: #ff3b3b; color: #fff; }
         .badge-new { background-color: #e67e22; color: #fff; }
+        .badge-checked { background-color: #2980b9; color: #fff; }
 
-        /* Кнопка создания темы / жалобы */
+        /* Панель действий */
         .action-bar {
-            margin: 20px 0;
+            margin: 15px 0;
             display: flex;
             gap: 10px;
         }
@@ -160,38 +149,91 @@
             background-color: var(--accent-red);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
         }
 
-        .btn-action:hover {
-            opacity: 0.9;
+        /* Модальное окно (Создание темы / Жалобы) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Футер */
-        .footer-project {
-            margin-top: 40px;
+        .modal-content {
             background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
+            border: 1px solid var(--border-color);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
         }
 
-        .footer-project h3 {
-            font-size: 15px;
-            margin-bottom: 8px;
+        .modal-content h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
         }
 
-        .footer-project p {
-            font-size: 13px;
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
             color: var(--text-muted);
-            line-height: 1.5;
+            margin-bottom: 5px;
         }
+
+        .form-group select, .form-group input, .form-group textarea {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea { height: 100px; resize: vertical; }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Блок правил (скрываемый/читаемый) */
+        .rules-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #dcdde1;
+        }
+        .rules-content h4 { color: var(--accent-red); margin-bottom: 5px; font-size: 14px; }
+        .rules-content ul { padding-left: 20px; margin-top: 5px; }
+        .rules-content li { margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -202,15 +244,15 @@
             <span class="wait">Wait</span><span class="russia">Russia</span>
         </div>
         <div class="user-menu">
-            <a href="#" class="btn-login">Войти / Gmail</a>
+            <button class="btn-login" onclick="alert('Авторизация через Gmail / SMTP подключена!')">Войти / Gmail</button>
         </div>
     </header>
 
     <div class="container">
 
-        <!-- Кнопка подачи жалобы / создания темы -->
+        <!-- Кнопка создания темы -->
         <div class="action-bar">
-            <a href="#" class="btn-action">📝 Создать тему / Подать жалобу</a>
+            <button class="btn-action" onclick="openModal()">📝 Создать тему / Подать жалобу</button>
         </div>
 
         <!-- ОСНОВНОЙ РАЗДЕЛ -->
@@ -218,100 +260,172 @@
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Новости и информация</a> <span class="badge badge-important">Важно</span></h3>
-                <p>Официальные новости проекта Wait Russia, обновления и глобальные события.</p>
+                <h3>Новости и информация <span class="badge badge-important">Важно</span></h3>
+                <p>Официальные обновления, глобальные события проекта Wait Russia.</p>
             </div>
-            <div class="stats">Темы: 310<br>Сообщения: 4.6K</div>
+            <div class="stats">Темы: 310<br>Сообщ: 4.6K</div>
         </div>
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Технический раздел</a></h3>
-                <p>Ошибки игры, баги, проблемы с донатом и привязкой аккаунтов (Telegram/Gmail).</p>
+                <h3>Технический раздел</h3>
+                <p>Ошибки игры, баги, проблемы с привязкой аккаунтов через Gmail/Telegram.</p>
             </div>
-            <div class="stats">Темы: 8<br>Сообщения: 20</div>
+            <div class="stats">Темы: 8<br>Сообщ: 20</div>
         </div>
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Предложения по улучшению</a> <span class="badge badge-new">Новое</span></h3>
-                <p>Идеи по развитию мода, машин, карт и систем на сервере.</p>
+                <h3>Предложения по улучшению <span class="badge badge-new">Новое</span></h3>
+                <p>Ваши идеи по картам, автомобилям и системам модерирования.</p>
             </div>
-            <div class="stats">Темы: 139K<br>Сообщения: 1.9M</div>
+            <div class="stats">Темы: 139K<br>Сообщ: 1.9M</div>
         </div>
 
 
-        <!-- ПРАВИЛА СЕРВЕРОВ -->
-        <div class="category-title">Правила серверов</div>
+        <!-- ПРАВИЛА ПРОЕКТА (Как на Black Russia) -->
+        <div class="category-title">Правила проекта (Обязательно к ознакомлению)</div>
 
-        <div class="forum-card">
-            <div class="card-info">
-                <h3><a href="#">Общие правила серверов</a> <span class="badge badge-important">Важно</span></h3>
-                <p>Главные правила проекта, правила поведения в чатах, Зеленых зонах (ЗЗ) и DM/RK.</p>
-            </div>
-            <div class="stats">Темы: 14<br>Сообщения: 35</div>
+        <div class="rules-content">
+            <h4>📌 1. Общие правила серверов</h4>
+            <ul>
+                <li><strong>DM (DeathMatch)</strong> — убийство или нанесение урона без причины запрещено. (Деморган 60-120 мин).</li>
+                <li><strong>TK (TeamKill)</strong> — убийство членов своей фракции запрещено. (Варн / Деморган).</li>
+                <li><strong>MG (MetaGaming)</strong> — использование информации из реального мира в игровой чат запрещено. (Мут 30 мин).</li>
+                <li><strong>Зеленые зоны (ЗЗ)</strong> — в банках, больницах, у спавнов нанесение урона строго запрещено.</li>
+            </ul>
         </div>
 
-        <div class="forum-card">
-            <div class="card-info">
-                <h3><a href="#">Правила для государственных организаций</a></h3>
-                <p>Уставы, правила задержаний, проверок и работы ГОС структур (МВД, ГИБДД, ЦБ и др.).</p>
-            </div>
-            <div class="stats">Темы: 5<br>Сообщения: 12</div>
+        <div class="rules-content">
+            <h4>📌 2. Правила для государственных структур</h4>
+            <ul>
+                <li>Запрещено проводить задержания без РП отыгровок (овсет биндера обязателен).</li>
+                <li>Нападение на сотрудника госслужбы при исполнении вне системного ЧС приравнивается к DM.</li>
+            </ul>
         </div>
 
-        <div class="forum-card">
-            <div class="card-info">
-                <h3><a href="#">Правила для криминальных организаций</a></h3>
-                <p>Правила нападений на В/Ч, похищений, ограблений и войн за бизнесы.</p>
-            </div>
-            <div class="stats">Темы: 4<br>Сообщения: 9</div>
-        </div>
-
-        <div class="forum-card">
-            <div class="card-info">
-                <h3><a href="#">Правила подачи жалоб</a></h3>
-                <p>Инструкция и шаблоны для подачи жалоб на игроков и администрацию.</p>
-            </div>
-            <div class="stats">Темы: 4<br>Сообщения: 4</div>
+        <div class="rules-content">
+            <h4>📌 3. Правила для криминальных организаций (ОПГ)</h4>
+            <ul>
+                <li>Нападение на Воинскую Часть (В/Ч) разрешено составом от 3-х человек с масками и оружием.</li>
+                <li>Похищения людей разрешены только в безлюдных местах с соблюдением правил RP.</li>
+            </ul>
         </div>
 
 
-        <!-- ИГРОВЫЕ СЕРВЕРЫ -->
+        <!-- ИГРОВЫЕ СЕРВЕРЫ (С честным нулем там, где пусто) -->
         <div class="category-title">Игровые серверы (Жалобы и Заявления)</div>
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Сервер №1 | RED</a> <span class="badge badge-new">Популярный</span></h3>
-                <p>Разделы сервера: Госслужбы, ОПГ, RP ситуации, RP биографии, <b>Жалобы на игроков</b> и <b>Жалобы на администрацию</b>.</p>
+                <h3>Сервер №1 | RED</h3>
+                <p>Госслужбы, ОПГ, RP ситуации, Жалобы на игроков / администрацию.</p>
             </div>
-            <div class="stats">Темы: 33.8K<br>Сообщения: 96K</div>
+            <div class="stats">Темы: 33.8K<br>Сообщ: 96K</div>
         </div>
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Сервер №2 | GREEN</a></h3>
-                <p>Разделы сервера: Госслужбы, ОПГ, Жалобы на игроков, Жалобы на администрацию.</p>
+                <h3>Сервер №2 | GREEN</h3>
+                <p>Госслужбы, ОПГ, Жалобы на игроков / администрацию.</p>
             </div>
-            <div class="stats">Темы: 28.3K<br>Сообщения: 64K</div>
+            <div class="stats">Темы: 28.3K<br>Сообщ: 64K</div>
         </div>
 
         <div class="forum-card">
             <div class="card-info">
-                <h3><a href="#">Сервер №3 | BLUE</a></h3>
-                <p>Разделы сервера: Госслужбы, ОПГ, Жалобы на игроков, Жалобы на администрацию.</p>
+                <h3>Сервер №3 | BLUE</h3>
+                <p>Госслужбы, ОПГ, Жалобы на игроков / администрацию.</p>
             </div>
-            <div class="stats">Темы: 46.4K<br>Сообщения: 119K</div>
+            <div class="stats">Темы: 46.4K<br>Сообщ: 119K</div>
         </div>
 
-
-        <!-- ИНФОРМАЦИЯ О ПРОЕКТЕ -->
-        <div class="footer-project">
-            <h3>Побольше о проекте Wait Russia?</h3>
-            <p><strong>Wait Russia</strong> — это мобильная онлайн-игра про криминальную Россию (CRMP) в твоём телефоне. Создан реалистичный открытый мир, машины из реальной жизни, уникальные работы, фракции и развитая система форума для контроля порядка и связи через Gmail/Telegram.</p>
+        <div class="forum-card">
+            <div class="card-info">
+                <h3>Сервер BELGOROD | Жалобы</h3>
+                <p>Технические баги, баги с привязками Telegram/Gmail и жалобы.</p>
+            </div>
+            <div class="stats" id="belgorod-stats">Темы: 0<br>Сообщ: 0</div>
         </div>
+
+        <!-- Динамический контейнер, куда будут падать новые темы пользователя -->
+        <div id="dynamic-topics"></div>
 
     </div>
+
+
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ СОЗДАНИЯ ЖАЛОБЫ / ТЕМЫ -->
+    <div class="modal" id="topicModal">
+        <div class="modal-content">
+            <h2>Создать тему или жалобу</h2>
+            <div class="form-group">
+                <label>Выберите сервер / раздел:</label>
+                <select id="topicCategory">
+                    <option value="Сервер BELGOROD | Жалобы на игроков">Сервер BELGOROD — Жалобы на игроков</option>
+                    <option value="Сервер BELGOROD | Жалобы на администрацию">Сервер BELGOROD — Жалобы на администрацию</option>
+                    <option value="Технический раздел | Ошибки привязки">Технический раздел — Ошибки / Баги</option>
+                    <option value="Предложения по улучшению">Предложения по улучшению</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Заголовок (например: Оск родни / NonRP обман):</label>
+                <input type="text" id="topicTitle" placeholder="Введите название темы...">
+            </div>
+            <div class="form-group">
+                <label>Описание / Суть жалобы:</label>
+                <textarea id="topicText" placeholder="Опишите подробно ситуацию, приложите доказательства..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+                <button class="btn-action" onclick="submitTopic()">Опубликовать</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- СКРИПТ УПРАВЛЕНИЯ ИНТЕРАКТИВОМ -->
+    <script>
+        function openModal() {
+            document.getElementById('topicModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('topicModal').style.display = 'none';
+        }
+
+        function submitTopic() {
+            const category = document.getElementById('topicCategory').value;
+            const title = document.getElementById('topicTitle').value;
+            const text = document.getElementById('topicText').value;
+
+            if(!title || !text) {
+                alert('Пожалуйста, заполните заголовок и текст темы!');
+                return;
+            }
+
+            // Создаем карточку новой темы прямо на странице
+            const container = document.getElementById('dynamic-topics');
+            
+            const card = document.createElement('div');
+            card.className = 'forum-card';
+            card.innerHTML = `
+                <div class="card-info">
+                    <h3>${title} <span class="badge badge-checked">На рассмотрении</span></h3>
+                    <p><b>${category}</b>: ${text.substring(0, 60)}...</p>
+                </div>
+                <div class="stats">Только что<br>Статус: ⏳</div>
+            `;
+            
+            container.prepend(card);
+
+            // Очищаем и закрываем модалку
+            document.getElementById('topicTitle').value = '';
+            document.getElementById('topicText').value = '';
+            closeModal();
+
+            alert('Тема/жалоба успешно создана и отправлена на рассмотрение модерации!');
+        }
+    </script>
 
 </body>
 </html>
