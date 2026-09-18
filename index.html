@@ -3,135 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus RolePlay | Официальный форум</title>
+    <title>Wait Russia — Официальный форум</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .dark-theme { background-color: #121214; color: #e1e1e6; }
-        .card-bg { background-color: #202024; }
-        .border-custom { border-color: #323238; }
+        body { background-color: #0d0d0f; color: #e1e1e6; font-family: system-ui, -apple-system, sans-serif; }
+        .br-card { background-color: #17171c; border: 1px solid #272730; }
+        .br-input { background-color: #0f0f13; border: 1px solid #2a2a35; color: #fff; }
+        .br-input:focus { border-color: #dc2626; outline: none; }
+        .br-red-btn { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
+        .br-red-btn:hover { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
     </style>
 </head>
-<body class="dark-theme min-h-screen flex flex-col font-sans">
+<body class="min-h-screen flex flex-col">
 
-    <!-- ХЭДЕР -->
-    <header class="card-bg border-b border-custom py-4 px-6 flex justify-between items-center shadow-md">
-        <div class="flex items-center space-x-3">
-            <span class="bg-red-600 text-white font-black px-3 py-1 rounded text-lg tracking-wider">NEXUS</span>
-            <span class="text-xl font-bold tracking-tight">RP FORUM <span class="text-xs bg-zinc-700 px-2 py-0.5 rounded text-zinc-300">Offline v1.0</span></span>
-        </div>
-        <div id="user-menu" class="flex items-center space-x-4">
-            <!-- Динамически заменяется скриптом -->
+    <!-- ШАПКА В СТИЛЕ BLACK RUSSIA -->
+    <header class="br-card border-b border-zinc-800 py-3 px-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center max-w-6xl">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showHome()">
+                <div class="bg-red-600 text-white font-black px-3 py-1.5 rounded-lg text-lg tracking-wider shadow-md shadow-red-900/40">WAIT</div>
+                <div>
+                    <div class="text-lg font-black tracking-wider leading-none text-white">RUSSIA <span class="text-red-500 text-xs">RP</span></div>
+                    <div class="text-[10px] text-zinc-400 tracking-widest uppercase">Mobile Online</div>
+                </div>
+            </div>
+            <div id="user-menu" class="flex items-center space-x-3">
+                <!-- Заполняется скриптом -->
+            </div>
         </div>
     </header>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
-    <main class="flex-grow container mx-auto px-4 py-6 max-w-5xl">
+    <main class="flex-grow container mx-auto px-4 py-6 max-w-6xl">
         
-        <!-- Хлебные крошки / Навигация -->
-        <div class="flex justify-between items-center mb-6">
-            <div id="breadcrumbs" class="text-sm text-zinc-400">
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span>
+        <!-- Навигация (Хлебные крошки) -->
+        <div class="flex justify-between items-center mb-6 bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/60">
+            <div id="breadcrumbs" class="text-xs text-zinc-400">
+                <span class="cursor-pointer text-red-500 hover:underline font-semibold" onclick="showHome()">Главная</span>
             </div>
             <div id="action-btn-container"></div>
         </div>
 
-        <!-- КОНТЕЙНЕР ДИНАМИЧЕСКИХ СТРАНИЦ -->
+        <!-- ДИНАМИЧЕСКИЕ СТРАНИЦЫ -->
         <div id="app-content"></div>
 
     </main>
 
     <!-- ФУТЕР -->
-    <footer class="card-bg border-t border-custom py-4 text-center text-xs text-zinc-500">
-        Nexus RolePlay © 2026. Все права защищены (Offline Mode).
+    <footer class="br-card border-t border-zinc-800 py-6 text-center text-xs text-zinc-500 mt-auto">
+        <div class="container mx-auto max-w-6xl space-y-1">
+            <p class="font-bold text-zinc-400">Wait Russia RolePlay • Обязательный игровой форум</p>
+            <p>Все права защищены © 2026. Offline Prototype Mode.</p>
+        </div>
     </footer>
 
-    <!-- МОДАЛЬНЫЕ ОКНА (Вход / Регистрация) -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/70 hidden flex justify-center items-center z-50">
-        <div class="card-bg border border-custom p-6 rounded-xl w-96 shadow-2xl relative">
-            <button onclick="closeAuthModal()" class="absolute top-3 right-3 text-zinc-400 hover:text-white">&times;</button>
-            <h2 id="modal-title" class="text-xl font-bold mb-4">Авторизация</h2>
-            <div id="modal-error" class="text-red-500 text-sm mb-3 hidden"></div>
-            <div class="space-y-3">
-                <input type="text" id="auth-username" placeholder="Имя пользователя (Nick_Name)" class="w-full bg-zinc-900 border border-custom rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500">
-                <input type="password" id="auth-password" placeholder="Пароль" class="w-full bg-zinc-900 border border-custom rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500">
-                <button onclick="handleAuthSubmit()" id="modal-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded text-sm transition">Войти</button>
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА И РЕГИСТРАЦИИ (КАК НА САЙТЕ) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
+        <div class="br-card p-6 rounded-2xl w-full max-w-md shadow-2xl relative border border-zinc-700">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-xl font-bold">&times;</button>
+            
+            <div class="text-center mb-6">
+                <span class="bg-red-600 text-white font-black px-3 py-1 rounded text-sm tracking-wider">WAIT RUSSIA</span>
+                <h2 id="modal-title" class="text-xl font-bold text-white mt-2">Авторизация</h2>
             </div>
-            <div class="mt-4 text-center text-xs text-zinc-400">
-                <span id="switch-auth-text">Нет аккаунта?</span> <span onclick="toggleAuthMode()" class="text-red-500 cursor-pointer hover:underline" id="switch-auth-btn">Зарегистрироваться</span>
+
+            <div id="modal-error" class="bg-red-950/50 border border-red-800 text-red-300 text-xs p-3 rounded-lg mb-4 hidden"></div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1 font-semibold">Игровой ник (Nick_Name)</label>
+                    <input type="text" id="auth-username" placeholder="Например: Majorka_Bounty" class="w-full br-input rounded-xl px-4 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1 font-semibold">Пароль</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full br-input rounded-xl px-4 py-2.5 text-sm">
+                </div>
+                <button onclick="handleAuthSubmit()" id="modal-submit-btn" class="w-full br-red-btn text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-red-900/30">Войти</button>
+            </div>
+
+            <div class="mt-5 text-center text-xs text-zinc-400 border-t border-zinc-800 pt-4">
+                <span id="switch-auth-text">Нет аккаунта на форуме?</span> 
+                <span onclick="toggleAuthMode()" class="text-red-500 font-bold cursor-pointer hover:underline ml-1" id="switch-auth-btn">Регистрация</span>
             </div>
         </div>
     </div>
 
-    <!-- СКРИПТ ЛОГИКИ -->
+    <!-- СКРИПТ ЛОГИКИ ФОРУМА -->
     <script>
-        // Инициализация базы данных в localStorage, если её нет
-        if (!localStorage.getItem('forum_users')) {
-            localStorage.setItem('forum_users', JSON.stringify([]));
+        // Инициализация базы данных
+        if (!localStorage.getItem('wait_users')) {
+            localStorage.setItem('wait_users', JSON.stringify([]));
         }
-        if (!localStorage.getItem('forum_logged_in')) {
-            localStorage.setItem('forum_logged_in', null);
+        if (!localStorage.getItem('wait_logged_in')) {
+            localStorage.setItem('wait_logged_in', null);
         }
-        if (!localStorage.getItem('forum_categories')) {
+        if (!localStorage.getItem('wait_categories')) {
             const defaultCategories = [
-                { id: 1, name: 'Важные новости и правила', desc: 'Официальная информация проекта, обновления и свод правил.', icon: '📢' },
-                { id: 2, name: 'Технический раздел', desc: 'Ошибки, баги, проблемы с донатом и входом в игру.', icon: '🛠️' },
-                { id: 3, name: 'Жалобы на администрацию', desc: 'Раздел для обжалования наказаний от игровых помощников и администраторов.', icon: '⚖️' },
-                { id: 4, name: 'Игровые обсуждения', desc: 'Общение игроков на любые темы, связанные с сервером.', icon: '💬' }
+                { id: 1, name: 'Важные новости и регламент', desc: 'Правила проекта, системные обновления и указы руководства.', icon: '📢', badge: 'Важно' },
+                { id: 2, name: 'Сервер [15] BELGOROD', desc: 'Игровой процесс, жалобы и организация жизни на сервере Белгород.', icon: '🏙️', badge: 'Belgorod' },
+                { id: 3, name: 'Технический раздел', desc: 'Проблемы с лаунчером, баги доната, баги привязки Telegram.', icon: '🛠️', badge: 'Support' },
+                { id: 4, name: 'Жалобы на администрацию', desc: 'Обжалование наказаний, варнов и банов от модерации.', icon: '⚖️', badge: 'Жалобы' }
             ];
-            localStorage.setItem('forum_categories', JSON.stringify(defaultCategories));
+            localStorage.setItem('wait_categories', JSON.stringify(defaultCategories));
         }
-        if (!localStorage.getItem('forum_threads')) {
-            localStorage.setItem('forum_threads', JSON.stringify([
-                { id: 1, catId: 1, title: 'Правила сервера [Обязательно к прочтению]', author: 'System_Admin', date: '18.09.2026', content: 'Добро пожаловать на проект! Запрещено: DM, TK, SK, Оскорбление родных.', replies: [] },
-                { id: 2, catId: 2, title: 'Не привязывается Telegram после обновы', author: 'Majorka_Bounty', date: '18.09.2026', content: 'Помогите, после утреннего патча бот в телеграме не принимает код подтверждения!', replies: [
-                    { author: 'Technical_Support', date: '18.09.2026', text: 'Перезапустите лаунчер и повторите попытку через 10 минут.' }
+        if (!localStorage.getItem('wait_threads')) {
+            localStorage.setItem('wait_threads', JSON.stringify([
+                { id: 1, catId: 1, title: 'Общие правила игровых серверов Wait Russia [Обязательно]', author: 'System_Admin', date: '18.09.2026', content: 'Добро пожаловать на проект! Запрещены любые виды читов, багоюз, оскорбления в OOC чат.', replies: [] },
+                { id: 2, catId: 3, title: 'Не привязывается Telegram после обновы', author: 'Majorka_Bounty', date: '18.09.2026', content: 'Помогите, после утреннего патча бот в телеграме не принимает код подтверждения аккаунта!', replies: [
+                    { author: 'Technical_Support', date: '18.09.2026 10:15', text: 'Перезапустите игру через официальный лаунчер, проблема была решена в горячем фиксе.' }
                 ]}
             ]));
         }
 
         let isRegisterMode = false;
 
-        // Обновление шапки профиля
+        // Обновление шапки пользователя
         function updateHeader() {
-            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const loggedUser = JSON.parse(localStorage.getItem('wait_logged_in'));
             const menu = document.getElementById('user-menu');
             
             if (loggedUser) {
                 menu.innerHTML = `
-                    <div class="flex items-center space-x-3 cursor-pointer" onclick="openProfile('${loggedUser.username}')">
-                        <div class="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center font-bold text-white uppercase">${loggedUser.username[0]}</div>
+                    <div class="flex items-center space-x-3 cursor-pointer br-card px-3 py-1.5 rounded-xl border border-zinc-800" onclick="openProfile('${loggedUser.username}')">
+                        <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center font-bold text-white uppercase text-sm shadow">${loggedUser.username[0]}</div>
                         <div class="text-left hidden sm:block">
-                            <div class="text-sm font-bold leading-tight">${loggedUser.username}</div>
-                            <div class="text-xs text-red-400">Игрок</div>
+                            <div class="text-xs font-bold text-white leading-tight">${loggedUser.username}</div>
+                            <div class="text-[10px] text-red-400">Игрок</div>
                         </div>
                     </div>
-                    <button onclick="logout()" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded text-zinc-300 transition">Выйти</button>
+                    <button onclick="logout()" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-3 py-2 rounded-xl text-zinc-300 transition font-semibold">Выйти</button>
                 `;
             } else {
                 menu.innerHTML = `
-                    <button onclick="openAuthModal(false)" class="text-xs bg-red-600 hover:bg-red-700 font-bold px-4 py-2 rounded text-white transition">Войти</button>
-                    <button onclick="openAuthModal(true)" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded text-zinc-300 transition">Регистрация</button>
+                    <button onclick="openAuthModal(false)" class="text-xs br-red-btn font-bold px-4 py-2 rounded-xl text-white transition shadow-md shadow-red-900/30">Войти</button>
+                    <button onclick="openAuthModal(true)" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-zinc-300 transition font-semibold">Регистрация</button>
                 `;
             }
         }
 
-        // Рендер главной страницы (Категории)
+        // Главная страница
         function showHome() {
-            document.getElementById('breadcrumbs').innerHTML = '<span class="text-zinc-200">Главная страница</span>';
+            document.getElementById('breadcrumbs').innerHTML = '<span class="text-white font-semibold">Главная страница форума</span>';
             document.getElementById('action-btn-container').innerHTML = '';
             
-            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const categories = JSON.parse(localStorage.getItem('wait_categories'));
             const container = document.getElementById('app-content');
             
-            let html = '<div class="space-y-4">';
+            let html = '<div class="space-y-3">';
             categories.forEach(cat => {
                 html += `
-                    <div onclick="openCategory(${cat.id})" class="card-bg border border-custom p-4 rounded-xl hover:border-red-500 cursor-pointer transition flex items-center space-x-4">
-                        <div class="text-3xl">${cat.icon}</div>
-                        <div>
-                            <h3 class="text-lg font-bold text-zinc-100 hover:text-red-400 transition">${cat.name}</h3>
-                            <p class="text-xs text-zinc-400">${cat.desc}</p>
+                    <div onclick="openCategory(${cat.id})" class="br-card p-4 rounded-xl hover:border-red-600/60 cursor-pointer transition flex items-center justify-between group shadow-sm">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-3xl w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center border border-zinc-800">${cat.icon}</div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="text-base font-bold text-zinc-100 group-hover:text-red-400 transition">${cat.name}</h3>
+                                    <span class="text-[10px] bg-red-950/80 text-red-400 border border-red-900 px-2 py-0.5 rounded-md font-semibold">${cat.badge}</span>
+                                </div>
+                                <p class="text-xs text-zinc-400 mt-0.5">${cat.desc}</p>
+                            </div>
                         </div>
+                        <div class="text-zinc-600 group-hover:text-red-500 transition font-bold text-lg pr-2">›</div>
                     </div>
                 `;
             });
@@ -139,37 +170,37 @@
             container.innerHTML = html;
         }
 
-        // Открытие категории (Список тем)
+        // Открытие категории
         function openCategory(catId) {
-            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const categories = JSON.parse(localStorage.getItem('wait_categories'));
             const cat = categories.find(c => c.id === catId);
-            const threads = JSON.parse(localStorage.getItem('forum_threads')).filter(t => t.catId === catId);
-            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const threads = JSON.parse(localStorage.getItem('wait_threads')).filter(t => t.catId === catId);
+            const loggedUser = JSON.parse(localStorage.getItem('wait_logged_in'));
 
             document.getElementById('breadcrumbs').innerHTML = `
                 <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> 
-                <span class="mx-2">/</span> 
-                <span class="text-zinc-200">${cat.name}</span>
+                <span class="mx-2 text-zinc-600">/</span> 
+                <span class="text-white font-semibold">${cat.name}</span>
             `;
 
             document.getElementById('action-btn-container').innerHTML = loggedUser ? 
-                `<button onclick="openCreateThread(${catId})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded transition">+ Создать тему</button>` : 
-                `<span class="text-xs text-zinc-500">Войдите, чтобы создавать темы</span>`;
+                `<button onclick="openCreateThread(${catId})" class="br-red-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-md shadow-red-900/30">+ Создать тему</button>` : 
+                `<span class="text-xs text-zinc-500">Авторизуйтесь для создания тем</span>`;
 
             const container = document.getElementById('app-content');
             let html = '<div class="space-y-3">';
             
             if (threads.length === 0) {
-                html += '<div class="card-bg p-6 text-center text-zinc-500 rounded-xl">В этом разделе пока нет тем. Создайте первую!</div>';
+                html += '<div class="br-card p-8 text-center text-zinc-500 rounded-xl text-xs">В этом разделе пока нет тем. Будьте первыми!</div>';
             } else {
                 threads.forEach(t => {
                     html += `
-                        <div onclick="openThread(${t.id})" class="card-bg border border-custom p-4 rounded-xl hover:border-zinc-500 cursor-pointer transition flex justify-between items-center">
+                        <div onclick="openThread(${t.id})" class="br-card p-4 rounded-xl hover:border-zinc-600 cursor-pointer transition flex justify-between items-center shadow-sm">
                             <div>
-                                <h4 class="font-bold text-zinc-100 hover:text-red-400 text-sm md:text-base">${t.title}</h4>
-                                <div class="text-xs text-zinc-400 mt-1">Автор: <span class="text-zinc-300 font-semibold">${t.author}</span> • ${t.date}</div>
+                                <h4 class="font-bold text-zinc-100 hover:text-red-400 text-sm">${t.title}</h4>
+                                <div class="text-[11px] text-zinc-400 mt-1">Автор: <span class="text-zinc-300 font-semibold">${t.author}</span> • Создано: ${t.date}</div>
                             </div>
-                            <div class="text-xs bg-zinc-800 px-3 py-1 rounded text-zinc-400">${t.replies.length} ответа(-ов)</div>
+                            <div class="text-xs bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg text-zinc-400 font-medium">${t.replies.length} отв.</div>
                         </div>
                     `;
                 });
@@ -178,51 +209,51 @@
             container.innerHTML = html;
         }
 
-        // Открытие конкретной темы и сообщений
+        // Открытие темы
         function openThread(threadId) {
-            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const threads = JSON.parse(localStorage.getItem('wait_threads'));
             const thread = threads.find(t => t.id === threadId);
-            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const categories = JSON.parse(localStorage.getItem('wait_categories'));
             const cat = categories.find(c => c.id === thread.catId);
-            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const loggedUser = JSON.parse(localStorage.getItem('wait_logged_in'));
 
             document.getElementById('breadcrumbs').innerHTML = `
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2">/</span>
-                <span class="text-zinc-200 truncate max-w-xs inline-block align-bottom">${thread.title}</span>
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2 text-zinc-600">/</span> 
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2 text-zinc-600">/</span>
+                <span class="text-white font-semibold truncate max-w-xs inline-block align-bottom">${thread.title}</span>
             `;
             document.getElementById('action-btn-container').innerHTML = '';
 
             const container = document.getElementById('app-content');
             let html = `
                 <div class="space-y-4">
-                    <!-- Шапка темы (Первое сообщение) -->
-                    <div class="card-bg border border-custom p-5 rounded-xl">
-                        <h2 class="text-xl font-bold text-zinc-100 mb-2">${thread.title}</h2>
-                        <div class="flex items-center space-x-2 pb-3 mb-3 border-b border-custom text-xs text-zinc-400">
+                    <!-- Стартовое сообщение темы -->
+                    <div class="br-card p-5 rounded-2xl shadow-md">
+                        <h2 class="text-lg font-bold text-white mb-3">${thread.title}</h2>
+                        <div class="flex items-center space-x-2 pb-3 mb-3 border-b border-zinc-800 text-xs text-zinc-400">
                             <span class="text-red-400 font-bold cursor-pointer" onclick="openProfile('${thread.author}')">${thread.author}</span>
                             <span>•</span>
                             <span>${thread.date}</span>
                         </div>
-                        <p class="text-zinc-300 text-sm whitespace-pre-wrap">${thread.content}</p>
+                        <p class="text-zinc-300 text-sm whitespace-pre-wrap leading-relaxed">${thread.content}</p>
                     </div>
 
-                    <!-- Ответы -->
+                    <!-- Список ответов -->
                     <div class="space-y-3">
-                        <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider">Ответы (${thread.replies.length})</h3>
+                        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider pl-1">Ответы (${thread.replies.length})</h3>
             `;
 
             if (thread.replies.length === 0) {
-                html += '<div class="text-xs text-zinc-500 card-bg p-4 rounded-xl">Пока никто не оставил ответ. Будьте первыми!</div>';
+                html += '<div class="text-xs text-zinc-500 br-card p-4 rounded-xl">Пока никто не оставил ответ.</div>';
             } else {
                 thread.replies.forEach(r => {
                     html += `
-                        <div class="card-bg border border-custom p-4 rounded-xl ml-0 md:ml-6">
+                        <div class="br-card p-4 rounded-xl ml-0 md:ml-6 border-zinc-800/80">
                             <div class="flex justify-between items-center mb-2 text-xs">
                                 <span class="font-bold text-red-400 cursor-pointer" onclick="openProfile('${r.author}')">${r.author}</span>
-                                <span class="text-zinc-500">${r.date}</span>
+                                <span class="text-zinc-500 text-[10px]">${r.date}</span>
                             </div>
-                            <p class="text-sm text-zinc-300 whitespace-pre-wrap">${r.text}</p>
+                            <p class="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed">${r.text}</p>
                         </div>
                     `;
                 });
@@ -230,49 +261,49 @@
 
             html += `</div>`;
 
-            // Форма отправки ответа
+            // Форма отправки сообщения
             if (loggedUser) {
                 html += `
-                    <div class="card-bg border border-custom p-4 rounded-xl mt-6">
-                        <h4 class="text-sm font-bold mb-2">Написать ответ</h4>
-                        <textarea id="reply-text" rows="3" placeholder="Введите ваш текст..." class="w-full bg-zinc-900 border border-custom rounded p-3 text-sm focus:outline-none focus:border-red-500 text-zinc-200 mb-2"></textarea>
-                        <button onclick="submitReply(${thread.id})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded transition">Отправить ответ</button>
+                    <div class="br-card p-5 rounded-2xl mt-6 shadow-md space-y-3">
+                        <h4 class="text-xs font-bold uppercase text-zinc-400">Оставить сообщение</h4>
+                        <textarea id="reply-text" rows="3" placeholder="Введите ваш текст..." class="w-full br-input rounded-xl p-3 text-sm text-zinc-200"></textarea>
+                        <button onclick="submitReply(${thread.id})" class="br-red-btn text-white font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-md shadow-red-900/30">Отправить ответ</button>
                     </div>
                 `;
             } else {
-                html += `<div class="text-center text-xs text-zinc-500 py-4">Чтобы писать ответы, пожалуйста, <span onclick="openAuthModal(false)" class="text-red-500 cursor-pointer underline">войдите в аккаунт</span>.</div>`;
+                html += `<div class="text-center text-xs text-zinc-500 py-4">Чтобы оставлять ответы, пожалуйста, <span onclick="openAuthModal(false)" class="text-red-500 cursor-pointer font-bold underline">войдите в аккаунт</span>.</div>`;
             }
 
             html += `</div>`;
             container.innerHTML = html;
         }
 
-        // Создание новой темы (Модальное окно/Форма)
+        // Создание темы
         function openCreateThread(catId) {
-            const categories = JSON.parse(localStorage.getItem('forum_categories'));
+            const categories = JSON.parse(localStorage.getItem('wait_categories'));
             const cat = categories.find(c => c.id === catId);
 
             document.getElementById('breadcrumbs').innerHTML = `
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2">/</span>
-                <span class="text-zinc-200">Создание темы</span>
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2 text-zinc-600">/</span> 
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="openCategory(${cat.id})">${cat.name}</span> <span class="mx-2 text-zinc-600">/</span>
+                <span class="text-white font-semibold">Новая тема</span>
             `;
             document.getElementById('action-btn-container').innerHTML = '';
 
             document.getElementById('app-content').innerHTML = `
-                <div class="card-bg border border-custom p-6 rounded-xl max-w-2xl mx-auto space-y-4">
-                    <h2 class="text-xl font-bold">Создать новую тему в разделе: ${cat.name}</h2>
+                <div class="br-card p-6 rounded-2xl max-w-2xl mx-auto space-y-4 shadow-xl">
+                    <h2 class="text-lg font-bold text-white">Создание темы в разделе: <span class="text-red-500">${cat.name}</span></h2>
                     <div>
-                        <label class="block text-xs text-zinc-400 mb-1">Заголовок темы</label>
-                        <input type="text" id="new-thread-title" placeholder="Например: Обжалование наказания / Баг интерфейса" class="w-full bg-zinc-900 border border-custom rounded p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-red-500">
+                        <label class="block text-xs text-zinc-400 mb-1 font-semibold">Заголовок темы</label>
+                        <input type="text" id="new-thread-title" placeholder="Краткая суть проблемы или вопроса" class="w-full br-input rounded-xl p-3 text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs text-zinc-400 mb-1">Описание / Суть</label>
-                        <textarea id="new-thread-content" rows="6" placeholder="Подробно опишите суть вашей темы..." class="w-full bg-zinc-900 border border-custom rounded p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-red-500"></textarea>
+                        <label class="block text-xs text-zinc-400 mb-1 font-semibold">Описание</label>
+                        <textarea id="new-thread-content" rows="6" placeholder="Опишите подробности..." class="w-full br-input rounded-xl p-3 text-sm"></textarea>
                     </div>
-                    <div class="flex space-x-3">
-                        <button onclick="saveNewThread(${catId})" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded transition">Опубликовать</button>
-                        <button onclick="openCategory(${catId})" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs px-4 py-2.5 rounded transition">Отмена</button>
+                    <div class="flex space-x-3 pt-2">
+                        <button onclick="saveNewThread(${catId})" class="br-red-btn text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-md shadow-red-900/30">Опубликовать</button>
+                        <button onclick="openCategory(${catId})" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs px-4 py-3 rounded-xl transition font-semibold">Отмена</button>
                     </div>
                 </div>
             `;
@@ -281,14 +312,14 @@
         function saveNewThread(catId) {
             const title = document.getElementById('new-thread-title').value.trim();
             const content = document.getElementById('new-thread-content').value.trim();
-            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const loggedUser = JSON.parse(localStorage.getItem('wait_logged_in'));
 
             if (!title || !content) {
-                alert('Заполните все поля!');
+                alert('Пожалуйста, заполните все поля!');
                 return;
             }
 
-            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const threads = JSON.parse(localStorage.getItem('wait_threads'));
             const newThread = {
                 id: Date.now(),
                 catId: catId,
@@ -300,18 +331,18 @@
             };
 
             threads.unshift(newThread);
-            localStorage.setItem('forum_threads', JSON.stringify(threads));
+            localStorage.setItem('wait_threads', JSON.stringify(threads));
             openCategory(catId);
         }
 
-        // Отправка ответа в тему
+        // Отправка ответа
         function submitReply(threadId) {
             const text = document.getElementById('reply-text').value.trim();
-            const loggedUser = JSON.parse(localStorage.getItem('forum_logged_in'));
+            const loggedUser = JSON.parse(localStorage.getItem('wait_logged_in'));
 
             if (!text) return;
 
-            const threads = JSON.parse(localStorage.getItem('forum_threads'));
+            const threads = JSON.parse(localStorage.getItem('wait_threads'));
             const thread = threads.find(t => t.id === threadId);
             
             thread.replies.push({
@@ -320,47 +351,46 @@
                 text: text
             });
 
-            localStorage.setItem('forum_threads', JSON.stringify(threads));
+            localStorage.setItem('wait_threads', JSON.stringify(threads));
             openThread(threadId);
         }
 
-        // Просмотр профиля игрока
+        // Профиль игрока
         function openProfile(username) {
-            const users = JSON.parse(localStorage.getItem('forum_users'));
+            const users = JSON.parse(localStorage.getItem('wait_users'));
             let user = users.find(u => u.username === username);
             
-            // Если дефолтный юзер (например System_Admin)
             if (!user) {
-                user = { username: username, role: 'Администратор', joined: '15.01.2026' };
+                user = { username: username, role: 'Администратор сервера', joined: '01.01.2026' };
             }
 
             document.getElementById('breadcrumbs').innerHTML = `
-                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2">/</span> 
-                <span class="text-zinc-200">Профиль: ${user.username}</span>
+                <span class="cursor-pointer text-red-500 hover:underline" onclick="showHome()">Главная</span> <span class="mx-2 text-zinc-600">/</span> 
+                <span class="text-white font-semibold">Профиль: ${user.username}</span>
             `;
             document.getElementById('action-btn-container').innerHTML = '';
 
             const container = document.getElementById('app-content');
             container.innerHTML = `
-                <div class="card-bg border border-custom p-6 rounded-xl max-w-xl mx-auto flex items-center space-x-6">
-                    <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center font-black text-3xl text-white uppercase">${user.username[0]}</div>
+                <div class="br-card p-6 rounded-2xl max-w-md mx-auto flex items-center space-x-5 shadow-xl">
+                    <div class="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center font-black text-2xl text-white uppercase shadow-lg shadow-red-900/40">${user.username[0]}</div>
                     <div class="space-y-1">
-                        <h2 class="text-2xl font-bold text-zinc-100">${user.username}</h2>
-                        <p class="text-xs text-red-400 font-bold uppercase tracking-wider">${user.role || 'Игрок сервера'}</p>
-                        <p class="text-xs text-zinc-400">На форуме с: ${user.joined || '01.09.2026'}</p>
+                        <h2 class="text-xl font-bold text-white">${user.username}</h2>
+                        <p class="text-xs text-red-400 font-bold uppercase tracking-wider">${user.role || 'Игрок проекта'}</p>
+                        <p class="text-[11px] text-zinc-400">На форуме с: ${user.joined || '18.09.2026'}</p>
                     </div>
                 </div>
             `;
         }
 
-        // Модальное окно Авторизации/Регистрации
+        // Модальное окно Вход/Регистрация
         function openAuthModal(register) {
             isRegisterMode = register;
             document.getElementById('auth-modal').classList.remove('hidden');
-            document.getElementById('modal-title').innerText = register ? 'Регистрация аккаунта' : 'Вход на форум';
+            document.getElementById('modal-title').innerText = register ? 'Регистрация аккаунта' : 'Авторизация';
             document.getElementById('modal-submit-btn').innerText = register ? 'Зарегистрироваться' : 'Войти';
-            document.getElementById('switch-auth-text').innerText = register ? 'Уже есть аккаунт?' : 'Нет аккаунта?';
-            document.getElementById('switch-auth-btn').innerText = register ? 'Войти' : 'Зарегистрироваться';
+            document.getElementById('switch-auth-text').innerText = register ? 'Уже есть аккаунт?' : 'Нет аккаунта на форуме?';
+            document.getElementById('switch-auth-btn').innerText = register ? 'Войти' : 'Регистрация';
             document.getElementById('modal-error').classList.add('hidden');
             document.getElementById('auth-username').value = '';
             document.getElementById('auth-password').value = '';
@@ -380,32 +410,32 @@
             const errorDiv = document.getElementById('modal-error');
 
             if (!username || !password) {
-                errorDiv.innerText = 'Заполните все поля!';
+                errorDiv.innerText = 'Заполните все обязательные поля!';
                 errorDiv.classList.remove('hidden');
                 return;
             }
 
-            let users = JSON.parse(localStorage.getItem('forum_users'));
+            let users = JSON.parse(localStorage.getItem('wait_users'));
 
             if (isRegisterMode) {
                 const existing = users.find(u => u.username === username);
                 if (existing) {
-                    errorDiv.innerText = 'Такое имя уже занято!';
+                    errorDiv.innerText = 'Этот игровой ник уже занят на форуме!';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
                 const newUser = { username, password, role: 'Игрок', joined: new Date().toLocaleDateString() };
                 users.push(newUser);
-                localStorage.setItem('forum_users', JSON.stringify(users));
-                localStorage.setItem('forum_logged_in', JSON.stringify(newUser));
+                localStorage.setItem('wait_users', JSON.stringify(users));
+                localStorage.setItem('wait_logged_in', JSON.stringify(newUser));
             } else {
                 const user = users.find(u => u.username === username && u.password === password);
                 if (!user) {
-                    errorDiv.innerText = 'Неверный логин или пароль!';
+                    errorDiv.innerText = 'Неверный никнейм или пароль!';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
-                localStorage.setItem('forum_logged_in', JSON.stringify(user));
+                localStorage.setItem('wait_logged_in', JSON.stringify(user));
             }
 
             closeAuthModal();
@@ -414,12 +444,12 @@
         }
 
         function logout() {
-            localStorage.setItem('forum_logged_in', null);
+            localStorage.setItem('wait_logged_in', null);
             updateHeader();
             showHome();
         }
 
-        // Первичный запуск при загрузке страницы
+        // Запуск при загрузке
         window.onload = function() {
             updateHeader();
             showHome();
@@ -427,4 +457,3 @@
     </script>
 </body>
 </html>
-
