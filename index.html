@@ -6,21 +6,21 @@
 <title>Wait Russia — Официальный форум</title>
 <style>
     :root{
-        --bg-body:#0e1116;
-        --bg-header:#171b22;
-        --bg-nav:#1c2129;
-        --bg-card:#1a1f27;
-        --bg-card-hover:#222832;
-        --bg-elev:#252b36;
-        --bg-input:#0d1015;
+        --bg-body:#0b0e13;
+        --bg-header:#12161d;
+        --bg-nav:#161b23;
+        --bg-card:#151a22;
+        --bg-card-hover:#1c222c;
+        --bg-elev:#1f252f;
+        --bg-input:#0d1017;
         --accent:#e63946;
         --accent-hover:#ff4d5a;
-        --accent-dim:rgba(230,57,70,.12);
-        --text-primary:#e6e8eb;
+        --accent-dim:rgba(230,57,70,.14);
+        --text-primary:#e8eaed;
         --text-secondary:#9aa0a8;
         --text-muted:#6b7280;
-        --border:#2a2f3a;
-        --border-light:#333945;
+        --border:#232a35;
+        --border-light:#2d3543;
         --green:#2ecc71;
         --blue:#3498db;
         --orange:#e67e22;
@@ -28,6 +28,9 @@
         --yellow:#f1c40f;
         --radius:8px;
         --radius-lg:12px;
+        --radius-xl:16px;
+        --shadow:0 4px 20px rgba(0,0,0,.35);
+        --shadow-lg:0 12px 40px rgba(0,0,0,.5);
     }
     *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
     body{background:var(--bg-body);color:var(--text-primary);min-height:100vh;padding-bottom:60px;-webkit-font-smoothing:antialiased}
@@ -41,15 +44,18 @@
     /* ============ ВЕРХНЯЯ ПАНЕЛЬ ============ */
     .top-bar{
         background:var(--bg-header);border-bottom:1px solid var(--border);
-        padding:0 20px;height:56px;display:flex;align-items:center;gap:16px;
-        position:sticky;top:0;z-index:200;
+        padding:0 24px;height:58px;display:flex;align-items:center;gap:18px;
+        position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);
+        background:rgba(18,22,29,.85);
     }
     .logo{
-        font-size:20px;font-weight:900;letter-spacing:.5px;white-space:nowrap;
+        font-size:21px;font-weight:900;letter-spacing:.5px;white-space:nowrap;
         user-select:none;cursor:pointer;display:flex;align-items:center;gap:6px;
+        transition:.2s;
     }
+    .logo:hover{transform:scale(1.02)}
     .logo .wait{color:#fff}
-    .logo .russia{color:#000;background:#fff;padding:2px 7px;border-radius:4px}
+    .logo .russia{color:#000;background:#fff;padding:2px 8px;border-radius:5px}
     .top-search{flex:1;max-width:520px;position:relative}
     .top-search input{
         width:100%;background:var(--bg-input);border:1px solid var(--border);
@@ -63,7 +69,7 @@
         background:var(--accent);color:#fff;padding:8px 18px;border-radius:22px;
         font-weight:600;font-size:12.5px;border:none;transition:.2s;
     }
-    .btn-login:hover{background:var(--accent-hover)}
+    .btn-login:hover{background:var(--accent-hover);transform:translateY(-1px)}
     .user-chip{
         display:flex;align-items:center;gap:9px;cursor:pointer;
         padding:4px 12px 4px 4px;border-radius:22px;transition:.2s;
@@ -75,21 +81,22 @@
     /* ============ НАВИГАЦИЯ ============ */
     .nav-bar{
         background:var(--bg-nav);border-bottom:1px solid var(--border);
-        padding:0 20px;height:44px;display:flex;align-items:center;gap:4px;
-        overflow-x:auto;position:sticky;top:56px;z-index:190;
+        padding:0 24px;height:46px;display:flex;align-items:center;gap:4px;
+        overflow-x:auto;position:sticky;top:58px;z-index:190;
     }
     .nav-bar::-webkit-scrollbar{height:0}
     .nav-item{
-        padding:0 14px;height:44px;display:flex;align-items:center;
+        padding:0 16px;height:46px;display:flex;align-items:center;
         font-size:13px;font-weight:500;color:var(--text-secondary);
         border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;
+        border-radius:6px 6px 0 0;
     }
     .nav-item:hover{color:var(--text-primary);background:rgba(255,255,255,.03)}
-    .nav-item.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .nav-item.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-dim)}
 
     /* ============ ХЛЕБНЫЕ КРОШКИ ============ */
     .breadcrumbs{
-        max-width:1150px;margin:0 auto;padding:16px 20px 0;
+        max-width:1200px;margin:0 auto;padding:16px 24px 0;
         font-size:12px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center;
     }
     .breadcrumbs .link{cursor:pointer;transition:.15s}
@@ -97,49 +104,60 @@
     .breadcrumbs .sep{opacity:.4;margin:0 2px}
 
     /* ============ КОНТЕЙНЕР ============ */
-    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
 
     /* ============ БЛОК КАТЕГОРИИ ============ */
-    .category-block{margin-top:22px}
+    .category-block{margin-top:24px}
     .category-header{
         background:linear-gradient(135deg,var(--bg-elev),var(--bg-card));
-        border:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;
-        padding:14px 20px;display:flex;align-items:center;gap:10px;
+        border:1px solid var(--border);border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+        padding:16px 22px;display:flex;align-items:center;gap:12px;
+        position:relative;overflow:hidden;
     }
-    .category-header .cat-icon{font-size:18px}
-    .category-header h2{font-size:14.5px;font-weight:700;letter-spacing:.3px}
+    .category-header::before{
+        content:'';position:absolute;top:0;left:0;right:0;height:2px;
+        background:linear-gradient(90deg,var(--accent),transparent);
+    }
+    .category-header .cat-icon{font-size:20px}
+    .category-header h2{font-size:15px;font-weight:700;letter-spacing:.3px}
     .category-header .cat-desc{font-size:11.5px;color:var(--text-muted);margin-left:auto}
 
     .forum-list{
         background:var(--bg-card);border:1px solid var(--border);border-top:none;
-        border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;
+        border-radius:0 0 var(--radius-xl) var(--radius-xl);overflow:hidden;
     }
     .forum-item{
-        display:flex;align-items:center;gap:14px;padding:15px 20px;
-        border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
+        display:flex;align-items:center;gap:16px;padding:16px 22px;
+        border-bottom:1px solid var(--border);cursor:pointer;transition:.18s;
+        position:relative;
     }
     .forum-item:last-child{border-bottom:none}
-    .forum-item:hover{background:var(--bg-card-hover)}
-    .forum-icon{
-        width:46px;height:46px;border-radius:10px;background:var(--bg-elev);
-        border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-        font-size:21px;flex-shrink:0;
+    .forum-item:hover{background:var(--bg-card-hover);padding-left:26px}
+    .forum-item:hover::before{
+        content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+        background:var(--accent);
     }
+    .forum-icon{
+        width:48px;height:48px;border-radius:12px;background:var(--bg-elev);
+        border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+        font-size:22px;flex-shrink:0;transition:.2s;
+    }
+    .forum-item:hover .forum-icon{border-color:var(--accent);box-shadow:0 0 12px var(--accent-dim)}
     .forum-info{flex:1;min-width:0}
     .forum-info h3{
-        font-size:14px;font-weight:600;margin-bottom:3px;
-        display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+        font-size:14px;font-weight:600;margin-bottom:4px;
+        display:flex;align-items:center;gap:8px;flex-wrap:wrap;
     }
-    .forum-info p{font-size:12px;color:var(--text-muted);line-height:1.45}
+    .forum-info p{font-size:12px;color:var(--text-muted);line-height:1.5}
     .forum-stats{
         text-align:right;font-size:11.5px;color:var(--text-muted);
-        min-width:110px;line-height:1.8;flex-shrink:0;
+        min-width:120px;line-height:1.9;flex-shrink:0;
     }
     .forum-stats b{color:#c9ced4;font-weight:600}
 
     /* ============ БЕЙДЖИ ============ */
     .badge{
-        font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:4px;
+        font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:5px;
         text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;
     }
     .badge-important{background:var(--accent);color:#fff}
@@ -153,83 +171,91 @@
 
     /* ============ СПИСОК ТЕМ ============ */
     .topic-list-header{
-        display:flex;align-items:center;gap:12px;padding:12px 20px;
+        display:flex;align-items:center;gap:14px;padding:13px 22px;
         background:var(--bg-elev);border-bottom:1px solid var(--border);
         font-size:11px;font-weight:700;text-transform:uppercase;
         letter-spacing:.8px;color:var(--text-muted);
     }
     .topic-list-header .col-main{flex:1}
-    .topic-list-header .col-stats{width:80px;text-align:center}
-    .topic-list-header .col-last{width:150px;text-align:right}
+    .topic-list-header .col-stats{width:90px;text-align:center}
+    .topic-list-header .col-last{width:160px;text-align:right}
 
     .topic-row{
-        display:flex;align-items:center;gap:12px;padding:14px 20px;
-        border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
+        display:flex;align-items:center;gap:14px;padding:15px 22px;
+        border-bottom:1px solid var(--border);cursor:pointer;transition:.18s;
+        position:relative;
     }
     .topic-row:last-child{border-bottom:none}
-    .topic-row:hover{background:var(--bg-card-hover)}
+    .topic-row:hover{background:var(--bg-card-hover);padding-left:26px}
+    .topic-row:hover::before{
+        content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+        background:var(--accent);
+    }
     .topic-avatar{
-        width:38px;height:38px;border-radius:9px;background:var(--bg-elev);
+        width:40px;height:40px;border-radius:10px;background:var(--bg-elev);
         border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-        font-weight:700;font-size:14px;color:var(--text-muted);flex-shrink:0;
+        font-weight:700;font-size:15px;color:var(--text-muted);flex-shrink:0;
     }
     .topic-avatar.gold{background:linear-gradient(135deg,#f1c40f,#d4a017);color:#000;border-color:#d4a017}
     .topic-avatar.red{background:linear-gradient(135deg,#e63946,#b71c2c);color:#fff;border-color:#b71c2c}
     .topic-avatar.blue{background:linear-gradient(135deg,#3498db,#1a6fa8);color:#fff;border-color:#1a6fa8}
     .topic-main{flex:1;min-width:0}
     .topic-title{
-        font-size:13.5px;font-weight:600;margin-bottom:4px;
-        display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+        font-size:13.5px;font-weight:600;margin-bottom:5px;
+        display:flex;align-items:center;gap:7px;flex-wrap:wrap;
     }
     .topic-title .tag{
-        font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:3px;
+        font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;
         background:var(--bg-elev);color:var(--text-secondary);
     }
     .topic-meta{font-size:11px;color:var(--text-muted)}
     .topic-meta b{color:var(--text-secondary);font-weight:600}
     .topic-stats{
         font-size:11px;color:var(--text-muted);text-align:center;
-        min-width:80px;line-height:1.7;flex-shrink:0;
+        min-width:90px;line-height:1.8;flex-shrink:0;
     }
     .topic-last{
         font-size:11px;color:var(--text-muted);text-align:right;
-        min-width:150px;line-height:1.6;flex-shrink:0;
+        min-width:160px;line-height:1.7;flex-shrink:0;
     }
     .topic-last b{color:var(--text-secondary);font-weight:600}
 
     /* ============ ТЕМА / ПОСТЫ ============ */
     .topic-head{
-        margin-top:18px;padding-bottom:14px;border-bottom:1px solid var(--border);
+        margin-top:18px;padding-bottom:16px;border-bottom:1px solid var(--border);
     }
-    .topic-head h1{font-size:19px;font-weight:700;margin-bottom:9px;line-height:1.35}
+    .topic-head h1{font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.35}
     .topic-head-meta{
         font-size:12px;color:var(--text-muted);display:flex;
-        align-items:center;gap:8px;flex-wrap:wrap;
+        align-items:center;gap:10px;flex-wrap:wrap;
     }
     .topic-head-meta b{color:var(--text-secondary)}
 
-    .posts{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+    .posts{display:flex;flex-direction:column;gap:12px;margin-top:16px}
     .post{
         background:var(--bg-card);border:1px solid var(--border);
-        border-radius:var(--radius-lg);display:flex;overflow:hidden;
+        border-radius:var(--radius-xl);display:flex;overflow:hidden;
+        transition:.2s;
     }
+    .post:hover{border-color:var(--border-light);box-shadow:var(--shadow)}
     .post-side{
-        width:170px;flex-shrink:0;padding:16px 12px;text-align:center;
-        border-right:1px solid var(--border);background:rgba(0,0,0,.15);
+        width:180px;flex-shrink:0;padding:18px 14px;text-align:center;
+        border-right:1px solid var(--border);background:rgba(0,0,0,.12);
     }
     .post-side .avatar{
-        width:58px;height:58px;border-radius:50%;margin:0 auto 9px;
+        width:62px;height:62px;border-radius:50%;margin:0 auto 10px;
         display:flex;align-items:center;justify-content:center;
-        font-weight:700;font-size:22px;color:#fff;
+        font-weight:700;font-size:24px;color:#fff;
         background:linear-gradient(135deg,#e63946,#b71c2c);
+        box-shadow:0 4px 16px rgba(230,57,70,.3);
     }
-    .post-author{font-size:13px;font-weight:700;margin-bottom:3px;word-break:break-word}
-    .post-role{font-size:10.5px;color:var(--text-muted);margin-bottom:6px}
-    .post-badge{font-size:9px;padding:2px 6px;border-radius:3px;display:inline-block}
-    .post-body{flex:1;padding:16px 20px;min-width:0}
+    .post-author{font-size:13.5px;font-weight:700;margin-bottom:4px;word-break:break-word}
+    .post-role{font-size:10.5px;color:var(--text-muted);margin-bottom:8px}
+    .post-badge{font-size:9px;padding:2px 7px;border-radius:4px;display:inline-block}
+    .post-body{flex:1;padding:18px 22px;min-width:0}
     .post-date{
-        font-size:11px;color:var(--text-muted);margin-bottom:9px;
-        padding-bottom:9px;border-bottom:1px solid var(--border);
+        font-size:11px;color:var(--text-muted);margin-bottom:10px;
+        padding-bottom:10px;border-bottom:1px solid var(--border);
     }
     .post-text{
         font-size:13.5px;line-height:1.7;color:#d5d9de;
@@ -238,39 +264,31 @@
 
     /* ============ ФОРМА ОТВЕТА ============ */
     .reply-box{
-        margin-top:16px;background:var(--bg-card);border:1px solid var(--border);
-        border-radius:var(--radius-lg);padding:16px;
+        margin-top:18px;background:var(--bg-card);border:1px solid var(--border);
+        border-radius:var(--radius-xl);padding:18px;
     }
     .reply-box textarea{
         width:100%;background:var(--bg-input);border:1px solid var(--border);
-        color:var(--text-primary);padding:12px;border-radius:var(--radius);
-        font-size:13.5px;height:110px;resize:vertical;outline:none;transition:.15s;
+        color:var(--text-primary);padding:13px;border-radius:var(--radius);
+        font-size:13.5px;height:120px;resize:vertical;outline:none;transition:.2s;
     }
     .reply-box textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
-    .reply-actions{display:flex;gap:10px;margin-top:11px;flex-wrap:wrap}
-
-    /* ============ ШАБЛОНЫ ============ */
-    .template-notice{
-        background:rgba(241,196,15,.08);border:1px solid rgba(241,196,15,.25);
-        border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;
-        font-size:12px;color:var(--yellow);line-height:1.5;
-    }
-    .template-notice b{color:#fff}
+    .reply-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 
     /* ============ КНОПКИ ============ */
     .btn{
-        border:none;padding:9px 18px;border-radius:var(--radius);
-        font-weight:600;font-size:13px;transition:.15s;display:inline-flex;
-        align-items:center;gap:6px;
+        border:none;padding:10px 20px;border-radius:var(--radius);
+        font-weight:600;font-size:13px;transition:.2s;display:inline-flex;
+        align-items:center;gap:7px;
     }
     .btn-primary{background:var(--accent);color:#fff}
-    .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
+    .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(230,57,70,.35)}
     .btn-ghost{
         background:transparent;color:var(--text-secondary);
         border:1px solid var(--border);
     }
-    .btn-ghost:hover{border-color:var(--accent);color:#fff}
-    .btn-sm{padding:6px 13px;font-size:12px}
+    .btn-ghost:hover{border-color:var(--accent);color:#fff;background:var(--accent-dim)}
+    .btn-sm{padding:7px 14px;font-size:12px}
 
     .action-bar{margin:16px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .muted-small{font-size:12px;color:var(--text-muted);margin-left:auto}
@@ -278,90 +296,91 @@
     /* ============ ПУСТОЕ СОСТОЯНИЕ ============ */
     .empty{
         background:var(--bg-card);border:1px dashed var(--border);
-        border-radius:var(--radius-lg);padding:38px;text-align:center;
-        color:var(--text-muted);font-size:13.5px;line-height:1.6;
+        border-radius:var(--radius-xl);padding:42px;text-align:center;
+        color:var(--text-muted);font-size:13.5px;line-height:1.7;
     }
 
     /* ============ ПРАВИЛА ============ */
     .rules-block{
         background:var(--bg-card);border:1px solid var(--border);
-        border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:10px;
-        font-size:13px;line-height:1.65;color:#d5d9de;
+        border-radius:var(--radius-xl);padding:20px 22px;margin-bottom:12px;
+        font-size:13px;line-height:1.7;color:#d5d9de;transition:.2s;
     }
-    .rules-block h4{color:var(--accent);margin-bottom:9px;font-size:14px}
-    .rules-block ul{padding-left:20px;margin-top:5px}
-    .rules-block li{margin-bottom:6px}
+    .rules-block:hover{border-color:var(--border-light)}
+    .rules-block h4{color:var(--accent);margin-bottom:10px;font-size:14px}
+    .rules-block ul{padding-left:20px;margin-top:6px}
+    .rules-block li{margin-bottom:7px}
     .rules-block .note{
         background:rgba(230,57,70,.06);border-left:3px solid var(--accent);
-        padding:10px 14px;border-radius:0 var(--radius) var(--radius) 0;
-        margin-top:10px;font-size:12.5px;color:var(--text-secondary);
+        padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;
+        margin-top:12px;font-size:12.5px;color:var(--text-secondary);
     }
 
     /* ============ МОДАЛЬНЫЕ ОКНА ============ */
     .modal{
-        display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);
-        backdrop-filter:blur(4px);z-index:1000;justify-content:center;
+        display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+        backdrop-filter:blur(6px);z-index:1000;justify-content:center;
         align-items:center;padding:16px;
     }
-    .modal.active{display:flex;animation:fade .15s ease}
+    .modal.active{display:flex;animation:fade .2s ease}
     @keyframes fade{from{opacity:0}to{opacity:1}}
     .modal-content{
-        background:var(--bg-card);border:1px solid var(--border);padding:24px;
-        border-radius:14px;width:100%;max-width:560px;max-height:90vh;
-        overflow-y:auto;animation:pop .18s ease;
+        background:var(--bg-card);border:1px solid var(--border);padding:26px;
+        border-radius:var(--radius-xl);width:100%;max-width:580px;max-height:90vh;
+        overflow-y:auto;animation:pop .2s ease;box-shadow:var(--shadow-lg);
     }
-    @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
-    .modal-content h2{font-size:16px;margin-bottom:18px;font-weight:700}
-    .form-group{margin-bottom:14px}
+    @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-content h2{font-size:17px;margin-bottom:20px;font-weight:700}
+    .form-group{margin-bottom:15px}
     .form-group label{
         display:block;font-size:11.5px;color:var(--text-muted);
-        margin-bottom:6px;font-weight:600;
+        margin-bottom:7px;font-weight:600;
     }
     .form-group select,.form-group input,.form-group textarea{
         width:100%;background:var(--bg-input);border:1px solid var(--border);
-        color:var(--text-primary);padding:11px;border-radius:var(--radius);
-        font-size:13.5px;outline:none;transition:.15s;font-family:inherit;
+        color:var(--text-primary);padding:12px;border-radius:var(--radius);
+        font-size:13.5px;outline:none;transition:.2s;font-family:inherit;
     }
     .form-group select:focus,.form-group input:focus,.form-group textarea:focus{
         border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);
     }
-    .form-group textarea{height:130px;resize:vertical}
-    .modal-buttons{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+    .form-group textarea{height:140px;resize:vertical}
+    .modal-buttons{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 
     /* ============ ТОСТ ============ */
     .toast{
         position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);
         background:var(--bg-elev);border:1px solid var(--border);
-        border-left:3px solid var(--accent);color:#fff;padding:13px 20px;
+        border-left:3px solid var(--accent);color:#fff;padding:14px 22px;
         border-radius:10px;font-size:13px;font-weight:500;z-index:2000;
-        opacity:0;transition:.28s cubic-bezier(.2,.8,.2,1);pointer-events:none;
-        box-shadow:0 10px 30px rgba(0,0,0,.6);max-width:90vw;
+        opacity:0;transition:.3s cubic-bezier(.2,.8,.2,1);pointer-events:none;
+        box-shadow:var(--shadow-lg);max-width:90vw;
     }
     .toast.show{transform:translate(-50%,0);opacity:1}
 
     /* ============ ПОДВАЛ ============ */
     .footer{
-        max-width:1150px;margin:32px auto 0;padding:22px 20px;
+        max-width:1200px;margin:36px auto 0;padding:24px 24px;
         border-top:1px solid var(--border);text-align:center;
-        font-size:11.5px;color:var(--text-muted);line-height:1.9;
+        font-size:11.5px;color:var(--text-muted);line-height:2;
     }
-    .footer a{color:var(--text-secondary);transition:.15s}
+    .footer a{color:var(--text-secondary);transition:.15s;cursor:pointer}
     .footer a:hover{color:var(--accent)}
 
     /* ============ АДАПТИВ ============ */
     @media(max-width:768px){
         .top-search{display:none}
-        .nav-bar{top:56px}
+        .nav-bar{top:58px}
         .post-side{
             width:100%;border-right:none;border-bottom:1px solid var(--border);
-            display:flex;align-items:center;gap:10px;text-align:left;padding:12px 16px;
+            display:flex;align-items:center;gap:12px;text-align:left;padding:14px 18px;
         }
-        .post-side .avatar{width:42px;height:42px;font-size:17px;margin:0}
+        .post-side .avatar{width:44px;height:44px;font-size:18px;margin:0}
         .post{flex-direction:column}
         .post-role{margin-left:auto}
         .topic-last{display:none}
         .topic-stats{min-width:50px}
-        .forum-stats{min-width:0;text-align:left;display:flex;gap:14px;margin-top:4px}
+        .forum-stats{min-width:0;text-align:left;display:flex;gap:16px;margin-top:4px}
         .forum-stats br{display:none}
         .forum-item{flex-wrap:wrap}
         .topic-list-header .col-last{display:none}
@@ -456,9 +475,9 @@
 /* =========================================================
    ХРАНИЛИЩЕ
    ========================================================= */
-const LS_DB   = 'wr_forum_db_v3';
-const LS_USER = 'wr_forum_user_v3';
-const DB_VERSION = 3;
+const LS_DB   = 'wr_forum_db_v4';
+const LS_USER = 'wr_forum_user_v4';
+const DB_VERSION = 4;
 
 let DB = null;
 let user = null;
