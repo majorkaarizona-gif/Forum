@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VA-TA Cyber-Red</title>
-<!-- Подключаем твои шрифты -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 <style>
-    /* Общие стили для самой страницы index.html */
+    * { box-sizing: border-box; }
     body, html {
         margin: 0;
         padding: 0;
@@ -17,126 +16,159 @@
         overflow: hidden;
     }
     
-    /* Контейнер для сайта */
-    iframe {
+    /* САМ САЙТ (IFRAME) */
+    #siteFrame {
         width: 100vw;
         height: 100vh;
         border: none;
         display: block;
+        /* МАГИЯ: Превращаем бирюзовый в кроваво-красный и затемняем */
+        filter: hue-rotate(160deg) saturate(1.6) contrast(1.2) brightness(0.85);
+        /* Оставляем место под наше нижнее меню на телефоне */
+        padding-bottom: 70px; 
     }
 
-    /* Красивая плашка, если сайт заблокируется */
-    #fallback {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
+    /* НАШ НОВЫЙ НИЖНИЙ НАВИГАТОР (ПОВЕРХ САЙТА) */
+    .custom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(229, 9, 20, 0.3);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 9999;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+    }
+
+    .nav-item {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: #050505;
-        color: #fff;
-        z-index: 999;
-    }
-    #fallback h1 {
-        font-family: 'Oswald', sans-serif;
-        color: #E50914;
-        text-transform: uppercase;
-        font-size: 2em;
-        text-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
-        margin-bottom: 10px;
-    }
-    #fallback p {
         color: #9A9A9A;
-        max-width: 400px;
-        text-align: center;
-        line-height: 1.5;
-        margin-bottom: 20px;
-    }
-    #fallback a {
-        background: linear-gradient(135deg, #E50914 0%, #800000 100%);
-        color: white;
         text-decoration: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 700;
-        box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        font-size: 11px;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 16%;
     }
 
-    /* Скрываем плашку, если сайт загрузился */
-    .loaded #fallback {
-        display: none;
+    /* Иконки */
+    .nav-item svg {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: all 0.3s ease;
+    }
+
+    /* Активный элемент и наведение */
+    .nav-item.active, .nav-item:hover {
+        color: #E50914;
+    }
+    
+    .nav-item.active svg, .nav-item:hover svg {
+        stroke: #E50914;
+        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.8));
+        transform: translateY(-2px);
+    }
+
+    /* ВЕРХНЯЯ ПЛАШКА */
+    .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: rgba(5, 5, 5, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    .top-bar h1 {
+        margin: 0;
+        color: #E50914;
+        font-family: 'Oswald', sans-serif;
+        font-size: 16px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+    }
+
+    /* ПК ВЕРСИЯ (Убираем телефонию) */
+    @media (min-width: 800px) {
+        .custom-nav { display: none; } /* На ПК меню снизу не нужно */
+        #siteFrame { padding-bottom: 0; padding-top: 50px; }
+        .top-bar { height: 50px; }
+        .top-bar h1 { font-size: 20px; }
     }
 </style>
 </head>
 <body>
 
-    <!-- Сюда грузится сам сайт -->
-    <iframe id="siteFrame" src="https://va-ta.com/app" onload="document.body.classList.add('loaded')"></iframe>
+    <!-- Верхняя плашка для красоты -->
+    <div class="top-bar">
+        <h1>VA-TA // Red Edition</h1>
+    </div>
 
-    <!-- Плашка на случай, если сайт заблокирует показ -->
-    <div id="fallback">
-        <h1>Ошибка загрузки</h1>
-        <p>Сайт VA-TA запрещает открывать себя внутри других страниц (защита безопасности).</p>
-        <p>Но у тебя уже установлен Tampermonkey! Просто нажми кнопку ниже, и сайт откроется сразу с твоей темой.</p>
-        <a href="https://va-ta.com/app" target="_blank">Открыть VA-TA</a>
+    <!-- Сайт -->
+    <iframe id="siteFrame" src="https://va-ta.com/app" allow="clipboard-write; clipboard-read"></iframe>
+
+    <!-- Наше кастомное меню с SVG иконками -->
+    <div class="custom-nav">
+        <a href="https://va-ta.com/app/#/overview" target="siteFrame" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            Обзор
+        </a>
+        <a href="https://va-ta.com/app/#/shops" target="siteFrame" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            Лавки
+        </a>
+        <a href="https://va-ta.com/app/#/prices" target="siteFrame" class="nav-item">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Цены
+        </a>
+        <a href="https://va-ta.com/app/#/ads" target="siteFrame" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            Объяв.
+        </a>
+        <a href="https://va-ta.com/app/#/rating" target="siteFrame" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            Рейтинг
+        </a>
+        <a href="https://va-ta.com/app/#/profile" target="siteFrame" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Профиль
+        </a>
     </div>
 
 <script>
-    // Вставляем стили прямо внутрь iframe, если он загрузился
-    const frame = document.getElementById('siteFrame');
-    
-    frame.onload = function() {
-        try {
-            document.body.classList.add('loaded');
-            const doc = frame.contentDocument || frame.contentWindow.document;
-
-            // Проверяем, прогрузился ли сайт (если да, вставляем стили)
-            if (doc) {
-                const style = doc.createElement('style');
-                style.textContent = `
-                    /* ТВОЙ ДИЗАЙН */
-                    :root { --accent: #E50914 !important; }
-                    html, body, #app, .app, main { 
-                        background: #050505 !important; 
-                        color: #FFF !important; 
-                        font-family: 'Inter', sans-serif !important; 
-                    }
-                    h1, h2, h3, [class*="title"] { 
-                        font-family: 'Oswald', sans-serif !important; 
-                        text-transform: uppercase !important; 
-                    }
-                    /* Защита картинок предметов */
-                    img, canvas { filter: none !important; }
-                    
-                    /* Карточки (Стекло) */
-                    .card, [class*="card"], [class*="item"] {
-                        background: rgba(22, 22, 22, 0.75) !important;
-                        backdrop-filter: blur(12px) !important;
-                        border: 1px solid rgba(255,255,255,0.05) !important;
-                        border-radius: 12px !important;
-                    }
-                    /* Акценты */
-                    [class*="price"], .active { color: #E50914 !important; }
-                    
-                    /* Кнопки */
-                    button, .btn { 
-                        background: #161616 !important; 
-                        border: 1px solid #333 !important; 
-                        color: #FFF !important; 
-                    }
-                    button:hover, .btn:hover { 
-                        background: #E50914 !important; 
-                        box-shadow: 0 0 15px rgba(229,9,20,0.6) !important; 
-                    }
-                `;
-                doc.head.appendChild(style);
-                console.log("Стили успешно внедрены в iframe!");
-            }
-        } catch (e) {
-            // Если браузер заблокировал доступ (CORS), показываем плашку
-            console.log("Сайт запретил менять стили внутри iframe.");
-        }
-    };
+    // Скрипт для переключения активной вкладки в нашем меню
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Убираем активный класс у всех
+            navItems.forEach(nav => nav.classList.remove('active'));
+            // Добавляем кликнутому
+            this.classList.add('active');
+        });
+    });
 </script>
 </body>
 </html>
