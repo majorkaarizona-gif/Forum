@@ -32,7 +32,7 @@
      АНИМАЦИИ
      ============================================================ */
   @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 50% { transform: scale(1.02); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
   @keyframes rollDice { 
     0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
     25% { transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg); }
@@ -40,15 +40,11 @@
     75% { transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg); }
     100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
   }
-  
-  /* Анимация раздачи карт (Бункер) */
   @keyframes dealCard {
     0% { opacity: 0; transform: translateY(100px) scale(0.5) rotateZ(-20deg); }
     70% { transform: translateY(-10px) scale(1.05) rotateZ(2deg); }
     100% { opacity: 1; transform: translateY(0) scale(1) rotateZ(0); }
   }
-
-  /* Анимация появления монстра */
   @keyframes monsterShake {
     0% { transform: scale(0.5); opacity: 0; }
     50% { transform: scale(1.1); }
@@ -57,18 +53,25 @@
     80% { transform: translateX(-5px) rotate(-2deg); }
     100% { transform: translateX(0) scale(1); opacity: 1; }
   }
-
-  /* Анимация расфокуса слова (Шпион/Крокодил) */
   @keyframes revealWord {
     0% { filter: blur(12px); opacity: 0; transform: scale(0.8); letter-spacing: -5px; }
     50% { filter: blur(4px); opacity: 0.8; letter-spacing: 2px; }
     100% { filter: blur(0); opacity: 1; transform: scale(1); letter-spacing: normal; }
   }
+  @keyframes typingDots {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(-4px); opacity: 1; }
+  }
 
   .animate-slide-up { animation: slideUp 0.3s ease forwards; }
   .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .anim-deal { animation: dealCard 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+  .anim-monster { animation: monsterShake 0.6s ease-in-out forwards; }
+  .anim-reveal { animation: revealWord 0.8s ease-out forwards; }
 
-  /* Layout */
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
   .sidebar { display: none; width: 240px; background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 12px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
@@ -149,12 +152,17 @@
   .chat-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
   
-  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow); }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow); position: relative; }
   .msg-me { align-self: flex-end; background: var(--chat-me); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; }
-  .msg-system { align-self: center; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; text-align: center; padding: 4px; box-shadow: none; }
+  .msg-system { align-self: center; background: rgba(255,255,255,0.05); color: var(--accent); font-size: 13px; font-weight: 600; text-align: center; padding: 8px 12px; box-shadow: none; border: 1px solid var(--accent-soft); }
   .msg-meta { font-size: 11px; opacity: 0.8; font-weight: 700; margin-bottom: 4px; }
   
+  .typing-indicator { align-self: flex-start; background: var(--chat-other); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 4px; display: flex; gap: 4px; align-items: center; }
+  .typing-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typingDots 1s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
   .chat-input { display: flex; gap: 8px; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
   .chat-input input { flex: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 15px; outline: none; }
   .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
@@ -171,7 +179,7 @@
   .bunker-card { background: #facc15 !important; color: #000 !important; border: 3px solid #000 !important; border-radius: 12px !important; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
   .bunker-card-header { background: #000; color: #facc15; padding: 6px; font-weight: 900; font-size: 11px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
   .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; font-weight: 800; font-size: 15px; text-align: center; line-height: 1.2; }
-  
+
   /* Карты Манчкина */
   .m-card { min-width: 100px; height: 140px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 6px 12px rgba(0,0,0,0.4); cursor: pointer; border: 2px solid #000; background: #facc15; color: #000; transition: transform 0.2s; }
   .m-card:active { transform: translateY(-5px) scale(1.05); z-index: 10; }
@@ -182,11 +190,6 @@
   .hand-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
   .hand-scroll::-webkit-scrollbar { display: none; }
 
-  /* Специфичные анимации */
-  .anim-deal { animation: dealCard 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
-  .anim-monster { animation: monsterShake 0.6s ease-in-out forwards; }
-  .anim-reveal { animation: revealWord 0.8s ease-out forwards; }
-
   /* Модалки */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
   .modal.active { display: flex; }
@@ -194,8 +197,8 @@
   .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; text-align: center; }
   .modal-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
 
-  /* 3D Кубик */
-  .dice-scene { width: 80px; height: 80px; perspective: 600px; margin: 0 auto 24px; }
+  /* 3D Кубик и Табло */
+  .dice-scene { width: 80px; height: 80px; perspective: 600px; margin: 0 auto 24px; transition: opacity 0.3s; }
   .dice-cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(-20deg); transition: transform 0.3s; }
   .dice-cube.rolling { animation: rollDice 1s ease-in-out; }
   .dice-face { position: absolute; width: 80px; height: 80px; background: #fff; border: 2px solid #cbd5e1; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: 900; color: #0f172a; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
@@ -205,6 +208,9 @@
   .face-4 { transform: rotateY(-90deg) translateZ(40px); }
   .face-5 { transform: rotateX(90deg) translateZ(40px); }
   .face-6 { transform: rotateX(-90deg) translateZ(40px); }
+  
+  .scoreboard-row { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius-sm); margin-bottom: 8px; font-weight: 600; border: 1px solid transparent; transition: all 0.3s; }
+  .scoreboard-row.winner { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); transform: scale(1.02); box-shadow: var(--shadow); }
 
   @media (min-width: 1024px) {
     .sidebar { display: flex; }
@@ -376,19 +382,26 @@
 </div>
 
 <div class="modal" id="diceModal" style="background: rgba(0,0,0,0.95);">
-  <div class="modal-content" style="background: transparent; border: none; text-align: center; box-shadow: none;">
-    <div class="dice-scene">
-      <div class="dice-cube" id="diceCube">
-        <div class="dice-face face-1">1</div>
-        <div class="dice-face face-2">2</div>
-        <div class="dice-face face-3">3</div>
-        <div class="dice-face face-4">4</div>
-        <div class="dice-face face-5">5</div>
-        <div class="dice-face face-6">6</div>
+  <div class="modal-content" style="background: var(--surface); border: none; text-align: center; box-shadow: none;">
+    <div id="diceRollView">
+      <div class="dice-scene">
+        <div class="dice-cube" id="diceCube">
+          <div class="dice-face face-1">1</div>
+          <div class="dice-face face-2">2</div>
+          <div class="dice-face face-3">3</div>
+          <div class="dice-face face-4">4</div>
+          <div class="dice-face face-5">5</div>
+          <div class="dice-face face-6">6</div>
+        </div>
       </div>
+      <div style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Кто ходит первым?</div>
+      <button class="btn btn-primary" id="rollDiceBtn" onclick="rollDice()" style="width: 200px; margin: 0 auto;">КИНУТЬ КУБИК</button>
     </div>
-    <div style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Определение первого хода</div>
-    <button class="btn btn-primary" id="rollDiceBtn" onclick="rollDice()" style="width: 200px;">КИНУТЬ КУБИК</button>
+    <div id="diceScoreboard" style="display: none; text-align: left;">
+      <div style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 16px; text-align: center;">Результаты</div>
+      <div id="scoreboardList"></div>
+      <div style="color: var(--accent); font-weight: 700; text-align: center; margin-top: 16px;" id="diceWinnerText">Ожидание...</div>
+    </div>
   </div>
 </div>
 
@@ -456,7 +469,7 @@ async function api(path, method = 'GET', body = null) {
   } catch (e) { console.error("API Error:", e); throw e; }
 }
 
-const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinData: null, lastStatus: null, lastPhase: null };
+const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinData: null, lastStatus: null };
 const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
 
 function showScreen(name) {
@@ -648,28 +661,63 @@ async function goGame() {
   startPolling(refreshGame, 1500);
 }
 
+let typingSound;
+function playTyping() {
+  if (!typingSound) {
+    typingSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU" + "123".repeat(100));
+    typingSound.volume = 0.05;
+  }
+  typingSound.currentTime = 0;
+  typingSound.play().catch(()=>{});
+}
+
 async function refreshGame() {
   if (!state.currentRoom) return;
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
     const oldStatus = state.currentRoom.status;
-    const oldPhase = state.currentRoom.turn_phase;
-    
     state.currentRoom = data.room;
     state.munchkinData = data.munchkin_data;
     const me = data.players.find(p => p.user_id === myId);
 
     if (data.room.status === 'waiting') { goLobby(); return; }
 
-    // Кубик
+    // КУБИК
     if (data.room.status === 'dice') {
       document.getElementById('diceModal').classList.add('active');
-      document.getElementById('rollDiceBtn').style.display = 'block';
+      const allRolled = data.players.every(p => p.dice_roll > 0);
+      
+      if (allRolled && data.room.current_speaker_id) {
+        // Показываем табло
+        document.getElementById('diceRollView').style.display = 'none';
+        document.getElementById('diceScoreboard').style.display = 'block';
+        
+        const sorted = [...data.players].sort((a, b) => b.dice_roll - a.dice_roll);
+        document.getElementById('scoreboardList').innerHTML = sorted.map(p => `
+          <div class="scoreboard-row ${p.user_id === data.room.current_speaker_id ? 'winner' : ''}">
+            <span>${esc(p.username)}</span>
+            <span>${p.dice_roll} ${p.user_id === data.room.current_speaker_id ? '👑' : ''}</span>
+          </div>
+        `).join('');
+        
+        const winner = data.players.find(p => p.user_id === data.room.current_speaker_id);
+        if (winner) document.getElementById('diceWinnerText').textContent = `Первым ходит: ${winner.username}`;
+      } else {
+        // Ожидание броска
+        document.getElementById('diceRollView').style.display = 'block';
+        document.getElementById('diceScoreboard').style.display = 'none';
+        
+        const meRolled = me?.dice_roll > 0;
+        const btn = document.getElementById('rollDiceBtn');
+        btn.style.display = meRolled ? 'none' : 'block';
+        if (meRolled) document.querySelector('.dice-scene').style.display = 'none';
+        else document.querySelector('.dice-scene').style.display = 'block';
+      }
     } else {
       document.getElementById('diceModal').classList.remove('active');
     }
 
-    // Голосование
+    // ГОЛОСОВАНИЕ
     if ((data.room.status === 'discussion' && data.room.game_type === 'bunker') || (data.room.status === 'discussion' && data.room.game_type === 'shpion')) {
       showVotingModal(data.room, data.players);
     } else {
@@ -682,31 +730,18 @@ async function refreshGame() {
       if (isGuest) { guestRoundsPlayed++; localStorage.setItem('guestRounds', guestRoundsPlayed); }
     }
 
-    // Проверка на смену фазы (для анимаций)
-    let triggerAnimation = false;
-    if (data.room.game_type === 'munchkin' && data.room.turn_phase === 'combat' && oldPhase !== 'combat') triggerAnimation = true;
-    if (data.room.game_type === 'bunker' && oldStatus !== 'discussion' && data.room.status === 'discussion') triggerAnimation = true;
-    
-    state.lastStatus = data.room.status;
-    state.lastPhase = data.room.turn_phase;
-
     document.getElementById('gameStatus').textContent = data.room.status;
-    renderGameContent(data.room, data.players, me, triggerAnimation);
+    renderGameContent(data.room, data.players, me, oldStatus);
     appendMessages(data.messages || []);
   } catch (e) {}
 }
 
-function renderGameContent(room, players, me, triggerAnimation = false) {
+function renderGameContent(room, players, me, oldStatus) {
   const el = document.getElementById('gameContent');
+  const triggerAnim = room.status === 'playing' && oldStatus !== 'playing';
   
   if (room.status === 'dice') {
-    el.innerHTML = `
-      <div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);">
-        <div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div>
-        <div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div>
-        <div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Определяем, кто ходит первым</div>
-      </div>
-    `;
+    el.innerHTML = `<div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);"><div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div><div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div></div>`;
     return;
   }
   if (room.status === 'finished') {
@@ -765,7 +800,7 @@ function renderGameContent(room, players, me, triggerAnimation = false) {
     el.innerHTML = `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
         ${['profession', 'health', 'baggage', 'fact'].map((key, i) => `
-          <div class="card-3d-wrapper ${triggerAnimation ? 'anim-deal' : ''}" style="height: 130px; animation-delay: ${i * 0.15}s" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
+          <div class="card-3d-wrapper ${triggerAnim ? 'anim-deal' : ''}" style="height: 130px; animation-delay: ${i * 0.15}s" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
             <div class="card-3d">
               <div class="card-face">
                 <div style="color: var(--accent);">${icon('bunker', 32)}</div>
@@ -800,7 +835,7 @@ function renderGameContent(room, players, me, triggerAnimation = false) {
       </div>
 
       ${mData.active_monster ? `
-        <div class="${triggerAnimation ? 'anim-monster' : 'animate-pop'}" style="border: 2px solid #ef4444; background: rgba(239,68,68,0.1); border-radius: var(--radius-lg); padding: 16px; text-align: center; margin-bottom: 16px; box-shadow: 0 0 20px rgba(239,68,68,0.3);">
+        <div class="anim-monster" style="border: 2px solid #ef4444; background: rgba(239,68,68,0.1); border-radius: var(--radius-lg); padding: 16px; text-align: center; margin-bottom: 16px; box-shadow: 0 0 20px rgba(239,68,68,0.3);">
           <div style="color: #ef4444; margin-bottom: 8px;">${icon('monster', 48)}</div>
           <div style="font-size: 18px; font-weight: 800; color: #ef4444;">${esc(mData.active_monster.name)}</div>
           <div style="font-size: 13px; font-weight: 600; margin-top: 4px;">СИЛА: ${mData.active_monster.power}</div>
@@ -838,7 +873,7 @@ function renderGameContent(room, players, me, triggerAnimation = false) {
       <h3 style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; margin-top: 12px;">В РУКЕ</h3>
       <div class="hand-scroll">
         ${mData.hand.map((c, i) => `
-          <div class="m-card item ${triggerAnimation ? 'anim-deal' : 'animate-pop'}" style="animation-delay: ${i * 0.1}s" onclick="munchkinAction('play_card', ${c.id})">
+          <div class="m-card item ${triggerAnim ? 'anim-deal' : 'animate-pop'}" style="animation-delay: ${i * 0.1}s" onclick="munchkinAction('play_card', ${c.id})">
             <div class="m-card-title">${c.name || 'Карта'}</div>
             <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'item', 24)}</div>
           </div>
@@ -860,14 +895,25 @@ function appendMessages(messages) {
   if (!messages || !messages.length) return;
   const container = document.getElementById('chatMessages');
   const maxId = Math.max(...messages.map(m => m.id));
-  if (maxId > state.lastMessageId) state.lastMessageId = maxId;
+  
+  if (maxId > state.lastMessageId) {
+    state.lastMessageId = maxId;
+    if (!isChatOpen) playTyping(); // Звук, если чат закрыт
+  }
 
   messages.forEach(m => {
     if (document.querySelector(`[data-msg-id="${m.id}"]`)) return; 
+    
+    // Убираем индикатор "печатает" при новом сообщении
+    const typing = container.querySelector('.typing-indicator');
+    if (typing) typing.remove();
+
     const el = document.createElement('div');
     el.dataset.msgId = m.id;
     if (m.is_system) {
-      el.className = 'msg msg-system animate-pop'; el.textContent = m.text;
+      el.className = 'msg msg-system animate-pop';
+      el.innerHTML = m.text;
+      playTyping(); // Звук при системном сообщении
     } else {
       const isMe = m.user_id === myId;
       el.className = `msg ${isMe ? 'msg-me' : 'msg-other'} animate-slide-up`;
