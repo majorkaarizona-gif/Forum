@@ -892,13 +892,18 @@ function toggleChat(open) {
 }
 
 function appendMessages(messages) {
-  if (!messages || !messages.length) return;
+  // 🛡️ ЗАЩИТА: проверяем, массив это или объект { data: [...] }
+  if (messages && !Array.isArray(messages) && Array.isArray(messages.data)) {
+    messages = messages.data;
+  }
+  if (!Array.isArray(messages) || !messages.length) return;
+
   const container = document.getElementById('chatMessages');
   const maxId = Math.max(...messages.map(m => m.id));
   
   if (maxId > state.lastMessageId) {
     state.lastMessageId = maxId;
-    if (!isChatOpen) playTyping(); // Звук, если чат закрыт
+    if (!isChatOpen) playTyping();
   }
 
   messages.forEach(m => {
@@ -913,7 +918,7 @@ function appendMessages(messages) {
     if (m.is_system) {
       el.className = 'msg msg-system animate-pop';
       el.innerHTML = m.text;
-      playTyping(); // Звук при системном сообщении
+      playTyping();
     } else {
       const isMe = m.user_id === myId;
       el.className = `msg ${isMe ? 'msg-me' : 'msg-other'} animate-slide-up`;
