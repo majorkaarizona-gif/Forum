@@ -11,7 +11,7 @@
     --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-pill: 999px;
     --transition: .2s ease;
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
-    --sidebar-width: 260px;
+    --sidebar-width: 280px;
   }
   [data-theme="dark"] {
     --bg: #080b14; --surface: #141828; --surface-2: #1c2138; --surface-3: #252a44;
@@ -35,11 +35,11 @@
   input, textarea { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* Layout */
+  /* Layout — Full Screen on Desktop */
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; position: relative; }
   
   /* Sidebar (Desktop) */
-  .sidebar { display: none; width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 16px; }
+  .sidebar { display: none; width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 16px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
   
   .header {
@@ -113,7 +113,7 @@
   .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
   .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
-  /* Chat */
+  /* Chat & Audio Player */
   .chat-container { display: flex; flex-direction: column; height: 45vh; min-height: 250px; border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; }
   .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
   .msg { max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: 14px; word-break: break-word; }
@@ -121,8 +121,13 @@
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
   .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 12px; text-align: center; }
   .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
-  .msg-audio { display: flex; align-items: center; margin-top: 4px; }
-  .msg-audio audio { height: 32px; max-width: 200px; outline: none; }
+  
+  /* Custom Audio Player */
+  .audio-player { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 20px; margin-top: 4px; }
+  .audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
+  .audio-progress { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; position: relative; }
+  .audio-progress-fill { height: 100%; background: #fff; border-radius: 2px; width: 0%; transition: width 0.1s linear; }
+  .audio-time { font-size: 11px; opacity: 0.7; min-width: 30px; text-align: right; }
   
   .chat-input-bar { display: flex; gap: 8px; padding: 10px 12px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
   .chat-input-bar input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
@@ -141,18 +146,20 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
 
+  /* Guest Mode Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; width: 100%; text-align: center; }
+  .modal-content h2 { font-size: 20px; margin-bottom: 12px; }
+  .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
   /* DESKTOP STYLES (PC) */
   @media (min-width: 768px) {
-    .app { background: #000; justify-content: center; }
-    .main { max-width: 800px; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-    .bottom-nav { display: none; }
-    
     .sidebar { display: flex; }
-    .main { flex: none; width: 100%; max-width: 900px; } /* Увеличиваем ширину для ПК */
+    .bottom-nav { display: none; }
+    .main { flex: 1; }
     .chat-container { height: 50vh; }
     .game-grid { grid-template-columns: repeat(2, 1fr); }
-    
-    /* Навигация в сайдбаре */
     .side-nav { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
     .side-nav .nav-item { flex-direction: row; justify-content: flex-start; padding: 12px 16px; font-size: 14px; gap: 12px; }
     .side-nav .nav-item svg { width: 20px; height: 20px; }
@@ -285,8 +292,16 @@
       </section>
     </main>
 
-    <!-- BOTTOM NAV (Только для мобилок) -->
     <nav class="bottom-nav" id="bottomNav"></nav>
+  </div>
+</div>
+
+<!-- Модальное окно для гостей -->
+<div class="modal-overlay" id="guestModal">
+  <div class="modal-content">
+    <h2>Лимит раундов исчерпан</h2>
+    <p>Вы сыграли 3 раунда как гость. Чтобы продолжить игру без ограничений, перейдите в нашего Telegram-бота.</p>
+    <a href="https://t.me/MajorkaAdmin_Bot" target="_blank" class="btn btn-primary" style="text-decoration:none;">Перейти в бота</a>
   </div>
 </div>
 
@@ -294,24 +309,20 @@
 
 <script>
 /* ============================================================
-   НОВЫЕ SVG ИКОНКИ (Крокодил, Шпион, Стрелки)
+   SVG ICONS (Обновленные, ровные)
    ============================================================ */
 const ICON_PATHS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
-  
-  // Шпион: шляпа и очки
-  spy: '<path d="M2 17h20v2H2z"/><path d="M4 15c0-5 3.5-9 8-9s8 4 8 9"/><circle cx="8" cy="13" r="2"/><circle cx="16" cy="13" r="2"/><path d="M10 13h4"/>',
-  
-  // Крокодил: голова с зубами
-  croc: '<path d="M2 16c0-4 3-7 7-7h10a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4H2z"/><path d="M6 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M14 14l2 2M10 14l2 2"/>',
-  
+  spy: '<path d="M12 4a8 8 0 0 0-8 8c0 3 2 5 5 5h6c3 0 5-2 5-5a8 8 0 0 0-8-8z"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M10 14h4"/>',
+  croc: '<path d="M4 16c0-3 2-6 6-6h8a2 2 0 0 1 2 2v2a4 4 0 0 1-4 4H4z"/><circle cx="8" cy="13" r="1.5"/><path d="M14 16l2 2M10 16l2 2"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
   moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
   coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a2 2 0 0 1 0 4h-3a2 2 0 0 0 0 4h4"/>',
   play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
   arrowLeft: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
-  chevronRight: '<polyline points="9 18 15 12 9 6"/>', // Правильная стрелка вправо для комнат
+  chevronRight: '<polyline points="9 18 15 12 9 6"/>',
   send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
   crown: '<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/>',
   check: '<polyline points="20 6 9 17 4 12"/>',
@@ -340,8 +351,14 @@ const CONFIG = {
 
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); }
-const telegramUser = tg?.initDataUnsafe?.user || { id: 123456789, first_name: 'Гость', username: 'guest' };
-const myId = telegramUser.id;
+
+// Проверка на гостя (если открыто не через Telegram)
+const isGuest = !tg || !tg.initData || !tg.initDataUnsafe?.user;
+const telegramUser = tg?.initDataUnsafe?.user || { id: 0, first_name: 'Гость', username: 'guest' };
+const myId = telegramUser.id || 0;
+
+// Гостевой счетчик (3 раунда)
+let guestRoundsPlayed = parseInt(localStorage.getItem('guestRounds') || '0');
 
 /* ============================================================
    THEME
@@ -459,11 +476,11 @@ async function goHome() {
   document.getElementById('gameGrid').innerHTML = `
     <div class="game-card spy" onclick="goRooms('shpion')">
       <div>${icon('spy', 48)}</div>
-      <div><h3>Шпион</h3><p>Найди шпиона</p></div>
+      <div><h3>Шпион</h3><p>Найди шпиона (3+ игрока)</p></div>
     </div>
     <div class="game-card crocodile" onclick="goRooms('crocodile')">
       <div>${icon('croc', 48)}</div>
-      <div><h3>Крокодил</h3><p>Угадай слово</p></div>
+      <div><h3>Крокодил</h3><p>Угадай слово (2-20 игроков)</p></div>
     </div>
   `;
 
@@ -471,6 +488,11 @@ async function goHome() {
 }
 
 async function refreshBalance() {
+  if (isGuest) {
+    document.getElementById('balanceValue').textContent = '0';
+    document.getElementById('profileBalance').textContent = '0';
+    return;
+  }
   try {
     const data = await api('/api/me');
     document.getElementById('balanceValue').textContent = data.balance ?? 0;
@@ -529,6 +551,10 @@ async function goRooms(game) {
 }
 
 async function joinRoom(roomId) {
+  if (isGuest && guestRoundsPlayed >= 3) {
+    document.getElementById('guestModal').classList.add('active');
+    return;
+  }
   try {
     const room = await api(`/api/rooms/${roomId}/join`, 'POST');
     state.currentRoom = room; state.lastMessageId = 0;
@@ -588,7 +614,13 @@ async function refreshLobby() {
   } catch (e) {}
 }
 
-document.getElementById('startBtn').onclick = async () => { try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) { showToast('Ошибка старта', 'error'); } };
+document.getElementById('startBtn').onclick = async () => {
+  if (isGuest && guestRoundsPlayed >= 3) {
+    document.getElementById('guestModal').classList.add('active');
+    return;
+  }
+  try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) { showToast('Ошибка старта', 'error'); }
+};
 
 async function kickPlayer(targetId) {
   if (!confirm('Кикнуть игрока?')) return;
@@ -628,6 +660,15 @@ async function refreshGame() {
     const me = data.players.find(p => p.user_id === myId);
 
     if (data.room.status === 'waiting') { goLobby(); return; }
+
+    // Гостевой лимит
+    if (isGuest && data.room.status === 'finished') {
+      guestRoundsPlayed++;
+      localStorage.setItem('guestRounds', guestRoundsPlayed);
+      if (guestRoundsPlayed >= 3) {
+        document.getElementById('guestModal').classList.add('active');
+      }
+    }
 
     document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
     renderGameContent(data.room, data.players, me);
@@ -714,7 +755,7 @@ function renderGameContent(room, players, me) {
 }
 
 /* ============================================================
-   CHAT & ACTIONS
+   CHAT & CUSTOM AUDIO PLAYER
    ============================================================ */
 function appendMessages(messages, targetId) {
   if (!messages || !messages.length) return;
@@ -734,13 +775,21 @@ function appendMessages(messages, targetId) {
       let content = '';
       if (!isMe) content += `<div class="msg-meta">${esc(m.username)}</div>`;
       
-      // ВЫВОДИМ ПЛЕЕР ДЛЯ ГОЛОСОВЫХ
-      if (m.is_voice) {
-        if (m.voice_url) {
-          content += `<div class="msg-audio"><audio controls src="${m.voice_url}"></audio></div>`;
-        } else {
-          content += `<div style="display:flex;align-items:center;gap:6px;opacity:0.7;">${icon('mic', 16)}<span>Голосовое (нет ссылки)</span></div>`;
-        }
+      if (m.is_voice && m.voice_url) {
+        // Кастомный плеер для ГС
+        const uniqueId = 'audio_' + m.id;
+        content += `
+          <div class="audio-player" id="player_${uniqueId}">
+            <button class="audio-play-btn" onclick="toggleAudio('${uniqueId}')">${icon('play', 16)}</button>
+            <div class="audio-progress" onclick="seekAudio(event, '${uniqueId}')">
+              <div class="audio-progress-fill" id="progress_${uniqueId}"></div>
+            </div>
+            <span class="audio-time" id="time_${uniqueId}">0:00</span>
+            <audio id="${uniqueId}" src="${m.voice_url}" preload="metadata"></audio>
+          </div>
+        `;
+      } else if (m.is_voice) {
+        content += `<div style="display:flex;align-items:center;gap:6px;opacity:0.7;">${icon('mic', 16)}<span>Голосовое (нет ссылки)</span></div>`;
       } else {
         content += esc(m.text);
       }
@@ -751,6 +800,43 @@ function appendMessages(messages, targetId) {
   container.scrollTop = container.scrollHeight;
 }
 
+// Управление кастомным плеером
+window.toggleAudio = function(id) {
+  const audio = document.getElementById(id);
+  const btn = document.querySelector(`#player_${id} .audio-play-btn`);
+  if (audio.paused) {
+    audio.play();
+    btn.innerHTML = icon('pause', 16);
+  } else {
+    audio.pause();
+    btn.innerHTML = icon('play', 16);
+  }
+  audio.onended = () => { btn.innerHTML = icon('play', 16); };
+  audio.ontimeupdate = () => {
+    const progress = document.getElementById(`progress_${id}`);
+    const timeEl = document.getElementById(`time_${id}`);
+    if (progress && audio.duration) {
+      progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
+      const min = Math.floor(audio.currentTime / 60);
+      const sec = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+      timeEl.textContent = `${min}:${sec}`;
+    }
+  };
+};
+
+window.seekAudio = function(event, id) {
+  const audio = document.getElementById(id);
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const width = rect.width;
+  if (audio.duration) {
+    audio.currentTime = (x / width) * audio.duration;
+  }
+};
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
 async function sendChatMessage(inputId) {
   const input = document.getElementById(inputId);
   const text = input.value.trim();
@@ -789,7 +875,7 @@ async function goProfile() {
   stopPolling(); showScreen('profile');
   document.getElementById('headerTitle').textContent = 'Профиль';
   document.getElementById('profileName').textContent = telegramUser.first_name;
-  document.getElementById('profileId').textContent = 'ID: ' + myId;
+  document.getElementById('profileId').textContent = isGuest ? 'Режим гостя' : 'ID: ' + myId;
   document.getElementById('profileAvatar').textContent = (telegramUser.first_name || 'U')[0].toUpperCase();
   await refreshBalance();
 }
