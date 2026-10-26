@@ -15,13 +15,12 @@
     --accent: #8b5cf6; --accent-grad: linear-gradient(135deg, #8b5cf6, #3b82f6);
     --accent-soft: rgba(139,92,246,.15); --chat-me: #8b5cf6; --chat-other: #2c2c2c;
     --shadow: 0 4px 12px rgba(0,0,0,0.3);
+    --danger: #ef4444;
   }
-
-  .theme-spy { --bg: #0f172a; --surface: #1e293b; --surface-2: #334155; --accent: #ef4444; --accent-grad: linear-gradient(135deg, #ef4444, #b91c1c); --accent-soft: rgba(239,68,68,.15); --chat-me: #ef4444; }
-  .theme-crocodile { --bg: #064e3b; --surface: #065f46; --surface-2: #047857; --accent: #10b981; --accent-grad: linear-gradient(135deg, #10b981, #059669); --accent-soft: rgba(16,185,129,.15); --chat-me: #10b981; }
-  .theme-bunker { --bg: #292524; --surface: #44403c; --surface-2: #57534e; --accent: #d97706; --accent-grad: linear-gradient(135deg, #d97706, #b45309); --accent-soft: rgba(217,119,6,.15); --chat-me: #d97706; }
-  .theme-munchkin { --bg: #451a03; --surface: #78350f; --surface-2: #92400e; --accent: #fcd34d; --accent-grad: linear-gradient(135deg, #fcd34d, #f59e0b); --accent-soft: rgba(252,211,77,.15); --chat-me: #fcd34d; }
-
+  .theme-spy { --bg: #0f172a; --surface: #1e293b; --surface-2: #334155; --accent: #ef4444; --accent-grad: linear-gradient(135deg, #ef4444, #b91c1c); --accent-soft: rgba(239,68,68,.15); --chat-me: #ef4444; --danger: #b91c1c; }
+  .theme-crocodile { --bg: #064e3b; --surface: #065f46; --surface-2: #047857; --accent: #10b981; --accent-grad: linear-gradient(135deg, #10b981, #059669); --accent-soft: rgba(16,185,129,.15); --chat-me: #10b981; --danger: #065f46; }
+  .theme-bunker { --bg: #292524; --surface: #44403c; --surface-2: #57534e; --accent: #d97706; --accent-grad: linear-gradient(135deg, #d97706, #b45309); --accent-soft: rgba(217,119,6,.15); --chat-me: #d97706; --danger: #b45309; }
+  .theme-munchkin { --bg: #451a03; --surface: #78350f; --surface-2: #92400e; --accent: #fcd34d; --accent-grad: linear-gradient(135deg, #fcd34d, #f59e0b); --accent-soft: rgba(252,211,77,.15); --chat-me: #fcd34d; --danger: #b91c1c; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; transition: background 0.3s; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; display: flex; align-items: center; justify-content: center; }
@@ -29,45 +28,117 @@
   svg { display: block; flex-shrink: 0; }
 
   /* ============================================================
-     АНИМАЦИИ
+     KEYFRAMES — все анимации
      ============================================================ */
   @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
-  @keyframes rollDice { 
-    0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-    25% { transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg); }
-    50% { transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg); }
-    75% { transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+  @keyframes popIn { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes rollDice { 0% { transform: rotateX(0) rotateY(0); } 100% { transform: rotateX(720deg) rotateY(720deg); } }
+  @keyframes typingDots { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-4px); opacity: 1; } }
+
+  /* deal — 3D раздача карт */
+  @keyframes dealCard3D {
+    0%   { opacity: 0; transform: perspective(900px) translateY(-120px) translateZ(-200px) rotateX(-40deg) rotateZ(-15deg) scale(0.5); }
+    60%  { opacity: 1; transform: perspective(900px) translateY(8px) translateZ(20px) rotateX(6deg) rotateZ(2deg) scale(1.04); }
+    100% { opacity: 1; transform: perspective(900px) translateY(0) translateZ(0) rotateX(0) rotateZ(0) scale(1); }
   }
-  @keyframes dealCard {
-    0% { opacity: 0; transform: translateY(100px) scale(0.5) rotateZ(-20deg); }
-    70% { transform: translateY(-10px) scale(1.05) rotateZ(2deg); }
-    100% { opacity: 1; transform: translateY(0) scale(1) rotateZ(0); }
+
+  /* monster summon — 3D призыв монстра (как кубик, но мощнее) */
+  @keyframes monsterSummon3D {
+    0%   { opacity: 0; transform: perspective(1000px) translateY(80px) translateZ(-400px) rotateY(-720deg) scale(0.2); filter: brightness(4) blur(20px) saturate(2); }
+    40%  { opacity: 1; transform: perspective(1000px) translateY(-20px) translateZ(60px) rotateY(-360deg) scale(1.15); filter: brightness(2) blur(4px) saturate(1.5); }
+    70%  { transform: perspective(1000px) translateY(6px) translateZ(0) rotateY(-20deg) scale(0.97); filter: brightness(1.2) blur(0) saturate(1.1); }
+    100% { opacity: 1; transform: perspective(1000px) translateY(0) translateZ(0) rotateY(0) scale(1); filter: brightness(1) blur(0) saturate(1); }
   }
+
+  /* monster idle — лёгкое дыхание */
+  @keyframes monsterIdle {
+    0%, 100% { transform: translateY(0) rotateZ(0); }
+    50%      { transform: translateY(-4px) rotateZ(-0.5deg); }
+  }
+
+  /* monster shake — тряска при появлении */
   @keyframes monsterShake {
-    0% { transform: scale(0.5); opacity: 0; }
-    50% { transform: scale(1.1); }
-    60% { transform: translateX(-5px) rotate(-2deg); }
-    70% { transform: translateX(5px) rotate(2deg); }
-    80% { transform: translateX(-5px) rotate(-2deg); }
-    100% { transform: translateX(0) scale(1); opacity: 1; }
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
   }
-  @keyframes revealWord {
-    0% { filter: blur(12px); opacity: 0; transform: scale(0.8); letter-spacing: -5px; }
-    50% { filter: blur(4px); opacity: 0.8; letter-spacing: 2px; }
+
+  /* screen shake */
+  @keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    20%      { transform: translate(-3px, 2px); }
+    40%      { transform: translate(3px, -2px); }
+    60%      { transform: translate(-2px, -2px); }
+    80%      { transform: translate(2px, 2px); }
+  }
+
+  /* pulse-свечение вокруг монстра */
+  @keyframes monsterGlowPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,.45), inset 0 0 40px rgba(0,0,0,.4); }
+    50%      { box-shadow: 0 0 60px rgba(239,68,68,.9), 0 0 100px rgba(239,68,68,.4), inset 0 0 60px rgba(0,0,0,.6); }
+  }
+
+  /* тень под монстром */
+  @keyframes shadowPulse {
+    0%, 100% { transform: scaleX(1) scaleY(1); opacity: .5; }
+    50%      { transform: scaleX(1.25) scaleY(0.85); opacity: .75; }
+  }
+
+  /* частицы при появлении */
+  @keyframes particleFloat {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+    15%  { opacity: 1; }
+    100% { transform: translate(var(--px, 0), var(--py, -80px)) scale(0.2); opacity: 0; }
+  }
+
+  /* свечение (shimmer), пробегающее по карте */
+  @keyframes cardShine {
+    0%   { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+    40%  { opacity: 1; }
+    100% { transform: translateX(250%) skewX(-20deg); opacity: 0; }
+  }
+
+  /* пульсация «горящей» карты */
+  @keyframes fireFlicker {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50%      { opacity: 0.85; transform: scale(1.06); }
+  }
+
+  /* раскрытие слова */
+  @keyframes wordReveal {
+    0%   { filter: blur(20px); opacity: 0; transform: scale(0.6); letter-spacing: -10px; }
+    60%  { filter: blur(4px); opacity: 1; letter-spacing: 4px; }
     100% { filter: blur(0); opacity: 1; transform: scale(1); letter-spacing: normal; }
   }
-  @keyframes typingDots {
-    0%, 100% { transform: translateY(0); opacity: 0.5; }
-    50% { transform: translateY(-4px); opacity: 1; }
+
+  /* всплывающие цифры */
+  @keyframes statReveal {
+    0%   { transform: translateY(20px) scale(0.4); opacity: 0; }
+    60%  { transform: translateY(-4px) scale(1.15); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* 3D flip (карточки) */
+  @keyframes flipIn {
+    from { transform: rotateY(90deg); opacity: 0; }
+    to   { transform: rotateY(0); opacity: 1; }
+  }
+
+  /* лёгкое покачивание «фокуса» на карте */
+  @keyframes focusFloat {
+    0%, 100% { transform: translateY(0) rotateZ(0) scale(1); }
+    50%      { transform: translateY(-3px) rotateZ(0.8deg) scale(1.02); }
   }
 
   .animate-slide-up { animation: slideUp 0.3s ease forwards; }
-  .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-  .anim-deal { animation: dealCard 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
-  .anim-monster { animation: monsterShake 0.6s ease-in-out forwards; }
-  .anim-reveal { animation: revealWord 0.8s ease-out forwards; }
+  .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .anim-deal { animation: dealCard3D 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+  .anim-summon { animation: monsterSummon3D 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .anim-shake { animation: monsterShake 0.5s ease-in-out 0.9s; }
+  .anim-word { animation: wordReveal 1s ease-out forwards; }
+  .anim-focus { animation: focusFloat 3s ease-in-out infinite; }
+
+  .screen-shake { animation: screenShake 0.4s ease-in-out; }
 
   /* ============================================================
      LAYOUT
@@ -75,41 +146,38 @@
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
   .sidebar { display: none; width: 240px; background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 12px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
-  
   .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
   .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); color: #fff; display: grid; place-items: center; }
   .balance-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--surface-2); border-radius: var(--radius-pill); font-weight: 600; font-size: 13px; color: var(--accent); border: 1px solid var(--border); }
-  
   .content { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   .screen { position: absolute; inset: 0; display: none; flex-direction: column; overflow: hidden; }
   .screen.active { display: flex; z-index: 5; }
   .scroll-area { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
-
-  /* Навигация */
   .bottom-nav { display: flex; background: var(--surface); border-top: 1px solid var(--border); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); flex-shrink: 0; z-index: 10; }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 8px 4px; border-radius: var(--radius-sm); transition: 0.2s; }
   .nav-item.active { color: var(--accent); background: var(--accent-soft); }
   .nav-item svg { width: 20px; height: 20px; }
 
-  /* UI Элементы */
   .page-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
   .page-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
-  
-  .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; transition: 0.2s; border: 1px solid transparent; width: 100%; margin-bottom: 8px; }
-  .btn:active { transform: scale(0.96); }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; transition: 0.15s; border: 1px solid transparent; width: 100%; margin-bottom: 8px; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-primary { background: var(--accent-grad); color: #000; }
   .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-  .btn-danger { background: #ef4444; color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
   .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
   .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); width: auto; }
 
-  /* Сетка игр */
+  /* ============================================================
+     Сетка игр / комнаты / лобби
+     ============================================================ */
   .game-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
   @media (min-width: 640px) { .game-grid { grid-template-columns: 1fr 1fr; } }
-  
-  .game-card { position: relative; border-radius: var(--radius-lg); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; background: var(--surface); border: 1px solid var(--border); transition: transform 0.2s; overflow: hidden; }
-  .game-card:active { transform: scale(0.96); }
+  .game-card { position: relative; border-radius: var(--radius-lg); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; background: var(--surface); border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; }
+  .game-card:active { transform: scale(0.97); }
+  .game-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,.4); }
   .game-card::before { content: ''; position: absolute; inset: 0; opacity: 0.15; z-index: 0; }
   .game-card.spy::before { background: radial-gradient(circle, #ef4444, transparent); }
   .game-card.crocodile::before { background: radial-gradient(circle, #10b981, transparent); }
@@ -118,86 +186,297 @@
   .game-card > * { position: relative; z-index: 1; }
   .game-card h3 { font-size: 18px; font-weight: 700; margin-top: 12px; }
   .game-card p { font-size: 12px; color: var(--text-muted); }
-  .game-card .rules-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; display: flex; gap: 4px; align-items: center; }
+  .game-card .rules-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; display: flex; gap: 4px; align-items: center; z-index: 2; }
 
-  /* Комнаты */
-  .room-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; transition: transform 0.2s; }
+  .room-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; transition: transform 0.15s; }
   .room-item:active { transform: scale(0.98); }
+  .room-item.disabled { opacity: 0.6; cursor: default; }
   .room-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
   .room-info { flex: 1; }
   .room-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
   .room-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; }
   .status-dot.waiting { background: #10b981; }
-  .status-dot.playing { background: #ef4444; }
+  .status-dot.playing { background: var(--danger); }
 
-  /* Лобби и Игроки */
   .player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .player-chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; position: relative; }
-  .player-chip.host { border-color: var(--accent); }
+  .player-chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; position: relative; animation: popIn 0.4s ease; }
+  .player-chip.host { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-soft); }
   .player-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
   .player-name { font-size: 12px; font-weight: 600; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Игровой экран */
+  /* ============================================================
+     Игра — верх/чат
+     ============================================================ */
   .game-layout { display: flex; flex-direction: column; height: 100%; }
   .game-top { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 0; }
-  
-  /* FAB Кнопка чата */
-  .fab-chat { position: absolute; bottom: calc(80px + env(safe-area-inset-bottom)); right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent-grad); color: #000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.4); z-index: 100; transition: transform 0.2s; }
+
+  .fab-chat { position: absolute; bottom: calc(80px + env(safe-area-inset-bottom)); right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent-grad); color: #000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.4); z-index: 100; transition: transform 0.15s; }
   .fab-chat:active { transform: scale(0.9); }
-  
-  /* Выдвижной чат */
+
   .chat-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 500; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .chat-overlay.active { transform: translateY(0); }
   .chat-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-  
-  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow); position: relative; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow); animation: slideUp 0.25s ease; }
   .msg-me { align-self: flex-end; background: var(--chat-me); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; }
-  .msg-system { align-self: center; background: rgba(255,255,255,0.05); color: var(--accent); font-size: 13px; font-weight: 600; text-align: center; padding: 8px 12px; box-shadow: none; border: 1px solid var(--accent-soft); }
+  .msg-system { align-self: center; background: rgba(255,255,255,0.05); color: var(--accent); font-size: 13px; font-weight: 600; text-align: center; padding: 8px 12px; box-shadow: none; border: 1px solid var(--accent-soft); border-radius: 12px; }
   .msg-meta { font-size: 11px; opacity: 0.8; font-weight: 700; margin-bottom: 4px; }
-  
-  .typing-indicator { align-self: flex-start; background: var(--chat-other); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 4px; display: flex; gap: 4px; align-items: center; }
-  .typing-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typingDots 1s infinite; }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
   .chat-input { display: flex; gap: 8px; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
   .chat-input input { flex: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 15px; outline: none; }
   .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
   .icon-btn.send { background: var(--accent-grad); color: #000; border: none; }
 
-  /* 3D Карточки */
-  .card-3d-wrapper { perspective: 1000px; width: 100%; height: 180px; margin-bottom: 16px; cursor: pointer; }
-  .card-3d { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+  /* ============================================================
+     3D Card — универсальный контейнер для флипа
+     ============================================================ */
+  .card-3d-wrapper {
+    perspective: 1200px;
+    width: 100%;
+    height: 180px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    animation: dealCard3D 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  .card-3d {
+    position: relative;
+    width: 100%; height: 100%;
+    transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+  }
   .card-3d.flipped { transform: rotateY(180deg); }
-  .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; border: 2px solid var(--border); background: var(--surface); }
-  .card-face.back { transform: rotateY(180deg); background: var(--surface-2); border-color: var(--accent); box-shadow: inset 0 0 40px rgba(139,92,246,0.2); }
-  
-  /* Карты Бункера */
-  .bunker-card { background: #facc15 !important; color: #000 !important; border: 3px solid #000 !important; border-radius: 12px !important; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-  .bunker-card-header { background: #000; color: #facc15; padding: 6px; font-weight: 900; font-size: 11px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
-  .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; font-weight: 800; font-size: 15px; text-align: center; line-height: 1.2; }
+  .card-3d-wrapper:hover .card-3d:not(.flipped) { transform: rotateY(8deg) rotateX(-4deg); }
+  .card-face {
+    position: absolute; width: 100%; height: 100%;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    border-radius: var(--radius-lg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 16px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .card-face.back {
+    transform: rotateY(180deg);
+    background: var(--surface-2);
+    border-color: var(--accent);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 30px var(--accent-soft);
+  }
 
-  /* Карты Манчкина */
-  .m-card { min-width: 100px; height: 140px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 6px 12px rgba(0,0,0,0.4); cursor: pointer; border: 2px solid #000; background: #facc15; color: #000; transition: transform 0.2s; }
-  .m-card:active { transform: translateY(-5px) scale(1.05); z-index: 10; }
-  .m-card.monster { background: #f87171; color: #fff; border-color: #7f1d1d; }
-  .m-card-title { font-size: 11px; font-weight: 900; margin-bottom: 6px; line-height: 1.1; text-transform: uppercase; }
-  .m-card-icon { margin: 8px 0; }
-  .m-card-desc { font-size: 10px; font-weight: 800; }
-  .hand-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+  /* Рубашка карты — узор */
+  .card-back-pattern {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.03) 10px, rgba(255,255,255,.03) 20px),
+      radial-gradient(circle at center, var(--accent-soft) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .card-face > * { position: relative; z-index: 1; }
+
+  /* Блик по карте */
+  .card-shine {
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: cardShine 1.2s ease-out 0.5s forwards;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ============================================================
+     Bunker карты
+     ============================================================ */
+  .bunker-card {
+    background: linear-gradient(180deg, #fde047 0%, #facc15 100%) !important;
+    color: #000 !important;
+    border: 3px solid #000 !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 10px 24px rgba(0,0,0,.5), inset 0 0 30px rgba(0,0,0,.15);
+  }
+  .bunker-card-header {
+    background: #000; color: #facc15;
+    padding: 6px; font-weight: 900; font-size: 10px;
+    text-align: center; letter-spacing: 1px; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; font-weight: 800; font-size: 14px; text-align: center; line-height: 1.2; }
+  .bunker-card-emoji { font-size: 42px; margin-bottom: 4px; }
+
+  /* ============================================================
+     Monster Stage — 3D сцена с монстром
+     ============================================================ */
+  .monster-stage {
+    position: relative;
+    margin-bottom: 20px;
+    perspective: 1200px;
+    padding: 12px 4px 24px;
+  }
+  .monster-shadow {
+    position: absolute;
+    left: 50%; bottom: 4px;
+    width: 70%; height: 26px;
+    background: radial-gradient(ellipse at center, rgba(239,68,68,.75) 0%, rgba(239,68,68,.2) 40%, transparent 70%);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: shadowPulse 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .monster-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .monster-particle {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fca5a5, #ef4444 60%, transparent);
+    box-shadow: 0 0 10px #ef4444;
+    animation: particleFloat 1.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .monster-card {
+    position: relative;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #450a0a 100%);
+    border: 3px solid #ef4444;
+    border-radius: var(--radius-lg);
+    padding: 20px 18px 18px;
+    text-align: center;
+    overflow: hidden;
+    animation: monsterGlowPulse 2.2s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+  .monster-card::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 60%);
+    animation: rollDice 12s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .monster-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.06) 0%, transparent 30%),
+      radial-gradient(circle at 80% 80%, rgba(255,255,255,.06) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .monster-card > * { position: relative; z-index: 1; }
+  .monster-card.idle { animation: monsterGlowPulse 2.2s ease-in-out infinite, monsterIdle 3s ease-in-out infinite; }
+
+  .monster-big-icon {
+    color: #fecaca;
+    margin-bottom: 8px;
+    display: flex; justify-content: center;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.6));
+    animation: statReveal 0.6s ease-out 0.2s both;
+  }
+  .monster-name-big {
+    font-size: 24px; font-weight: 900;
+    color: #fecaca; text-transform: uppercase;
+    letter-spacing: 3px; margin-bottom: 16px;
+    text-shadow: 0 2px 12px rgba(0,0,0,.9), 0 0 20px rgba(239,68,68,.4);
+    animation: statReveal 0.6s ease-out 0.35s both;
+  }
+  .monster-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; margin-bottom: 16px;
+  }
+  .monster-stat {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(239,68,68,.3);
+    border-radius: var(--radius-md);
+    padding: 10px 6px;
+    animation: statReveal 0.5s ease-out both;
+  }
+  .monster-stat:nth-child(1) { animation-delay: 0.5s; }
+  .monster-stat:nth-child(2) { animation-delay: 0.65s; }
+  .monster-stat:nth-child(3) { animation-delay: 0.8s; }
+  .monster-stat-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 3px; }
+  .monster-stat-value { font-size: 22px; font-weight: 900; color: #fff; text-shadow: 0 0 12px rgba(239,68,68,.6); }
+  .monster-actions { display: flex; gap: 8px; animation: statReveal 0.5s ease-out 0.95s both; }
+
+  /* ============================================================
+     Munchkin карты в руке
+     ============================================================ */
+  .m-card-slot {
+    perspective: 800px;
+    flex-shrink: 0;
+  }
+  .m-card {
+    min-width: 110px; height: 158px;
+    border-radius: 10px;
+    padding: 8px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,.08);
+    cursor: pointer;
+    border: 2px solid #000;
+    background: linear-gradient(180deg, #fef08a 0%, #facc15 100%);
+    color: #000;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+  }
+  .m-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+    transform: translateX(-100%) skewX(-15deg);
+    pointer-events: none;
+  }
+  .m-card:hover { transform: translateY(-6px) scale(1.04) rotateZ(-1deg); box-shadow: 0 12px 24px rgba(0,0,0,.6); }
+  .m-card:hover::before { animation: cardShine 0.8s ease-out; }
+  .m-card:active { transform: translateY(-2px) scale(0.98); }
+  .m-card.monster {
+    background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+    color: #fff;
+    border-color: #7f1d1d;
+  }
+  .m-card.monster .m-card-power { background: #7f1d1d; color: #fff; }
+  .m-card-title {
+    font-size: 11px; font-weight: 900;
+    margin-bottom: 6px; line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    word-break: break-word;
+  }
+  .m-card-icon { margin: 4px 0; }
+  .m-card-power {
+    margin-top: auto;
+    background: #000; color: #facc15;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 10px; font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  .hand-scroll {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    padding: 14px 4px 10px;
+    scrollbar-width: none;
+  }
   .hand-scroll::-webkit-scrollbar { display: none; }
 
-  /* Модалки */
+  /* ============================================================
+     Модалки
+     ============================================================ */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
   .modal.active { display: flex; }
   .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; text-align: center; }
   .modal-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
 
-  /* 3D Кубик и Табло */
+  /* ============================================================
+     Кубик
+     ============================================================ */
   .dice-scene { width: 80px; height: 80px; perspective: 600px; margin: 0 auto 24px; transition: opacity 0.3s; }
   .dice-cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(-20deg); transition: transform 0.3s; }
   .dice-cube.rolling { animation: rollDice 1s ease-in-out; }
@@ -208,9 +487,8 @@
   .face-4 { transform: rotateY(-90deg) translateZ(40px); }
   .face-5 { transform: rotateX(90deg) translateZ(40px); }
   .face-6 { transform: rotateX(-90deg) translateZ(40px); }
-  
-  .scoreboard-row { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius-sm); margin-bottom: 8px; font-weight: 600; border: 1px solid transparent; transition: all 0.3s; }
-  .scoreboard-row.winner { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); transform: scale(1.02); box-shadow: var(--shadow); }
+  .scoreboard-row { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius-sm); margin-bottom: 8px; font-weight: 600; border: 1px solid transparent; }
+  .scoreboard-row.winner { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
   @media (min-width: 1024px) {
     .sidebar { display: flex; }
@@ -229,7 +507,6 @@
     <div class="brand"><div class="brand-logo" id="sideBrandIcon"></div><span>Game Hub</span></div>
     <div class="side-nav" id="sideNav" style="margin-top: 24px; display: flex; flex-direction: column; gap: 8px;"></div>
   </aside>
-
   <div class="main">
     <header class="header">
       <div class="brand"><div class="brand-logo" id="headerBrandIcon"></div><span id="headerTitle">Game Hub</span></div>
@@ -237,13 +514,11 @@
         <div class="balance-pill"><span id="balanceIcon"></span><span id="balanceValue">0</span></div>
       </div>
     </header>
-
     <main class="content">
       <section class="screen active animate-slide-up" id="screen-home">
         <div class="scroll-area">
           <h1 class="page-title">Привет, <span id="userName">Игрок</span>!</h1>
           <p class="page-subtitle">Выбери игру и присоединяйся</p>
-          
           <div class="game-grid">
             <div class="game-card spy" onclick="goRooms('shpion')">
               <div class="rules-btn" onclick="showRules('shpion', event)">Правила</div>
@@ -266,7 +541,6 @@
               <div><h3>Манчкин</h3><p>Мочи монстров (3-6)</p></div>
             </div>
           </div>
-
           <h2 style="font-size: 14px; margin-bottom: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Активные комнаты</h2>
           <div id="activeRooms"></div>
         </div>
@@ -289,7 +563,6 @@
           </div>
           <h1 class="page-title" id="lobbyTitle">Лобби</h1>
           <p class="page-subtitle" id="lobbySubtitle">Ожидание игроков...</p>
-          
           <div style="background: var(--surface); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px; border: 1px solid var(--border);">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 700; font-size: 14px;">
               <span id="playersIcon" style="color: var(--accent);"></span>
@@ -297,7 +570,6 @@
             </div>
             <div class="player-grid" id="lobbyPlayers"></div>
           </div>
-
           <button class="btn btn-primary" id="startBtn">Начать игру</button>
           <p id="hostWaitText" style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 8px;"></p>
         </div>
@@ -365,35 +637,13 @@
   </div>
 </div>
 
-<div class="modal" id="rulesModal">
-  <div class="modal-content">
-    <div class="modal-title" id="rulesTitle">Правила</div>
-    <div class="modal-text" id="rulesText"></div>
-    <button class="btn btn-primary" onclick="closeModal('rulesModal')">Понятно</button>
-  </div>
-</div>
-
-<div class="modal" id="votingModal">
-  <div class="modal-content">
-    <div class="modal-title" style="color: #ef4444;">Голосование</div>
-    <p style="text-align: center; color: var(--text-muted); margin-bottom: 16px;">Кого выгоняем?</p>
-    <div id="votingOptions" style="display: flex; flex-direction: column; gap: 8px;"></div>
-  </div>
-</div>
+<div class="modal" id="rulesModal"><div class="modal-content"><div class="modal-title" id="rulesTitle"></div><div class="modal-text" id="rulesText"></div><button class="btn btn-primary" onclick="closeModal('rulesModal')">Понятно</button></div></div>
+<div class="modal" id="votingModal"><div class="modal-content"><div class="modal-title" style="color: var(--danger);">Голосование</div><p style="text-align: center; color: var(--text-muted); margin-bottom: 16px;">Кого выгоняем?</p><div id="votingOptions" style="display: flex; flex-direction: column; gap: 8px;"></div></div></div>
 
 <div class="modal" id="diceModal" style="background: rgba(0,0,0,0.95);">
-  <div class="modal-content" style="background: var(--surface); border: none; text-align: center; box-shadow: none;">
+  <div class="modal-content" style="background: var(--surface); border: none; text-align: center;">
     <div id="diceRollView">
-      <div class="dice-scene">
-        <div class="dice-cube" id="diceCube">
-          <div class="dice-face face-1">1</div>
-          <div class="dice-face face-2">2</div>
-          <div class="dice-face face-3">3</div>
-          <div class="dice-face face-4">4</div>
-          <div class="dice-face face-5">5</div>
-          <div class="dice-face face-6">6</div>
-        </div>
-      </div>
+      <div class="dice-scene"><div class="dice-cube" id="diceCube"><div class="dice-face face-1">1</div><div class="dice-face face-2">2</div><div class="dice-face face-3">3</div><div class="dice-face face-4">4</div><div class="dice-face face-5">5</div><div class="dice-face face-6">6</div></div></div>
       <div style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Кто ходит первым?</div>
       <button class="btn btn-primary" id="rollDiceBtn" onclick="rollDice()" style="width: 200px; margin: 0 auto;">КИНУТЬ КУБИК</button>
     </div>
@@ -408,6 +658,9 @@
 <div id="toastWrap" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
 
 <script>
+/* ============================================================
+   ИКОНКИ
+   ============================================================ */
 const ICONS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
   user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
@@ -428,20 +681,44 @@ const ICONS = {
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
   skull: '<circle cx="12" cy="9" r="7"/><path d="M9 16v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/>',
   eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+  heart: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+  backpack: '<path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>',
+  brain: '<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>',
+  sword: '<polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  goblin: '<path d="M12 2l-2 4h4l-2-4zM8 8a4 4 0 0 1 8 0v6a4 4 0 0 1-8 0V8z"/><circle cx="10" cy="10" r="1" fill="currentColor"/><circle cx="14" cy="10" r="1" fill="currentColor"/>',
+  skeleton: '<circle cx="12" cy="9" r="6"/><path d="M9 15v3M15 15v3M11 20v2M13 20v2"/><circle cx="10" cy="9" r="1" fill="currentColor"/><circle cx="14" cy="9" r="1" fill="currentColor"/>',
+  orc: '<circle cx="12" cy="12" r="10"/><path d="M7 12c0-2 2-4 5-4s5 2 5 4"/><path d="M8 15c1 2 3 3 4 3s3-1 4-3"/><path d="M9 6l-2-3M15 6l2-3"/>',
+  ogre: '<circle cx="12" cy="10" r="8"/><path d="M6 10h.01M18 10h.01"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M8 14v2M16 14v2"/>',
+  dragon: '<path d="M2 20h20M4 20V10l8-6 8 6v10"/><path d="M8 14l2-2M16 14l-2-2"/><circle cx="9" cy="10" r=".5" fill="currentColor"/><circle cx="15" cy="10" r=".5" fill="currentColor"/>',
   door: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18"/>',
-  item: '<path d="M20 7h-4V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z"/><path d="M16 3v4"/>',
-  monster: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M8 10h.01M16 10h.01M12 14h.01M9 18h6"/>',
-  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
+  gem: '<polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><polyline points="2 8.5 12 15.5 22 8.5"/><line x1="12" y1="22" x2="12" y2="15.5"/>',
+  package: '<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+  civilian: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
+  agent: '<path d="M4 15h16l-2-8-3 4-3-4-3 4-3-4z"/><rect x="8" y="12" width="8" height="3" rx="1"/>',
+  mrWhite: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  monster: '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 15c1.5 1 3 1.5 4 1.5s2.5-.5 4-1.5"/>',
+  fire: '<path d="M12 2C9 7 6 9 6 14a6 6 0 0 0 12 0c0-3-2-5-4-8-1 2-2 3-2 3s0-4-2-7z"/>'
 };
 function icon(name, size = 20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
 }
 
 const RULES = {
-  shpion: `<b>Цель:</b> Вычислить шпиона среди игроков.<br><br><b>Как играть:</b><br>1. Все игроки получают секретное слово (например, "Танк").<br>2. Один игрок — Шпион. Ему достается другое слово (например, "БТР") или он не знает слова вообще.<br>3. Игроки по очереди описывают свое слово одним предложением. Шпион должен понять, какое слово у остальных.<br>4. После круга обсуждения все голосуют. Если выгнали шпиона — победили мирные. Если шпион угадал слово или его не вычислили — победил шпион.<br><br><b>Роли:</b> Мирные, Шпион, Мистер Уайт.`,
-  crocodile: `<b>Цель:</b> Угадать слово по объяснению.<br><br><b>Как играть:</b><br>1. Один игрок (Ведущий) получает слово.<br>2. Он должен объяснить это слово остальным, не называя его и однокоренные слова.<br>3. Игроки пишут варианты в чат.<br>4. Если слово угадано — ведущий получает очки, а угадавший становится новым ведущим.<br>5. У ведущего есть таймер. Если не успел — ход переходит к следующему.`,
-  bunker: `<b>Цель:</b> Убедить других, что вы достойны места в бункере.<br><br><b>Как играть:</b><br>1. Случается катастрофа. Все хотят попасть в бункер, но мест мало.<br>2. Каждый игрок получает карточки характеристик (Профессия, Здоровье, Багаж, Факты).<br>3. Игроки по очереди раскрывают карты и доказывают свою полезность.<br>4. После обсуждения проходит голосование. Кого выгоняют, тот становится наблюдателем.<br>5. Игра идет до тех пор, пока не останется столько игроков, сколько мест в бункере.`,
-  munchkin: `<b>Цель:</b> Первым достичь 10-го уровня.<br><br><b>Как играть:</b><br>1. В свой ход вы "Вышибаете дверь" и встречаете монстра.<br>2. Сравниваете свою силу (Уровень + Шмотки) с силой монстра.<br>3. Если ваша сила выше — вы побеждаете, получаете уровень и сокровище. Если ниже — бросаете кубик, чтобы смыться (5-6 успех).<br>4. Надевайте шмотки, чтобы повысить силу.<br>5. Чтобы победить, нужно убить монстра на 10-м уровне.`
+  shpion: `<b>🕵️ Шпион</b><br><br><b>Цель:</b> Найти шпиона среди мирных.<br><br><b>Как играть:</b><br>1. Все получают секретное слово (например, "Танк").<br>2. Один — шпион. Ему дают другое слово или он не знает ничего.<br>3. По очереди описываете слова, стараясь не выдать.<br>4. Голосуете. Если выгнали шпиона — победили мирные.`,
+  crocodile: `<b>🐊 Крокодил</b><br><br><b>Цель:</b> Угадать слово.<br><br><b>Как играть:</b><br>1. Ведущий получает слово.<br>2. Он объясняет его в чате, не называя.<br>3. Игроки пишут варианты.<br>4. Кто угадал — становится ведущим.`,
+  bunker: `<b>🏚️ Бункер</b><br><br><b>Цель:</b> Убедить других пустить вас в бункер.<br><br><b>Как играть:</b><br>1. Случается катастрофа.<br>2. Каждый получает карты (Профессия, Здоровье, Багаж, Факт).<br>3. Раскрывайте карты и доказывайте пользу.<br>4. Голосуйте за изгнание. Выжившие — побеждают.`,
+  munchkin: `<b>⚔️ Манчкин</b><br><br><b>Цель:</b> Первым дойти до 10 уровня.<br><br><b>Как играть:</b><br>1. Вышибаете дверь → встречаете монстра.<br>2. Сравниваете силу. Сильнее — победа (уровень + сокровище). Слабее — смывайтесь (кубик 5-6).<br>3. Надевайте шмотки, чтобы повысить силу.<br>4. Победить на 10 уровне можно только в бою.`
+};
+
+const MONSTER_INFO = {
+  'Гоблин': { power: 1, levels: 1, treasures: 1, iconName: 'goblin' },
+  'Скелет': { power: 2, levels: 1, treasures: 1, iconName: 'skeleton' },
+  'Орк':    { power: 3, levels: 1, treasures: 2, iconName: 'orc' },
+  'Огр':    { power: 5, levels: 2, treasures: 2, iconName: 'ogre' },
+  'Дракон': { power: 15, levels: 3, treasures: 4, iconName: 'dragon' }
 };
 
 const CONFIG = {
@@ -450,26 +727,57 @@ const CONFIG = {
   FUNCTIONS_URL: 'https://jgjereoejdipaqwjhexc.supabase.co/functions/v1',
 };
 
+/* ============================================================
+   ПОЛЬЗОВАТЕЛЬ + ГОСТЕВОЙ ID
+   ============================================================ */
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); }
+if (tg) { try { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); } catch(e){} }
 const isGuest = !tg || !tg.initData || !tg.initDataUnsafe?.user;
 const telegramUser = tg?.initDataUnsafe?.user || { id: 0, first_name: 'Гость', username: 'guest' };
-const myId = telegramUser.id || 0;
-let guestRoundsPlayed = parseInt(localStorage.getItem('guestRounds') || '0');
+
+let guestId = 0;
+if (isGuest) {
+  try {
+    guestId = Number(localStorage.getItem('guestId')) || 0;
+    if (!guestId || guestId >= 0) {
+      guestId = -(Date.now() % 1e9) - Math.floor(Math.random() * 1000);
+      localStorage.setItem('guestId', String(guestId));
+    }
+  } catch(e) { guestId = -(Date.now() % 1e9); }
+}
+const myId = isGuest ? guestId : (telegramUser.id || 0);
+
+let guestRoundsPlayed = 0;
+try { guestRoundsPlayed = parseInt(localStorage.getItem('guestRounds') || '0'); } catch(e) {}
+const GUEST_LIMIT = 3;
 
 async function api(path, method = 'GET', body = null) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': CONFIG.SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+    'x-telegram-init-data': tg?.initData || '',
+  };
+  if (isGuest) headers['x-guest-id'] = String(myId);
   try {
     const res = await fetch(`${CONFIG.FUNCTIONS_URL}${path}`, {
-      method,
-      headers: { 'Content-Type': 'application/json', 'apikey': CONFIG.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`, 'x-telegram-init-data': tg?.initData || '' },
+      method, headers,
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
     return await res.json();
-  } catch (e) { console.error("API Error:", e); throw e; }
+  } catch (e) { console.error("API Error:", path, e); throw e; }
 }
 
-const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinData: null, lastStatus: null };
+/* ============================================================
+   СОСТОЯНИЕ
+   ============================================================ */
+const state = {
+  balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null,
+  userIsHost: false, currentGame: null, munchkinData: null,
+  lastRenderHash: null, chatOpen: false, votedRound: 0, diceRolling: false,
+  lastMonsterName: null, lastMonsterId: null, lastSpeakerId: null
+};
 const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
 
 function showScreen(name) {
@@ -486,16 +794,19 @@ const NAV_ITEMS = [
   { id: 'profile', icon: 'user', label: 'Профиль' },
 ];
 
+function setNavActive(id) {
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.dataset.nav === id) n.classList.add('active'); else n.classList.remove('active');
+  });
+}
+
 function renderNav() {
   const html = NAV_ITEMS.map(n => `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 20)}<span>${n.label}</span></button>`).join('');
   document.getElementById('bottomNav').innerHTML = html;
   document.getElementById('sideNav').innerHTML = html;
-  
   document.querySelectorAll('.nav-item[data-nav]').forEach(el => {
     el.onclick = () => {
       const nav = el.dataset.nav;
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.querySelectorAll(`.nav-item[data-nav="${nav}"]`).forEach(n => n.classList.add('active'));
       if (nav === 'home') goHome();
       if (nav === 'profile') goProfile();
       if (nav === 'shpion') goRooms('shpion');
@@ -506,16 +817,37 @@ function renderNav() {
   });
 }
 
+/* ============================================================
+   ПЕРЕХОДЫ
+   ============================================================ */
+function resetRoomState() {
+  state.currentRoom = null;
+  state.lastMessageId = 0;
+  state.lastRenderHash = null;
+  state.userIsHost = false;
+  state.munchkinData = null;
+  state.votedRound = 0;
+  state.diceRolling = false;
+  state.lastMonsterName = null;
+  state.lastMonsterId = null;
+  state.lastSpeakerId = null;
+  const chat = document.getElementById('chatMessages');
+  if (chat) chat.innerHTML = '';
+  document.getElementById('votingModal').classList.remove('active');
+  document.getElementById('diceModal').classList.remove('active');
+  toggleChat(false);
+}
+
 async function goHome() {
-  stopPolling(); showScreen('home'); document.body.className = 'theme-home';
+  stopPolling(); resetRoomState();
+  showScreen('home'); setNavActive('home');
+  document.body.className = 'theme-home';
   document.getElementById('headerTitle').textContent = 'Game Hub';
-  document.getElementById('userName').textContent = telegramUser.first_name;
-  
+  document.getElementById('userName').textContent = telegramUser.first_name || 'Игрок';
   document.getElementById('icon-spy').innerHTML = icon('spy', 32);
   document.getElementById('icon-croc').innerHTML = icon('croc', 32);
   document.getElementById('icon-bunker').innerHTML = icon('bunker', 32);
   document.getElementById('icon-munchkin').innerHTML = icon('munchkin', 32);
-
   await Promise.all([refreshBalance(), loadActiveRooms()]);
 }
 
@@ -528,7 +860,8 @@ async function refreshBalance() {
     document.getElementById('profileGames').textContent = data.games_played ?? 0;
     if (data.current_room && !state.currentRoom) {
       state.currentRoom = data.current_room;
-      if (data.current_room.status === 'waiting') goLobby(); else goGame();
+      state.currentGame = data.current_room.game_type;
+      if (data.current_room.status === 'waiting') await goLobby(); else await goGame();
     }
   } catch (e) {}
 }
@@ -540,64 +873,81 @@ async function loadActiveRooms() {
     const rooms = await api('/api/rooms');
     const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 4);
     if (!active.length) { container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 16px;">Нет активных комнат</div>`; return; }
-    container.innerHTML = active.map(r => `
-      <div class="room-item" onclick="joinRoom(${r.id})">
+    container.innerHTML = active.map(r => {
+      const playable = r.status === 'waiting';
+      return `
+      <div class="room-item ${playable ? '' : 'disabled'}" ${playable ? `onclick="joinRoom(${r.id})"` : `onclick="showToast('Игра уже идёт','info')"`}>
         <div class="room-icon">${icon(r.game_type === 'shpion' ? 'spy' : r.game_type === 'crocodile' ? 'croc' : r.game_type === 'bunker' ? 'bunker' : 'munchkin', 18)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Играют' : `${r.players_count}/20`}</div>
         </div>
         <span style="color:var(--accent);">${icon('next', 18)}</span>
-      </div>
-    `).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">Ошибка загрузки</div>`; }
+      </div>`;
+    }).join('');
+  } catch (e) { container.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">Ошибка загрузки</div>`; }
 }
 
 async function goRooms(game) {
-  state.currentGame = game; showScreen('rooms'); document.body.className = `theme-${game}`;
+  state.currentGame = game;
+  showScreen('rooms'); setNavActive(game);
+  document.body.className = `theme-${game}`;
   const title = game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : game === 'bunker' ? 'Бункер' : 'Манчкин';
   document.getElementById('headerTitle').textContent = title;
   document.getElementById('roomsTitle').textContent = title;
-  document.getElementById('backBtn').innerHTML = icon('back', 16) + ' Назад';
-  document.getElementById('backBtn').onclick = goHome;
-
+  const backBtn = document.getElementById('backBtn');
+  backBtn.innerHTML = icon('back', 16) + ' Назад';
+  backBtn.onclick = goHome;
   const container = document.getElementById('roomList');
   container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 16px;">Загрузка...</div>`;
   try {
     const rooms = await api(`/api/rooms?game=${game}`);
-    container.innerHTML = rooms.map(r => `
-      <div class="room-item" ${r.status === 'waiting' ? `onclick="joinRoom(${r.id})"` : ''}>
-        <div class="room-icon">${icon(r.status === 'waiting' ? 'play' : 'x', 18)}</div>
+    container.innerHTML = (rooms || []).map(r => {
+      const playable = r.status === 'waiting';
+      return `
+      <div class="room-item ${playable ? '' : 'disabled'}" ${playable ? `onclick="joinRoom(${r.id})"` : `onclick="showToast('Игра уже идёт','info')"`}>
+        <div class="room-icon">${icon(playable ? 'play' : 'x', 18)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Игра уже идет' : `${r.players_count}/20`}</div>
         </div>
-        ${r.status === 'waiting' ? `<span style="color:var(--accent);">${icon('next', 18)}</span>` : ''}
-      </div>
-    `).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">Ошибка загрузки</div>`; }
+        ${playable ? `<span style="color:var(--accent);">${icon('next', 18)}</span>` : ''}
+      </div>`;
+    }).join('');
+  } catch (e) { container.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">Ошибка загрузки</div>`; }
 }
 
 async function joinRoom(roomId) {
-  if (isGuest && guestRoundsPlayed >= 3) { showToast('Лимит гостя. Перейдите в бота.', 'error'); return; }
+  if (isGuest && guestRoundsPlayed >= GUEST_LIMIT) {
+    showToast('Лимит гостя. Перейдите в бота.', 'error'); return;
+  }
   try {
     const room = await api(`/api/rooms/${roomId}/join`, 'POST');
-    state.currentRoom = room; state.lastMessageId = 0;
-    if (room.status === 'waiting') goLobby(); else goGame();
+    if (!room || room.error) { showToast(room?.error || 'Не удалось войти', 'error'); return; }
+    resetRoomState();
+    state.currentRoom = room;
+    state.currentGame = room.game_type || state.currentGame;
+    if (isGuest) {
+      guestRoundsPlayed++;
+      try { localStorage.setItem('guestRounds', String(guestRoundsPlayed)); } catch(e){}
+    }
+    if (room.status === 'waiting') await goLobby(); else await goGame();
   } catch (e) { showToast('Не удалось войти', 'error'); }
 }
 
 async function goLobby() {
-  showScreen('lobby'); document.body.className = `theme-${state.currentRoom.game_type || state.currentGame}`;
-  document.getElementById('headerTitle').textContent = state.currentRoom.code;
-  document.getElementById('lobbyTitle').textContent = state.currentRoom.code;
-  document.getElementById('leaveLobbyBtn').innerHTML = icon('back', 16) + ' Выйти';
-  document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
+  if (!state.currentRoom) return goHome();
+  showScreen('lobby');
+  document.body.className = `theme-${state.currentRoom.game_type || state.currentGame || 'home'}`;
+  document.getElementById('headerTitle').textContent = state.currentRoom.code || 'Лобби';
+  document.getElementById('lobbyTitle').textContent = state.currentRoom.code || 'Лобби';
+  const leaveBtn = document.getElementById('leaveLobbyBtn');
+  leaveBtn.innerHTML = icon('back', 16) + ' Выйти';
+  leaveBtn.onclick = leaveRoom;
   document.getElementById('playersIcon').innerHTML = icon('users', 16);
   document.getElementById('chatSendBtn').innerHTML = icon('send', 16);
   document.getElementById('fabIconLobby').innerHTML = icon('chat', 24);
   document.getElementById('fabIconGame').innerHTML = icon('chat', 24);
-  
   await refreshLobby();
   startPolling(refreshLobby, 2000);
 }
@@ -606,13 +956,15 @@ async function refreshLobby() {
   if (!state.currentRoom) return;
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
-    state.currentRoom = data.room; state.userIsHost = data.room.host_id === myId;
-    if (data.room.status !== 'waiting') return goGame();
+    if (!data || !data.room) return;
+    state.currentRoom = data.room;
+    state.userIsHost = data.room.host_id === myId;
 
-    document.getElementById('playersCount').textContent = data.players.length;
-    document.getElementById('lobbyStatus').textContent = data.room.game_type;
-    
-    document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
+    if (data.room.status !== 'waiting') { await goGame(); return; }
+
+    document.getElementById('playersCount').textContent = (data.players || []).length;
+    document.getElementById('lobbyStatus').textContent = data.room.game_type || '';
+    document.getElementById('lobbyPlayers').innerHTML = (data.players || []).map(p => `
       <div class="player-chip ${data.room.host_id === p.user_id ? 'host' : ''}">
         <div class="player-avatar">${icon('user', 18)}</div>
         <div class="player-name">${esc(p.username || 'Игрок')}</div>
@@ -623,40 +975,45 @@ async function refreshLobby() {
     const startBtn = document.getElementById('startBtn');
     const waitText = document.getElementById('hostWaitText');
     const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : 3;
-    const canStart = data.players.length >= minPlayers;
-    
+    const canStart = (data.players || []).length >= minPlayers;
+
     if (state.userIsHost || data.room.host_id === -1) {
       startBtn.style.display = 'flex';
       startBtn.disabled = !canStart;
-      startBtn.innerHTML = icon('play', 16) + (canStart ? ' НАЧАТЬ ИГРУ' : ` ЖДЕМ (${data.players.length}/${minPlayers})`);
+      startBtn.innerHTML = icon('play', 16) + (canStart ? ' НАЧАТЬ ИГРУ' : ` ЖДЕМ (${(data.players||[]).length}/${minPlayers})`);
+      startBtn.onclick = startGame;
       waitText.textContent = '';
     } else {
       startBtn.style.display = 'none';
       waitText.textContent = 'Ожидание хоста для старта...';
     }
-
     appendMessages(data.messages || []);
-  } catch (e) {}
+  } catch (e) { console.error('refreshLobby', e); }
 }
 
-document.getElementById('startBtn').onclick = async () => {
-  if (isGuest && guestRoundsPlayed >= 3) { showToast('Лимит гостя!', 'error'); return; }
-  try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) { showToast('Ошибка старта', 'error'); }
-};
-
-document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
-async function leaveRoom() {
+async function startGame() {
   if (!state.currentRoom) return;
-  try { await api(`/api/rooms/${state.currentRoom.id}/leave`, 'POST'); } catch {}
-  state.currentRoom = null; stopPolling(); goHome();
+  if (isGuest && guestRoundsPlayed >= GUEST_LIMIT) { showToast('Лимит гостя!', 'error'); return; }
+  try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); }
+  catch (e) { showToast('Ошибка старта', 'error'); }
+}
+
+async function leaveRoom() {
+  const room = state.currentRoom;
+  if (!room) { stopPolling(); resetRoomState(); goHome(); return; }
+  try { await api(`/api/rooms/${room.id}/leave`, 'POST'); } catch {}
+  stopPolling(); resetRoomState();
+  goHome();
 }
 
 async function goGame() {
-  showScreen('game'); document.body.className = `theme-${state.currentRoom.game_type}`;
-  document.getElementById('headerTitle').textContent = state.currentRoom.code;
-  document.getElementById('leaveGameBtn').innerHTML = icon('back', 16) + ' Выйти';
-  document.getElementById('leaveGameBtn').onclick = leaveRoom;
-  
+  if (!state.currentRoom) return goHome();
+  showScreen('game');
+  document.body.className = `theme-${state.currentRoom.game_type || state.currentGame || 'home'}`;
+  document.getElementById('headerTitle').textContent = state.currentRoom.code || 'Игра';
+  const leaveBtn = document.getElementById('leaveGameBtn');
+  leaveBtn.innerHTML = icon('back', 16) + ' Выйти';
+  leaveBtn.onclick = leaveRoom;
   await refreshGame();
   startPolling(refreshGame, 1500);
 }
@@ -671,121 +1028,173 @@ function playTyping() {
   typingSound.play().catch(()=>{});
 }
 
+/* ============================================================
+   ОБНОВЛЕНИЕ ИГРЫ
+   ============================================================ */
 async function refreshGame() {
   if (!state.currentRoom) return;
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
-    const oldStatus = state.currentRoom.status;
+    if (!data || !data.room) return;
+
+    if (data.room.status === 'waiting') { await goLobby(); return; }
+
     state.currentRoom = data.room;
     state.munchkinData = data.munchkin_data;
-    const me = data.players.find(p => p.user_id === myId);
+    const players = data.players || [];
+    const me = players.find(p => p.user_id === myId);
 
-    if (data.room.status === 'waiting') { goLobby(); return; }
-
-    // КУБИК
+    // Кубик
     if (data.room.status === 'dice') {
-      document.getElementById('diceModal').classList.add('active');
-      const allRolled = data.players.every(p => p.dice_roll > 0);
-      
-      if (allRolled && data.room.current_speaker_id) {
-        // Показываем табло
-        document.getElementById('diceRollView').style.display = 'none';
-        document.getElementById('diceScoreboard').style.display = 'block';
-        
-        const sorted = [...data.players].sort((a, b) => b.dice_roll - a.dice_roll);
-        document.getElementById('scoreboardList').innerHTML = sorted.map(p => `
-          <div class="scoreboard-row ${p.user_id === data.room.current_speaker_id ? 'winner' : ''}">
-            <span>${esc(p.username)}</span>
-            <span>${p.dice_roll} ${p.user_id === data.room.current_speaker_id ? '👑' : ''}</span>
-          </div>
-        `).join('');
-        
-        const winner = data.players.find(p => p.user_id === data.room.current_speaker_id);
-        if (winner) document.getElementById('diceWinnerText').textContent = `Первым ходит: ${winner.username}`;
-      } else {
-        // Ожидание броска
-        document.getElementById('diceRollView').style.display = 'block';
-        document.getElementById('diceScoreboard').style.display = 'none';
-        
-        const meRolled = me?.dice_roll > 0;
-        const btn = document.getElementById('rollDiceBtn');
-        btn.style.display = meRolled ? 'none' : 'block';
-        if (meRolled) document.querySelector('.dice-scene').style.display = 'none';
-        else document.querySelector('.dice-scene').style.display = 'block';
-      }
+      showDiceModal(data.room, players, me);
     } else {
       document.getElementById('diceModal').classList.remove('active');
     }
 
-    // ГОЛОСОВАНИЕ
-    if ((data.room.status === 'discussion' && data.room.game_type === 'bunker') || (data.room.status === 'discussion' && data.room.game_type === 'shpion')) {
-      showVotingModal(data.room, data.players);
+    // Голосование (Бункер)
+    const canVote = data.room.game_type === 'bunker'
+      && (data.room.status === 'discussion' || data.room.status === 'voting')
+      && me?.is_alive && !me?.is_spectator
+      && state.votedRound !== data.room.current_round;
+    if (canVote) {
+      showVotingModal(data.room, players);
     } else {
       document.getElementById('votingModal').classList.remove('active');
     }
 
-    // Победа
-    if (data.room.status === 'finished' && oldStatus !== 'finished') {
-      showToast('Игра окончена!', 'success');
-      if (isGuest) { guestRoundsPlayed++; localStorage.setItem('guestRounds', guestRoundsPlayed); }
+    const renderHash = JSON.stringify({
+      s: data.room.status,
+      p: data.room.turn_phase,
+      sp: data.room.current_speaker_id,
+      r: data.room.current_round,
+      m: data.room.active_monster_id,
+      g: data.room.pending_guess,
+      h: data.room.host_id,
+      hand: (data.munchkin_data?.hand || []).map(c => c.id),
+      eq: (data.munchkin_data?.equipped || []).map(c => c.id),
+      me: me ? [me.role, me.word, me.is_alive, me.munchkin_level, me.munchkin_power] : null,
+      pl: players.length,
+      alive: players.filter(p => p.is_alive).length,
+    });
+
+    if (renderHash !== state.lastRenderHash) {
+      state.lastRenderHash = renderHash;
+      document.getElementById('gameStatus').textContent = data.room.status || '';
+      renderGameContent(data.room, players, me);
     }
 
-    document.getElementById('gameStatus').textContent = data.room.status;
-    renderGameContent(data.room, data.players, me, oldStatus);
+    if (data.room.status === 'finished') stopPolling();
+
     appendMessages(data.messages || []);
-  } catch (e) {}
+  } catch (e) { console.error('refreshGame', e); }
 }
 
-function renderGameContent(room, players, me, oldStatus) {
+function showDiceModal(room, players, me) {
+  document.getElementById('diceModal').classList.add('active');
+  const allRolled = players.length > 0 && players.every(p => p.dice_roll > 0);
+  const meRolled = me && me.dice_roll > 0;
+
+  if (allRolled && room.current_speaker_id) {
+    document.getElementById('diceRollView').style.display = 'none';
+    document.getElementById('diceScoreboard').style.display = 'block';
+    const sorted = [...players].sort((a, b) => b.dice_roll - a.dice_roll);
+    document.getElementById('scoreboardList').innerHTML = sorted.map(p => `
+      <div class="scoreboard-row ${p.user_id === room.current_speaker_id ? 'winner' : ''}">
+        <span>${esc(p.username)}</span>
+        <span>${p.dice_roll} ${p.user_id === room.current_speaker_id ? '👑' : ''}</span>
+      </div>
+    `).join('');
+    const winner = players.find(p => p.user_id === room.current_speaker_id);
+    if (winner) document.getElementById('diceWinnerText').textContent = `Первым ходит: ${winner.username}`;
+  } else {
+    document.getElementById('diceRollView').style.display = 'block';
+    document.getElementById('diceScoreboard').style.display = 'none';
+    const btn = document.getElementById('rollDiceBtn');
+    if (state.diceRolling) {
+      btn.textContent = 'БРОСАЕМ...'; btn.disabled = true;
+    } else if (meRolled) {
+      btn.textContent = 'ЖДЁМ ОСТАЛЬНЫХ...'; btn.disabled = true;
+    } else {
+      btn.textContent = 'КИНУТЬ КУБИК'; btn.disabled = false;
+    }
+  }
+}
+
+/* ---------- РЕНДЕР ВСЕХ КАРТОЧЕК ---------- */
+function renderGameContent(room, players, me) {
   const el = document.getElementById('gameContent');
-  const triggerAnim = room.status === 'playing' && oldStatus !== 'playing';
-  
+  if (!room) { el.innerHTML = ''; return; }
+
   if (room.status === 'dice') {
-    el.innerHTML = `<div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);"><div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div><div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div></div>`;
+    el.innerHTML = `<div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);"><div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div><div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Определяем, кто ходит первым</div></div>`;
     return;
   }
+
   if (room.status === 'finished') {
-    el.innerHTML = `<div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);"><div style="font-size: 32px; color: #fcd34d; margin-bottom: 8px;">${icon('trophy', 48)}</div><div style="font-size: 18px; font-weight: 700;">ИГРА ОКОНЧЕНА</div></div>`;
+    el.innerHTML = `
+      <div style="text-align: center; padding: 24px 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);">
+        <div style="font-size: 32px; color: #fcd34d; margin-bottom: 8px; display: flex; justify-content: center;">${icon('trophy', 56)}</div>
+        <div style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">ИГРА ОКОНЧЕНА</div>
+        <button class="btn btn-primary" onclick="leaveRoom()" style="max-width: 200px; margin: 0 auto;">В меню</button>
+      </div>`;
     return;
   }
-  
+
+  /* ---------- КРОКОДИЛ ---------- */
   if (room.game_type === 'crocodile' && room.status === 'playing') {
     const isHost = room.current_speaker_id === myId;
+    const speaker = players.find(p => p.user_id === room.current_speaker_id);
     el.innerHTML = `
-      <div class="card-3d-wrapper animate-slide-up" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
+      <div class="card-3d-wrapper" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
         <div class="card-3d ${!isHost ? 'flipped' : ''}">
           <div class="card-face">
-            <div style="color: var(--accent); margin-bottom: 8px;">${icon('croc', 48)}</div>
-            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ТВОЁ СЛОВО</div>
-            <div class="anim-reveal" style="font-size: 22px; font-weight: 800; color: var(--accent); margin-top: 4px;">${esc(room.pending_guess || '...')}</div>
+            <div class="card-back-pattern"></div>
+            <div class="card-shine"></div>
+            <div style="color: var(--accent); margin-bottom: 8px;">${icon('eye', 56)}</div>
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px;">СЛОВО СКРЫТО</div>
+            <div style="font-size: 22px; font-weight: 900; color: var(--accent); margin-top: 6px; letter-spacing: 6px;">???</div>
           </div>
           <div class="card-face back">
-             <div style="color: var(--accent); margin-bottom: 8px;">${icon('users', 48)}</div>
-             <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ОБЪЯСНЯЕТ</div>
-             <div style="font-size: 18px; font-weight: 700; margin-top: 4px;">${esc(players.find(p => p.user_id === room.current_speaker_id)?.username || 'Игрок')}</div>
+            <div class="card-back-pattern"></div>
+            <div style="color: var(--accent); margin-bottom: 8px;">${icon('croc', 56)}</div>
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px;">${isHost ? 'ТВОЁ СЛОВО' : 'ОБЪЯСНЯЕТ'}</div>
+            ${isHost
+              ? `<div class="anim-word" style="font-size: 26px; font-weight: 900; color: var(--accent); margin-top: 6px;">${esc(room.pending_guess || '...')}</div>`
+              : `<div style="font-size: 22px; font-weight: 800; margin-top: 6px;">${esc(speaker?.username || 'Игрок')}</div>`}
           </div>
         </div>
       </div>
-      ${isHost ? `<button class="btn btn-danger" onclick="surrender()">${icon('skull', 16)} СДАТЬСЯ</button>` : `<p style="text-align: center; color: var(--text-muted); font-size: 14px;">Пиши варианты в чат!</p>`}
+      ${isHost
+        ? `<button class="btn btn-danger" onclick="event.stopPropagation(); surrender()">${icon('skull', 16)} СДАТЬСЯ</button>`
+        : `<p style="text-align: center; color: var(--text-muted); font-size: 14px;">Пиши варианты в чат! Нажми на карту, чтобы перевернуть.</p>`}
     `;
     return;
   }
 
-  if (room.game_type === 'shpion' && room.status === 'playing') {
+  /* ---------- ШПИОН ---------- */
+  if (room.game_type === 'shpion' && (room.status === 'playing' || room.status === 'discussion')) {
     const myWord = me?.word;
     const role = me?.role === 'civilian' ? 'МИРНЫЙ' : me?.role === 'undercover' ? 'ШПИОН' : 'МИСТЕР УАЙТ';
+    const roleIcon = me?.role === 'civilian' ? 'civilian' : me?.role === 'undercover' ? 'agent' : 'mrWhite';
     el.innerHTML = `
       <div style="text-align: center; margin-bottom: 12px;">
-        <div style="display: inline-block; padding: 4px 12px; background: var(--accent-soft); color: var(--accent); border-radius: var(--radius-pill); font-weight: 700; font-size: 12px; letter-spacing: 1px;">${role}</div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: var(--accent-soft); color: var(--accent); border-radius: var(--radius-pill); font-weight: 800; font-size: 13px; letter-spacing: 1.5px; border: 1px solid var(--accent); animation: popIn 0.5s ease;">
+          ${icon(roleIcon, 16)} ${role}
+        </div>
       </div>
-      <div class="card-3d-wrapper animate-slide-up" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
+      <div class="card-3d-wrapper" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
         <div class="card-3d flipped">
           <div class="card-face">
-            <div style="color: var(--accent); margin-bottom: 8px;">${icon('eye', 48)}</div>
+            <div class="card-back-pattern"></div>
+            <div class="card-shine"></div>
+            <div style="color: var(--accent); margin-bottom: 12px;">${icon('eye', 56)}</div>
+            <div style="font-size: 13px; color: var(--text-muted);">Нажми, чтобы открыть</div>
           </div>
           <div class="card-face back">
-            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">СЕКРЕТНОЕ СЛОВО</div>
-            <div class="anim-reveal" style="font-size: 22px; font-weight: 800; color: var(--accent); margin-top: 4px;">${esc(myWord || 'Блефуй!')}</div>
+            <div class="card-back-pattern"></div>
+            <div style="color: var(--accent); margin-bottom: 10px;">${icon(roleIcon, 56)}</div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 1.5px;">${me?.role === 'mrwhite' ? 'ТЫ БЕЗ СЛОВА' : 'СЕКРЕТНОЕ СЛОВО'}</div>
+            <div class="anim-word" style="font-size: 26px; font-weight: 900; color: var(--accent); margin-top: 6px;">${esc(myWord || 'Блефуй!')}</div>
           </div>
         </div>
       </div>
@@ -793,144 +1202,207 @@ function renderGameContent(room, players, me, oldStatus) {
     return;
   }
 
-  if (room.game_type === 'bunker' && room.status === 'discussion') {
+  /* ---------- БУНКЕР ---------- */
+  if (room.game_type === 'bunker' && (room.status === 'discussion' || room.status === 'voting')) {
     let cards = { profession: 'Врач', health: 'Здоров', baggage: 'Аптечка', fact: 'Паникер' };
     if (me?.word) { try { cards = JSON.parse(me.word); } catch(e){} }
-    
+    const cardConfig = [
+      { key: 'profession', title: 'ПРОФЕССИЯ', icon: 'briefcase', emoji: '👷' },
+      { key: 'health',     title: 'ЗДОРОВЬЕ',  icon: 'heart',     emoji: '🩺' },
+      { key: 'baggage',    title: 'БАГАЖ',     icon: 'backpack',  emoji: '🎒' },
+      { key: 'fact',       title: 'ФАКТЫ',     icon: 'brain',     emoji: '💡' },
+    ];
     el.innerHTML = `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
-        ${['profession', 'health', 'baggage', 'fact'].map((key, i) => `
-          <div class="card-3d-wrapper ${triggerAnim ? 'anim-deal' : ''}" style="height: 130px; animation-delay: ${i * 0.15}s" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        ${cardConfig.map((cfg, i) => `
+          <div class="card-3d-wrapper" style="height: 150px; animation-delay: ${i * 0.15}s" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
             <div class="card-3d">
               <div class="card-face">
-                <div style="color: var(--accent);">${icon('bunker', 32)}</div>
+                <div class="card-back-pattern"></div>
+                <div class="card-shine"></div>
+                <div style="color: var(--accent); animation: focusFloat 3s ease-in-out infinite;">${icon(cfg.icon, 44)}</div>
+                <div style="font-size: 10px; margin-top: 8px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px;">${cfg.title}</div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; opacity: 0.6;">нажми</div>
               </div>
               <div class="card-face back bunker-card">
-                <div class="bunker-card-header">${key === 'profession' ? 'ПРОФЕССИЯ' : key === 'health' ? 'ЗДОРОВЬЕ' : key === 'baggage' ? 'БАГАЖ' : 'ФАКТЫ'}</div>
-                <div class="bunker-card-body">${esc(cards[key])}</div>
+                <div class="bunker-card-header">${icon(cfg.icon, 12)} ${cfg.title}</div>
+                <div class="bunker-card-body">
+                  <div class="bunker-card-emoji">${cfg.emoji}</div>
+                  <div>${esc(cards[cfg.key])}</div>
+                </div>
               </div>
             </div>
           </div>
         `).join('')}
       </div>
-      <button class="btn btn-outline btn-sm" onclick="surrender()" style="margin: 0 auto;">${icon('skull', 14)} СДАТЬСЯ</button>
+      <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); surrender()" style="margin: 0 auto;">${icon('skull', 14)} СДАТЬСЯ</button>
     `;
     return;
   }
 
+  /* ---------- МАНЧКИН ---------- */
   if (room.game_type === 'munchkin') {
     const mData = state.munchkinData || { hand: [], equipped: [], active_monster: null };
     const isMyTurn = room.current_speaker_id === myId;
+    const monsterName = mData.active_monster?.name;
+    const monsterInfo = monsterName ? (MONSTER_INFO[monsterName] || { iconName: 'monster', levels: '?', treasures: '?' }) : null;
+
+    // Определяем, новый ли монстр — для анимации summon
+    const isNewMonster = monsterName && (monsterName !== state.lastMonsterName);
+    state.lastMonsterName = monsterName || null;
+
+    // Определяем, сменился ли ход — для эффекта
+    const turnChanged = room.current_speaker_id !== state.lastSpeakerId;
+    state.lastSpeakerId = room.current_speaker_id;
+
+    // Частицы при появлении монстра
+    let particles = '';
+    if (monsterName && isNewMonster) {
+      const parts = [];
+      for (let i = 0; i < 14; i++) {
+        const px = (Math.random() - 0.5) * 200;
+        const py = -(Math.random() * 120 + 40);
+        const delay = (Math.random() * 0.4).toFixed(2);
+        const size = (Math.random() * 5 + 3).toFixed(1);
+        parts.push(`<div class="monster-particle" style="--px:${px}px;--py:${py}px;animation-delay:${delay}s;width:${size}px;height:${size}px;left:calc(50% + ${(Math.random()-0.5)*30}px)"></div>`);
+      }
+      particles = parts.join('');
+    }
 
     el.innerHTML = `
       <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 10px; text-align: center; border: 1px solid var(--border);">
+        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 12px 10px; text-align: center; border: 1px solid var(--border); animation: statReveal 0.5s ease;">
           <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px;">УРОВЕНЬ</div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--accent);">${me?.munchkin_level || 1}</div>
+          <div style="font-size: 28px; font-weight: 900; color: var(--accent); text-shadow: 0 0 20px var(--accent-soft);">${me?.munchkin_level || 1}</div>
         </div>
-        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 10px; text-align: center; border: 1px solid var(--border);">
+        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 12px 10px; text-align: center; border: 1px solid var(--border); animation: statReveal 0.5s ease 0.1s both;">
           <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px;">СИЛА</div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--accent);">${me?.munchkin_power || 1}</div>
+          <div style="font-size: 28px; font-weight: 900; color: var(--accent); text-shadow: 0 0 20px var(--accent-soft);">${me?.munchkin_power || 1}</div>
         </div>
       </div>
 
       ${mData.active_monster ? `
-        <div class="anim-monster" style="border: 2px solid #ef4444; background: rgba(239,68,68,0.1); border-radius: var(--radius-lg); padding: 16px; text-align: center; margin-bottom: 16px; box-shadow: 0 0 20px rgba(239,68,68,0.3);">
-          <div style="color: #ef4444; margin-bottom: 8px;">${icon('monster', 48)}</div>
-          <div style="font-size: 18px; font-weight: 800; color: #ef4444;">${esc(mData.active_monster.name)}</div>
-          <div style="font-size: 13px; font-weight: 600; margin-top: 4px;">СИЛА: ${mData.active_monster.power}</div>
-          ${isMyTurn ? `
-            <div style="display: flex; gap: 8px; margin-top: 12px;">
-              <button class="btn btn-primary btn-sm" onclick="munchkinAction('fight')" style="margin: 0; flex: 1;">БОЙ</button>
-              <button class="btn btn-secondary btn-sm" onclick="munchkinAction('run')" style="margin: 0; flex: 1;">СМЫТЬСЯ</button>
+        <div class="monster-stage">
+          <div class="monster-shadow"></div>
+          <div class="monster-particles">${particles}</div>
+          <div class="monster-card ${isNewMonster ? 'anim-summon anim-shake' : 'idle'}">
+            <div class="monster-big-icon">${icon(monsterInfo?.iconName || 'monster', 64)}</div>
+            <div class="monster-name-big">${esc(mData.active_monster.name)}</div>
+            <div class="monster-stats">
+              <div class="monster-stat">
+                <div class="monster-stat-label">${icon('sword', 12)} Сила</div>
+                <div class="monster-stat-value">${mData.active_monster.power}</div>
+              </div>
+              <div class="monster-stat">
+                <div class="monster-stat-label">${icon('trophy', 12)} Уровни</div>
+                <div class="monster-stat-value">+${monsterInfo?.levels || '?'}</div>
+              </div>
+              <div class="monster-stat">
+                <div class="monster-stat-label">${icon('gem', 12)} Награда</div>
+                <div class="monster-stat-value">${monsterInfo?.treasures || '?'}</div>
+              </div>
             </div>
-          ` : `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted);">Ждем хода...</div>`}
+            ${isMyTurn ? `
+              <div class="monster-actions">
+                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); munchkinAction('fight')" style="margin: 0; flex: 1;">${icon('sword', 14)} БОЙ</button>
+                <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); munchkinAction('run')" style="margin: 0; flex: 1; border-color: #7f1d1d; color: #fca5a5;">${icon('skull', 14)} СМЫТЬСЯ</button>
+              </div>
+            ` : `<div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.8); text-align: center; letter-spacing: 1px;">ЖДЁМ ХОДА ИГРОКА...</div>`}
+          </div>
         </div>
       ` : isMyTurn ? `
-        <div style="text-align: center; margin-bottom: 16px;" class="animate-slide-up">
-          <div style="font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 8px;">ТВОЙ ХОД</div>
+        <div style="text-align: center; margin-bottom: 16px; padding: 18px; background: var(--accent-soft); border-radius: var(--radius-lg); border: 1px solid var(--accent); animation: popIn 0.5s ease;">
+          <div style="font-weight: 800; font-size: 16px; color: var(--accent); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 6px;">${icon('clock', 18)} Твой ход</div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary btn-sm" onclick="munchkinAction('door')" style="margin: 0; flex: 1; flex-direction: column; padding: 12px;">
-              <div style="margin-bottom: 4px;">${icon('door', 24)}</div> ДВЕРЬ
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); munchkinAction('door')" style="margin: 0; flex: 1; flex-direction: column; padding: 16px; animation: focusFloat 2s ease-in-out infinite;">
+              <div style="margin-bottom: 6px;">${icon('door', 28)}</div> ДВЕРЬ
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="munchkinAction('loot')" style="margin: 0; flex: 1; flex-direction: column; padding: 12px;">
-              <div style="margin-bottom: 4px;">${icon('item', 24)}</div> НЫЧКИ
+            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); munchkinAction('loot')" style="margin: 0; flex: 1; flex-direction: column; padding: 16px;">
+              <div style="margin-bottom: 6px;">${icon('package', 28)}</div> НЫЧКИ
             </button>
           </div>
         </div>
-      ` : ''}
+      ` : `<div style="text-align: center; padding: 14px; color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Ждем хода соперника...</div>`}
 
-      <h3 style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">ЭКИПИРОВКА</h3>
+      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('shield', 14)} Экипировка</h3>
       <div class="hand-scroll">
-        ${mData.equipped.map(c => `
-          <div class="m-card item" onclick="munchkinAction('unequip', ${c.id})">
-            <div class="m-card-title">${c.name || 'Шмотка'}</div>
-            <div class="m-card-icon">${icon('item', 24)}</div>
+        ${(mData.equipped || []).length ? mData.equipped.map((c, i) => `
+          <div class="m-card-slot">
+            <div class="m-card item anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('unequip', ${c.id})">
+              <div class="m-card-title">${esc(c.name || 'Шмотка')}</div>
+              <div class="m-card-icon">${icon('shield', 32)}</div>
+              <div class="m-card-power">+${c.power || 0}</div>
+            </div>
           </div>
-        `).join('') || `<div style="font-size: 12px; color: var(--text-muted);">Пусто</div>`}
+        `).join('') : `<div style="font-size: 12px; color: var(--text-muted); padding: 10px;">Пусто</div>`}
       </div>
 
-      <h3 style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; margin-top: 12px;">В РУКЕ</h3>
+      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('package', 14)} В руке</h3>
       <div class="hand-scroll">
-        ${mData.hand.map((c, i) => `
-          <div class="m-card item ${triggerAnim ? 'anim-deal' : 'animate-pop'}" style="animation-delay: ${i * 0.1}s" onclick="munchkinAction('play_card', ${c.id})">
-            <div class="m-card-title">${c.name || 'Карта'}</div>
-            <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'item', 24)}</div>
+        ${(mData.hand || []).length ? mData.hand.map((c, i) => `
+          <div class="m-card-slot">
+            <div class="m-card item ${c.deck_type === 'door' && c.is_monster ? 'monster' : ''} anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('play_card', ${c.id})">
+              <div class="m-card-title">${esc(c.name || 'Карта')}</div>
+              <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'gem', 32)}</div>
+              <div class="m-card-power">${c.deck_type === 'door' ? 'ДВЕРЬ' : 'СОКРОВИЩЕ'}</div>
+            </div>
           </div>
-        `).join('') || `<div style="font-size: 12px; color: var(--text-muted);">Пусто</div>`}
+        `).join('') : `<div style="font-size: 12px; color: var(--text-muted); padding: 10px;">Пусто</div>`}
       </div>
     `;
+
+    // Тряска экрана при появлении нового монстра
+    if (isNewMonster) {
+      const gameTop = document.getElementById('gameScroll');
+      if (gameTop) {
+        gameTop.classList.add('screen-shake');
+        setTimeout(() => gameTop.classList.remove('screen-shake'), 400);
+      }
+    }
     return;
   }
+
+  el.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Ожидание игры...</div>`;
 }
 
-let isChatOpen = false;
+/* ============================================================
+   ЧАТ
+   ============================================================ */
 function toggleChat(open) {
-  isChatOpen = open;
-  document.getElementById('chatOverlay').classList.toggle('active', open);
-  if (open) setTimeout(() => document.getElementById('chatInput').focus(), 300);
+  state.chatOpen = !!open;
+  document.getElementById('chatOverlay').classList.toggle('active', state.chatOpen);
+  if (state.chatOpen) setTimeout(() => { try { document.getElementById('chatInput').focus(); } catch(e){} }, 300);
 }
 
 function appendMessages(messages) {
-  // 🛡️ ЗАЩИТА: проверяем, массив это или объект { data: [...] }
-  if (messages && !Array.isArray(messages) && Array.isArray(messages.data)) {
-    messages = messages.data;
-  }
   if (!Array.isArray(messages) || !messages.length) return;
-
   const container = document.getElementById('chatMessages');
   const maxId = Math.max(...messages.map(m => m.id));
-  
   if (maxId > state.lastMessageId) {
     state.lastMessageId = maxId;
-    if (!isChatOpen) playTyping();
+    if (!state.chatOpen) playTyping();
   }
-
+  let added = false;
   messages.forEach(m => {
-    if (document.querySelector(`[data-msg-id="${m.id}"]`)) return; 
-    
-    // Убираем индикатор "печатает" при новом сообщении
-    const typing = container.querySelector('.typing-indicator');
-    if (typing) typing.remove();
-
+    if (document.querySelector(`[data-msg-id="${m.id}"]`)) return;
     const el = document.createElement('div');
     el.dataset.msgId = m.id;
     if (m.is_system) {
-      el.className = 'msg msg-system animate-pop';
+      el.className = 'msg msg-system';
       el.innerHTML = m.text;
-      playTyping();
     } else {
       const isMe = m.user_id === myId;
-      el.className = `msg ${isMe ? 'msg-me' : 'msg-other'} animate-slide-up`;
+      el.className = `msg ${isMe ? 'msg-me' : 'msg-other'}`;
       let content = '';
       if (!isMe) content += `<div class="msg-meta">${esc(m.username)}</div>`;
-      if (m.is_voice && m.voice_url) content += `<audio controls src="${m.voice_url}" style="max-width: 100%; height: 32px;"></audio>`;
+      if (m.is_voice && m.voice_url) content += `<audio controls src="${esc(m.voice_url)}" style="max-width: 100%; height: 32px;"></audio>`;
       else content += esc(m.text);
       el.innerHTML = content;
     }
     container.appendChild(el);
+    added = true;
   });
-  container.scrollTop = container.scrollHeight;
+  if (added) container.scrollTop = container.scrollHeight;
 }
 
 async function sendChatMessage() {
@@ -940,80 +1412,110 @@ async function sendChatMessage() {
   input.value = ''; input.disabled = true;
   try { await api(`/api/rooms/${state.currentRoom.id}/message`, 'POST', { text }); }
   catch (e) { showToast('Ошибка отправки', 'error'); input.value = text; }
-  finally { input.disabled = false; input.focus(); }
+  finally { input.disabled = false; try { input.focus(); } catch(e){} }
 }
 
-document.getElementById('chatSendBtn').onclick = sendChatMessage;
-document.getElementById('chatInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage(); };
-
+/* ============================================================
+   КУБИК
+   ============================================================ */
 async function rollDice() {
+  if (!state.currentRoom || state.diceRolling) return;
+  state.diceRolling = true;
   const cube = document.getElementById('diceCube');
   const btn = document.getElementById('rollDiceBtn');
-  
   cube.classList.add('rolling');
-  btn.disabled = true;
-  
+  btn.disabled = true; btn.textContent = 'БРОСАЕМ...';
   setTimeout(async () => {
     cube.classList.remove('rolling');
     const val = Math.floor(Math.random() * 6) + 1;
     const rotations = { 1: [0, 0], 2: [0, -90], 3: [0, 180], 4: [0, 90], 5: [90, 0], 6: [-90, 0] };
     cube.style.transform = `rotateX(${rotations[val][0] - 20}deg) rotateY(${rotations[val][1] - 20}deg)`;
-    
     try {
       await api(`/api/rooms/${state.currentRoom.id}/roll_dice`, 'POST', { value: val });
-      btn.style.display = 'none';
       showToast(`Ты выбросил ${val}!`, 'success');
-    } catch(e) { showToast('Ошибка броска', 'error'); btn.disabled = false; }
+    } catch(e) {
+      showToast('Ошибка броска', 'error');
+      btn.disabled = false; btn.textContent = 'КИНУТЬ КУБИК';
+    } finally {
+      state.diceRolling = false;
+    }
   }, 1000);
 }
 
+/* ============================================================
+   ГОЛОСОВАНИЕ
+   ============================================================ */
 function showVotingModal(room, players) {
-  const alive = players.filter(p => p.is_alive && !p.is_spectator && p.user_id !== myId);
+  const alive = (players || []).filter(p => p.is_alive && !p.is_spectator && p.user_id !== myId);
+  if (!alive.length) { document.getElementById('votingModal').classList.remove('active'); return; }
   const options = document.getElementById('votingOptions');
-  options.innerHTML = alive.map(p => `
-    <button class="btn btn-secondary" onclick="vote(${p.user_id})">${esc(p.username)}</button>
-  `).join('');
+  options.innerHTML = alive.map(p => `<button class="btn btn-secondary" onclick="vote(${p.user_id})">${esc(p.username)}</button>`).join('')
+    + `<button class="btn btn-outline" onclick="document.getElementById('votingModal').classList.remove('active')">Позже</button>`;
   document.getElementById('votingModal').classList.add('active');
 }
 
 async function vote(targetId) {
   document.getElementById('votingModal').classList.remove('active');
-  try { await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId }); showToast('Голос учтен', 'success'); }
-  catch (e) { showToast('Ошибка', 'error'); }
+  if (state.currentRoom) state.votedRound = state.currentRoom.current_round || 0;
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId });
+    showToast('Голос учтен', 'success');
+  } catch (e) { showToast('Ошибка', 'error'); }
 }
 
 async function surrender() {
+  if (!state.currentRoom) return;
   if (!confirm('Вы уверены, что хотите сдаться?')) return;
-  try { await api(`/api/rooms/${state.currentRoom.id}/surrender`, 'POST'); showToast('Вы сдались', 'info'); } catch (e) { showToast('Ошибка', 'error'); }
+  try { await api(`/api/rooms/${state.currentRoom.id}/surrender`, 'POST'); showToast('Вы сдались', 'info'); }
+  catch (e) { showToast('Ошибка', 'error'); }
 }
 
 async function munchkinAction(action, cardId = null) {
+  if (!state.currentRoom) return;
   try {
     await api(`/api/rooms/${state.currentRoom.id}/munchkin`, 'POST', { action, card_id: cardId });
-    refreshGame();
+    state.lastRenderHash = null;
+    await refreshGame();
   } catch (e) { showToast('Ошибка действия', 'error'); }
 }
 
+/* ============================================================
+   МОДАЛКИ / ПРОФИЛЬ
+   ============================================================ */
 function showRules(game, event) {
   if (event) event.stopPropagation();
-  document.getElementById('rulesTitle').textContent = `Правила: ${game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : game === 'bunker' ? 'Бункер' : 'Манчкин'}`;
+  document.getElementById('rulesTitle').textContent = game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : game === 'bunker' ? 'Бункер' : 'Манчкин';
   document.getElementById('rulesText').innerHTML = RULES[game];
   document.getElementById('rulesModal').classList.add('active');
 }
-
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
 async function goProfile() {
-  stopPolling(); showScreen('profile'); document.body.className = 'theme-home';
+  stopPolling();
+  showScreen('profile'); setNavActive('profile');
+  document.body.className = 'theme-home';
   document.getElementById('headerTitle').textContent = 'Профиль';
-  document.getElementById('profileName').textContent = telegramUser.first_name;
-  document.getElementById('profileId').textContent = isGuest ? 'Режим гостя' : 'ID: ' + myId;
+  document.getElementById('profileName').textContent = telegramUser.first_name || 'Игрок';
+  document.getElementById('profileId').textContent = isGuest ? `Гость (${myId})` : 'ID: ' + myId;
   document.getElementById('profileAvatar').innerHTML = icon('user', 32);
-  await refreshBalance();
+  if (isGuest) {
+    document.getElementById('profileBalance').textContent = '0';
+    document.getElementById('profileGames').textContent = String(guestRoundsPlayed);
+  } else {
+    await refreshBalance();
+  }
 }
 
-function startPolling(fn, ms) { stopPolling(); state.pollingTimer = setInterval(fn, ms); }
-function stopPolling() { if (state.pollingTimer) clearInterval(state.pollingTimer); }
+/* ============================================================
+   УТИЛИТЫ
+   ============================================================ */
+function startPolling(fn, ms) {
+  stopPolling();
+  state.pollingTimer = setInterval(() => { fn().catch(()=>{}); }, ms);
+}
+function stopPolling() {
+  if (state.pollingTimer) { clearInterval(state.pollingTimer); state.pollingTimer = null; }
+}
 function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 function showToast(text, type = 'info') {
@@ -1026,9 +1528,14 @@ function showToast(text, type = 'info') {
   setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
+/* ============================================================
+   СТАРТ
+   ============================================================ */
 document.getElementById('headerBrandIcon').innerHTML = icon('play', 18);
 document.getElementById('sideBrandIcon').innerHTML = icon('play', 18);
 document.getElementById('balanceIcon').innerHTML = icon('coin', 14);
+document.getElementById('chatSendBtn').onclick = sendChatMessage;
+document.getElementById('chatInput').onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); } };
 renderNav();
 goHome();
 </script>
