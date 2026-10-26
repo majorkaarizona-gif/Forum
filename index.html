@@ -16,118 +16,82 @@
     --accent-soft: rgba(139,92,246,.15); --chat-me: #8b5cf6; --chat-other: #2c2c2c;
     --shadow: 0 4px 12px rgba(0,0,0,0.3);
     --danger: #ef4444;
+    --gold: #fbbf24;
   }
   .theme-spy { --bg: #0f172a; --surface: #1e293b; --surface-2: #334155; --accent: #ef4444; --accent-grad: linear-gradient(135deg, #ef4444, #b91c1c); --accent-soft: rgba(239,68,68,.15); --chat-me: #ef4444; --danger: #b91c1c; }
   .theme-crocodile { --bg: #064e3b; --surface: #065f46; --surface-2: #047857; --accent: #10b981; --accent-grad: linear-gradient(135deg, #10b981, #059669); --accent-soft: rgba(16,185,129,.15); --chat-me: #10b981; --danger: #065f46; }
   .theme-bunker { --bg: #292524; --surface: #44403c; --surface-2: #57534e; --accent: #d97706; --accent-grad: linear-gradient(135deg, #d97706, #b45309); --accent-soft: rgba(217,119,6,.15); --chat-me: #d97706; --danger: #b45309; }
-  .theme-munchkin { --bg: #451a03; --surface: #78350f; --surface-2: #92400e; --accent: #fcd34d; --accent-grad: linear-gradient(135deg, #fcd34d, #f59e0b); --accent-soft: rgba(252,211,77,.15); --chat-me: #fcd34d; --danger: #b91c1c; }
+  .theme-munchkin { --bg: #451a03; --surface: #78350f; --surface-2: #92400e; --accent: #fcd34d; --accent-grad: linear-gradient(135deg, #fcd34d, #f59e0b); --accent-soft: rgba(252,211,77,.15); --chat-me: #fcd34d; --danger: #b91c1c; --gold: #fde047; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; transition: background 0.3s; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; display: flex; align-items: center; justify-content: center; }
   input { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* ============================================================
-     KEYFRAMES — все анимации
-     ============================================================ */
+  /* ============ KEYFRAMES ============ */
   @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes popIn { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
   @keyframes rollDice { 0% { transform: rotateX(0) rotateY(0); } 100% { transform: rotateX(720deg) rotateY(720deg); } }
   @keyframes typingDots { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-4px); opacity: 1; } }
-
-  /* deal — 3D раздача карт */
   @keyframes dealCard3D {
     0%   { opacity: 0; transform: perspective(900px) translateY(-120px) translateZ(-200px) rotateX(-40deg) rotateZ(-15deg) scale(0.5); }
     60%  { opacity: 1; transform: perspective(900px) translateY(8px) translateZ(20px) rotateX(6deg) rotateZ(2deg) scale(1.04); }
     100% { opacity: 1; transform: perspective(900px) translateY(0) translateZ(0) rotateX(0) rotateZ(0) scale(1); }
   }
-
-  /* monster summon — 3D призыв монстра (как кубик, но мощнее) */
   @keyframes monsterSummon3D {
     0%   { opacity: 0; transform: perspective(1000px) translateY(80px) translateZ(-400px) rotateY(-720deg) scale(0.2); filter: brightness(4) blur(20px) saturate(2); }
     40%  { opacity: 1; transform: perspective(1000px) translateY(-20px) translateZ(60px) rotateY(-360deg) scale(1.15); filter: brightness(2) blur(4px) saturate(1.5); }
     70%  { transform: perspective(1000px) translateY(6px) translateZ(0) rotateY(-20deg) scale(0.97); filter: brightness(1.2) blur(0) saturate(1.1); }
     100% { opacity: 1; transform: perspective(1000px) translateY(0) translateZ(0) rotateY(0) scale(1); filter: brightness(1) blur(0) saturate(1); }
   }
-
-  /* monster idle — лёгкое дыхание */
-  @keyframes monsterIdle {
-    0%, 100% { transform: translateY(0) rotateZ(0); }
-    50%      { transform: translateY(-4px) rotateZ(-0.5deg); }
-  }
-
-  /* monster shake — тряска при появлении */
+  @keyframes monsterIdle { 0%, 100% { transform: translateY(0) rotateZ(0); } 50% { transform: translateY(-4px) rotateZ(-0.5deg); } }
   @keyframes monsterShake {
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
     20%, 40%, 60%, 80% { transform: translateX(5px); }
   }
-
-  /* screen shake */
   @keyframes screenShake {
     0%, 100% { transform: translate(0, 0); }
-    20%      { transform: translate(-3px, 2px); }
-    40%      { transform: translate(3px, -2px); }
-    60%      { transform: translate(-2px, -2px); }
-    80%      { transform: translate(2px, 2px); }
+    20% { transform: translate(-3px, 2px); }
+    40% { transform: translate(3px, -2px); }
+    60% { transform: translate(-2px, -2px); }
+    80% { transform: translate(2px, 2px); }
   }
-
-  /* pulse-свечение вокруг монстра */
   @keyframes monsterGlowPulse {
     0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,.45), inset 0 0 40px rgba(0,0,0,.4); }
-    50%      { box-shadow: 0 0 60px rgba(239,68,68,.9), 0 0 100px rgba(239,68,68,.4), inset 0 0 60px rgba(0,0,0,.6); }
+    50% { box-shadow: 0 0 60px rgba(239,68,68,.9), 0 0 100px rgba(239,68,68,.4), inset 0 0 60px rgba(0,0,0,.6); }
   }
-
-  /* тень под монстром */
   @keyframes shadowPulse {
     0%, 100% { transform: scaleX(1) scaleY(1); opacity: .5; }
-    50%      { transform: scaleX(1.25) scaleY(0.85); opacity: .75; }
+    50% { transform: scaleX(1.25) scaleY(0.85); opacity: .75; }
   }
-
-  /* частицы при появлении */
   @keyframes particleFloat {
     0%   { transform: translate(0, 0) scale(1); opacity: 0; }
     15%  { opacity: 1; }
     100% { transform: translate(var(--px, 0), var(--py, -80px)) scale(0.2); opacity: 0; }
   }
-
-  /* свечение (shimmer), пробегающее по карте */
   @keyframes cardShine {
     0%   { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
     40%  { opacity: 1; }
     100% { transform: translateX(250%) skewX(-20deg); opacity: 0; }
   }
-
-  /* пульсация «горящей» карты */
-  @keyframes fireFlicker {
-    0%, 100% { opacity: 0.35; transform: scale(1); }
-    50%      { opacity: 0.85; transform: scale(1.06); }
-  }
-
-  /* раскрытие слова */
   @keyframes wordReveal {
     0%   { filter: blur(20px); opacity: 0; transform: scale(0.6); letter-spacing: -10px; }
     60%  { filter: blur(4px); opacity: 1; letter-spacing: 4px; }
     100% { filter: blur(0); opacity: 1; transform: scale(1); letter-spacing: normal; }
   }
-
-  /* всплывающие цифры */
   @keyframes statReveal {
     0%   { transform: translateY(20px) scale(0.4); opacity: 0; }
     60%  { transform: translateY(-4px) scale(1.15); opacity: 1; }
     100% { transform: translateY(0) scale(1); opacity: 1; }
   }
-
-  /* 3D flip (карточки) */
-  @keyframes flipIn {
-    from { transform: rotateY(90deg); opacity: 0; }
-    to   { transform: rotateY(0); opacity: 1; }
-  }
-
-  /* лёгкое покачивание «фокуса» на карте */
   @keyframes focusFloat {
     0%, 100% { transform: translateY(0) rotateZ(0) scale(1); }
     50%      { transform: translateY(-3px) rotateZ(0.8deg) scale(1.02); }
+  }
+  @keyframes coinPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(251,191,36,.6)); }
+    50%      { transform: scale(1.15); filter: drop-shadow(0 0 12px rgba(251,191,36,1)); }
   }
 
   .animate-slide-up { animation: slideUp 0.3s ease forwards; }
@@ -137,12 +101,9 @@
   .anim-shake { animation: monsterShake 0.5s ease-in-out 0.9s; }
   .anim-word { animation: wordReveal 1s ease-out forwards; }
   .anim-focus { animation: focusFloat 3s ease-in-out infinite; }
-
   .screen-shake { animation: screenShake 0.4s ease-in-out; }
 
-  /* ============================================================
-     LAYOUT
-     ============================================================ */
+  /* ============ LAYOUT ============ */
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
   .sidebar { display: none; width: 240px; background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 12px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
@@ -170,14 +131,11 @@
   .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
   .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); width: auto; }
 
-  /* ============================================================
-     Сетка игр / комнаты / лобби
-     ============================================================ */
+  /* Game grid */
   .game-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
   @media (min-width: 640px) { .game-grid { grid-template-columns: 1fr 1fr; } }
   .game-card { position: relative; border-radius: var(--radius-lg); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; background: var(--surface); border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; }
   .game-card:active { transform: scale(0.97); }
-  .game-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,.4); }
   .game-card::before { content: ''; position: absolute; inset: 0; opacity: 0.15; z-index: 0; }
   .game-card.spy::before { background: radial-gradient(circle, #ef4444, transparent); }
   .game-card.crocodile::before { background: radial-gradient(circle, #10b981, transparent); }
@@ -205,9 +163,7 @@
   .player-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
   .player-name { font-size: 12px; font-weight: 600; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* ============================================================
-     Игра — верх/чат
-     ============================================================ */
+  /* Game */
   .game-layout { display: flex; flex-direction: column; height: 100%; }
   .game-top { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 0; }
 
@@ -228,172 +184,37 @@
   .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
   .icon-btn.send { background: var(--accent-grad); color: #000; border: none; }
 
-  /* ============================================================
-     3D Card — универсальный контейнер для флипа
-     ============================================================ */
-  .card-3d-wrapper {
-    perspective: 1200px;
-    width: 100%;
-    height: 180px;
-    margin-bottom: 16px;
-    cursor: pointer;
-    animation: dealCard3D 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
-  .card-3d {
-    position: relative;
-    width: 100%; height: 100%;
-    transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-style: preserve-3d;
-  }
+  /* 3D Card */
+  .card-3d-wrapper { perspective: 1200px; width: 100%; height: 180px; margin-bottom: 16px; cursor: pointer; }
+  .card-3d { position: relative; width: 100%; height: 100%; transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
   .card-3d.flipped { transform: rotateY(180deg); }
-  .card-3d-wrapper:hover .card-3d:not(.flipped) { transform: rotateY(8deg) rotateX(-4deg); }
-  .card-face {
-    position: absolute; width: 100%; height: 100%;
-    -webkit-backface-visibility: hidden; backface-visibility: hidden;
-    border-radius: var(--radius-lg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 16px;
-    border: 2px solid var(--border);
-    background: var(--surface);
-    overflow: hidden;
-  }
-  .card-face.back {
-    transform: rotateY(180deg);
-    background: var(--surface-2);
-    border-color: var(--accent);
-    box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 30px var(--accent-soft);
-  }
-
-  /* Рубашка карты — узор */
-  .card-back-pattern {
-    position: absolute; inset: 0;
-    background:
-      repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.03) 10px, rgba(255,255,255,.03) 20px),
-      radial-gradient(circle at center, var(--accent-soft) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+  .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; border: 2px solid var(--border); background: var(--surface); overflow: hidden; }
+  .card-face.back { transform: rotateY(180deg); background: var(--surface-2); border-color: var(--accent); box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 30px var(--accent-soft); }
+  .card-back-pattern { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.03) 10px, rgba(255,255,255,.03) 20px), radial-gradient(circle at center, var(--accent-soft) 0%, transparent 70%); pointer-events: none; z-index: 0; }
   .card-face > * { position: relative; z-index: 1; }
+  .card-shine { position: absolute; top: 0; left: 0; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); animation: cardShine 1.2s ease-out 0.5s forwards; pointer-events: none; z-index: 2; }
 
-  /* Блик по карте */
-  .card-shine {
-    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    animation: cardShine 1.2s ease-out 0.5s forwards;
-    pointer-events: none;
-    z-index: 2;
-  }
+  /* Bunker */
+  .bunker-card { background: linear-gradient(180deg, #fde047 0%, #facc15 100%) !important; color: #000 !important; border: 3px solid #000 !important; border-radius: 12px !important; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 24px rgba(0,0,0,.5), inset 0 0 30px rgba(0,0,0,.15); }
+  .bunker-card-header { background: #000; color: #facc15; padding: 6px; font-weight: 900; font-size: 10px; text-align: center; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; font-weight: 800; font-size: 13px; text-align: center; line-height: 1.25; }
+  .bunker-card-emoji { font-size: 40px; margin-bottom: 4px; }
 
-  /* ============================================================
-     Bunker карты
-     ============================================================ */
-  .bunker-card {
-    background: linear-gradient(180deg, #fde047 0%, #facc15 100%) !important;
-    color: #000 !important;
-    border: 3px solid #000 !important;
-    border-radius: 12px !important;
-    padding: 0 !important;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    box-shadow: 0 10px 24px rgba(0,0,0,.5), inset 0 0 30px rgba(0,0,0,.15);
-  }
-  .bunker-card-header {
-    background: #000; color: #facc15;
-    padding: 6px; font-weight: 900; font-size: 10px;
-    text-align: center; letter-spacing: 1px; text-transform: uppercase;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-  }
-  .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; font-weight: 800; font-size: 14px; text-align: center; line-height: 1.2; }
-  .bunker-card-emoji { font-size: 42px; margin-bottom: 4px; }
-
-  /* ============================================================
-     Monster Stage — 3D сцена с монстром
-     ============================================================ */
-  .monster-stage {
-    position: relative;
-    margin-bottom: 20px;
-    perspective: 1200px;
-    padding: 12px 4px 24px;
-  }
-  .monster-shadow {
-    position: absolute;
-    left: 50%; bottom: 4px;
-    width: 70%; height: 26px;
-    background: radial-gradient(ellipse at center, rgba(239,68,68,.75) 0%, rgba(239,68,68,.2) 40%, transparent 70%);
-    border-radius: 50%;
-    transform: translateX(-50%);
-    animation: shadowPulse 2.4s ease-in-out infinite;
-    pointer-events: none;
-  }
+  /* ========== MONSTER STAGE ========== */
+  .monster-stage { position: relative; margin-bottom: 20px; perspective: 1200px; padding: 12px 4px 24px; }
+  .monster-shadow { position: absolute; left: 50%; bottom: 4px; width: 70%; height: 26px; background: radial-gradient(ellipse at center, rgba(239,68,68,.75) 0%, rgba(239,68,68,.2) 40%, transparent 70%); border-radius: 50%; transform: translateX(-50%); animation: shadowPulse 2.4s ease-in-out infinite; pointer-events: none; }
   .monster-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-  .monster-particle {
-    position: absolute;
-    bottom: 20px; left: 50%;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fca5a5, #ef4444 60%, transparent);
-    box-shadow: 0 0 10px #ef4444;
-    animation: particleFloat 1.6s ease-out forwards;
-    opacity: 0;
-  }
-
-  .monster-card {
-    position: relative;
-    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #450a0a 100%);
-    border: 3px solid #ef4444;
-    border-radius: var(--radius-lg);
-    padding: 20px 18px 18px;
-    text-align: center;
-    overflow: hidden;
-    animation: monsterGlowPulse 2.2s ease-in-out infinite;
-    transform-style: preserve-3d;
-  }
-  .monster-card::before {
-    content: '';
-    position: absolute; top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 60%);
-    animation: rollDice 12s linear infinite;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .monster-card::after {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(255,255,255,.06) 0%, transparent 30%),
-      radial-gradient(circle at 80% 80%, rgba(255,255,255,.06) 0%, transparent 30%);
-    pointer-events: none;
-    z-index: 0;
-  }
+  .monster-particle { position: absolute; bottom: 20px; left: 50%; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, #fca5a5, #ef4444 60%, transparent); box-shadow: 0 0 10px #ef4444; animation: particleFloat 1.6s ease-out forwards; opacity: 0; }
+  .monster-card { position: relative; background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #450a0a 100%); border: 3px solid #ef4444; border-radius: var(--radius-lg); padding: 20px 18px 18px; text-align: center; overflow: hidden; animation: monsterGlowPulse 2.2s ease-in-out infinite; transform-style: preserve-3d; }
+  .monster-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 60%); animation: rollDice 12s linear infinite; z-index: 0; pointer-events: none; }
   .monster-card > * { position: relative; z-index: 1; }
   .monster-card.idle { animation: monsterGlowPulse 2.2s ease-in-out infinite, monsterIdle 3s ease-in-out infinite; }
-
-  .monster-big-icon {
-    color: #fecaca;
-    margin-bottom: 8px;
-    display: flex; justify-content: center;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,.6));
-    animation: statReveal 0.6s ease-out 0.2s both;
-  }
-  .monster-name-big {
-    font-size: 24px; font-weight: 900;
-    color: #fecaca; text-transform: uppercase;
-    letter-spacing: 3px; margin-bottom: 16px;
-    text-shadow: 0 2px 12px rgba(0,0,0,.9), 0 0 20px rgba(239,68,68,.4);
-    animation: statReveal 0.6s ease-out 0.35s both;
-  }
-  .monster-stats {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 8px; margin-bottom: 16px;
-  }
-  .monster-stat {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(239,68,68,.3);
-    border-radius: var(--radius-md);
-    padding: 10px 6px;
-    animation: statReveal 0.5s ease-out both;
-  }
+  .monster-big-icon { color: #fecaca; margin-bottom: 8px; display: flex; justify-content: center; filter: drop-shadow(0 4px 12px rgba(0,0,0,.6)); animation: statReveal 0.6s ease-out 0.2s both; }
+  .monster-name-big { font-size: 22px; font-weight: 900; color: #fecaca; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; text-shadow: 0 2px 12px rgba(0,0,0,.9), 0 0 20px rgba(239,68,68,.4); animation: statReveal 0.6s ease-out 0.35s both; }
+  .monster-badstuff { font-size: 11px; color: #fca5a5; background: rgba(0,0,0,.4); padding: 6px 10px; border-radius: 8px; margin-bottom: 14px; line-height: 1.35; animation: statReveal 0.6s ease-out 0.4s both; }
+  .monster-badstuff b { color: #fff; }
+  .monster-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+  .monster-stat { background: rgba(0,0,0,0.4); border: 1px solid rgba(239,68,68,.3); border-radius: var(--radius-md); padding: 10px 6px; animation: statReveal 0.5s ease-out both; }
   .monster-stat:nth-child(1) { animation-delay: 0.5s; }
   .monster-stat:nth-child(2) { animation-delay: 0.65s; }
   .monster-stat:nth-child(3) { animation-delay: 0.8s; }
@@ -401,82 +222,86 @@
   .monster-stat-value { font-size: 22px; font-weight: 900; color: #fff; text-shadow: 0 0 12px rgba(239,68,68,.6); }
   .monster-actions { display: flex; gap: 8px; animation: statReveal 0.5s ease-out 0.95s both; }
 
-  /* ============================================================
-     Munchkin карты в руке
-     ============================================================ */
-  .m-card-slot {
-    perspective: 800px;
-    flex-shrink: 0;
-  }
-  .m-card {
-    min-width: 110px; height: 158px;
-    border-radius: 10px;
-    padding: 8px;
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,.08);
-    cursor: pointer;
-    border: 2px solid #000;
-    background: linear-gradient(180deg, #fef08a 0%, #facc15 100%);
-    color: #000;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-    transform-style: preserve-3d;
-  }
-  .m-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 40%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
-    transform: translateX(-100%) skewX(-15deg);
-    pointer-events: none;
-  }
+  /* ========== HERO / CHARACTER PANEL ========== */
+  .hero-panel { background: linear-gradient(135deg, rgba(252,211,77,.15), rgba(180,83,9,.15)); border: 2px solid var(--accent); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .hero-panel::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, var(--accent-soft), transparent 60%); pointer-events: none; }
+  .hero-panel > * { position: relative; }
+  .hero-title { font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+  .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .hero-stat { background: rgba(0,0,0,.35); border-radius: 10px; padding: 8px 4px; text-align: center; border: 1px solid rgba(255,255,255,.08); }
+  .hero-stat-label { font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.5px; }
+  .hero-stat-value { font-size: 20px; font-weight: 900; color: var(--accent); text-shadow: 0 0 12px var(--accent-soft); }
+  .hero-stat.gold .hero-stat-value { color: var(--gold); text-shadow: 0 0 12px rgba(251,191,36,.5); }
+  .hero-stat.power .hero-stat-value { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,.5); }
+  .hero-class-race { display: flex; gap: 8px; margin-top: 10px; }
+  .hero-tag { flex: 1; background: rgba(0,0,0,.35); border-radius: 8px; padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--accent); text-align: center; border: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+  /* ========== MARKET ========== */
+  .market-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(251,191,36,.2), rgba(180,83,9,.2)); border: 2px solid var(--gold); border-radius: var(--radius-md); color: var(--gold); font-weight: 800; font-size: 14px; letter-spacing: 1px; margin-bottom: 16px; animation: popIn 0.5s ease; }
+  .market-btn:active { transform: scale(0.97); }
+  .market-btn svg { animation: coinPulse 2s ease-in-out infinite; }
+
+  .market-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 1500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); }
+  .market-overlay.active { display: flex; }
+  .market-sheet { background: var(--surface); width: 100%; max-width: 500px; max-height: 88vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; display: flex; flex-direction: column; animation: slideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding-bottom: env(safe-area-inset-bottom); border-top: 2px solid var(--gold); }
+  .market-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+  .market-title { font-size: 18px; font-weight: 800; color: var(--gold); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+  .market-body { flex: 1; overflow-y: auto; padding: 14px 16px; }
+  .market-gold { background: linear-gradient(135deg, rgba(251,191,36,.2), rgba(180,83,9,.2)); border: 2px solid var(--gold); border-radius: var(--radius-md); padding: 14px; text-align: center; margin-bottom: 14px; }
+  .market-gold-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .market-gold-value { font-size: 32px; font-weight: 900; color: var(--gold); display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .market-progress { height: 8px; background: rgba(0,0,0,.4); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+  .market-progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #f59e0b); border-radius: 4px; transition: width 0.5s ease; box-shadow: 0 0 10px var(--gold); }
+  .market-progress-text { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-weight: 600; }
+
+  .sell-item { display: flex; align-items: center; gap: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px; }
+  .sell-item-icon { width: 40px; height: 40px; border-radius: 8px; background: rgba(251,191,36,.15); color: var(--gold); display: grid; place-items: center; flex-shrink: 0; }
+  .sell-item-info { flex: 1; min-width: 0; }
+  .sell-item-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sell-item-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; margin-top: 2px; }
+  .sell-item-price { font-weight: 800; color: var(--gold); }
+  .sell-item-power { font-weight: 700; color: #ef4444; }
+  .sell-item-btn { padding: 6px 12px; background: var(--gold); color: #000; border-radius: 8px; font-weight: 800; font-size: 11px; white-space: nowrap; }
+  .sell-item-btn:disabled { opacity: 0.4; }
+
+  .market-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 24px 0; }
+
+  .market-lvl-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; border-radius: var(--radius-md); font-weight: 900; font-size: 15px; letter-spacing: 1px; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .market-lvl-btn:disabled { opacity: 0.4; cursor: not-allowed; background: var(--surface-2); color: var(--text-muted); }
+  .market-lvl-btn:not(:disabled) { animation: focusFloat 2s ease-in-out infinite; }
+
+  /* ========== MUNCHKIN CARDS ========== */
+  .m-card-slot { perspective: 800px; flex-shrink: 0; }
+  .m-card { min-width: 120px; height: 175px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 6px 14px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,.08); cursor: pointer; border: 2px solid #000; background: linear-gradient(180deg, #fef08a 0%, #facc15 100%); color: #000; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s; position: relative; overflow: hidden; }
+  .m-card::before { content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); transform: translateX(-100%) skewX(-15deg); pointer-events: none; }
   .m-card:hover { transform: translateY(-6px) scale(1.04) rotateZ(-1deg); box-shadow: 0 12px 24px rgba(0,0,0,.6); }
   .m-card:hover::before { animation: cardShine 0.8s ease-out; }
   .m-card:active { transform: translateY(-2px) scale(0.98); }
-  .m-card.monster {
-    background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
-    color: #fff;
-    border-color: #7f1d1d;
-  }
-  .m-card.monster .m-card-power { background: #7f1d1d; color: #fff; }
-  .m-card-title {
-    font-size: 11px; font-weight: 900;
-    margin-bottom: 6px; line-height: 1.15;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    word-break: break-word;
-  }
+  .m-card.monster { background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); color: #fff; border-color: #7f1d1d; }
+  .m-card.treasure { background: linear-gradient(180deg, #fef9c3 0%, #fde047 100%); }
+  .m-card-header { display: flex; justify-content: space-between; width: 100%; font-size: 8px; font-weight: 900; letter-spacing: 0.5px; opacity: 0.85; margin-bottom: 2px; }
+  .m-card-title { font-size: 11px; font-weight: 900; line-height: 1.15; text-transform: uppercase; letter-spacing: 0.3px; word-break: break-word; flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
   .m-card-icon { margin: 4px 0; }
-  .m-card-power {
-    margin-top: auto;
-    background: #000; color: #facc15;
-    border-radius: 6px;
-    padding: 3px 8px;
-    font-size: 10px; font-weight: 900;
-    letter-spacing: 0.5px;
-  }
-  .hand-scroll {
-    display: flex; gap: 10px;
-    overflow-x: auto;
-    padding: 14px 4px 10px;
-    scrollbar-width: none;
-  }
+  .m-card-footer { width: 100%; display: flex; gap: 3px; margin-top: auto; }
+  .m-card-badge { flex: 1; border-radius: 6px; padding: 3px 4px; font-size: 9px; font-weight: 900; text-align: center; letter-spacing: 0.3px; }
+  .m-card-power { background: #000; color: #facc15; }
+  .m-card.monster .m-card-power { background: #7f1d1d; color: #fff; }
+  .m-card-price { background: rgba(0,0,0,.7); color: var(--gold); }
+  .m-card-lvl-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #000; font-size: 10px; font-weight: 900; padding: 3px 6px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+
+  .hand-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 14px 4px 10px; scrollbar-width: none; }
   .hand-scroll::-webkit-scrollbar { display: none; }
 
-  /* ============================================================
-     Модалки
-     ============================================================ */
+  .empty-slot { font-size: 12px; color: var(--text-muted); padding: 16px 10px; }
+
+  /* Modals */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
   .modal.active { display: flex; }
   .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; text-align: center; }
   .modal-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
 
-  /* ============================================================
-     Кубик
-     ============================================================ */
+  /* Dice */
   .dice-scene { width: 80px; height: 80px; perspective: 600px; margin: 0 auto 24px; transition: opacity 0.3s; }
   .dice-cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(-20deg); transition: transform 0.3s; }
   .dice-cube.rolling { animation: rollDice 1s ease-in-out; }
@@ -655,7 +480,20 @@
   </div>
 </div>
 
-<div id="toastWrap" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
+<!-- РЫНОК -->
+<div class="market-overlay" id="marketOverlay">
+  <div class="market-sheet">
+    <div class="market-header">
+      <div class="market-title">💰 Рынок</div>
+      <button class="icon-btn" onclick="closeMarket()" style="width: 32px; height: 32px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="market-body" id="marketBody"></div>
+  </div>
+</div>
+
+<div id="toastWrap" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
 
 <script>
 /* ============================================================
@@ -700,26 +538,76 @@ const ICONS = {
   mrWhite: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
   chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
   monster: '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 15c1.5 1 3 1.5 4 1.5s2.5-.5 4-1.5"/>',
-  fire: '<path d="M12 2C9 7 6 9 6 14a6 6 0 0 0 12 0c0-3-2-5-4-8-1 2-2 3-2 3s0-4-2-7z"/>'
+  fire: '<path d="M12 2C9 7 6 9 6 14a6 6 0 0 0 12 0c0-3-2-5-4-8-1 2-2 3-2 3s0-4-2-7z"/>',
+  shop: '<path d="M3 9l2-6h14l2 6"/><path d="M3 9v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/><path d="M9 22V12h6v10"/>',
+  horse: '<path d="M4 20l3-1M20 20l-3-1M8 20V10l2-4h4l2 4v10M10 6h4"/><circle cx="11" cy="14" r=".5" fill="currentColor"/><circle cx="13" cy="14" r=".5" fill="currentColor"/>',
+  crab: '<circle cx="12" cy="13" r="5"/><path d="M7 13L4 11M17 13l3-2M9 16l-2 3M15 16l2 3M9 11l-2-2M15 11l2-2"/><circle cx="10" cy="12" r=".5" fill="currentColor"/><circle cx="14" cy="12" r=".5" fill="currentColor"/>',
+  ghost: '<path d="M12 2a7 7 0 0 0-7 7v13l3-2 2 2 2-2 2 2 2-2 3 2V9a7 7 0 0 0-7-7z"/><circle cx="9" cy="11" r="1" fill="currentColor"/><circle cx="15" cy="11" r="1" fill="currentColor"/>'
 };
 function icon(name, size = 20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
 }
 
 const RULES = {
-  shpion: `<b>🕵️ Шпион</b><br><br><b>Цель:</b> Найти шпиона среди мирных.<br><br><b>Как играть:</b><br>1. Все получают секретное слово (например, "Танк").<br>2. Один — шпион. Ему дают другое слово или он не знает ничего.<br>3. По очереди описываете слова, стараясь не выдать.<br>4. Голосуете. Если выгнали шпиона — победили мирные.`,
+  shpion: `<b>🕵️ Шпион</b><br><br><b>Цель:</b> Найти шпиона среди мирных.<br><br><b>Как играть:</b><br>1. Все получают секретное слово.<br>2. Один — шпион. Ему дают другое слово.<br>3. По очереди описываете слова, стараясь не выдать.<br>4. Голосуете. Выгнали шпиона — победили мирные.`,
   crocodile: `<b>🐊 Крокодил</b><br><br><b>Цель:</b> Угадать слово.<br><br><b>Как играть:</b><br>1. Ведущий получает слово.<br>2. Он объясняет его в чате, не называя.<br>3. Игроки пишут варианты.<br>4. Кто угадал — становится ведущим.`,
-  bunker: `<b>🏚️ Бункер</b><br><br><b>Цель:</b> Убедить других пустить вас в бункер.<br><br><b>Как играть:</b><br>1. Случается катастрофа.<br>2. Каждый получает карты (Профессия, Здоровье, Багаж, Факт).<br>3. Раскрывайте карты и доказывайте пользу.<br>4. Голосуйте за изгнание. Выжившие — побеждают.`,
-  munchkin: `<b>⚔️ Манчкин</b><br><br><b>Цель:</b> Первым дойти до 10 уровня.<br><br><b>Как играть:</b><br>1. Вышибаете дверь → встречаете монстра.<br>2. Сравниваете силу. Сильнее — победа (уровень + сокровище). Слабее — смывайтесь (кубик 5-6).<br>3. Надевайте шмотки, чтобы повысить силу.<br>4. Победить на 10 уровне можно только в бою.`
+  bunker: `<b>🏚️ Бункер</b><br><br><b>Цель:</b> Убедить других пустить вас в бункер.<br><br><b>Как играть:</b><br>1. Случается катастрофа.<br>2. Каждый получает карты.<br>3. Раскрывайте карты и доказывайте пользу.<br>4. Голосуйте за изгнание. Выжившие — побеждают.`,
+  munchkin: `<b>⚔️ Манчкин</b><br><br><b>Цель:</b> Первым дойти до 10 уровня.<br><br><b>Как играть:</b><br>1. Вышибаете дверь → встречаете монстра.<br>2. Сравниваете силу. Сильнее — победа (уровень + сокровище). Слабее — смывайтесь (кубик 5-6).<br>3. Надевайте шмотки, чтобы повысить силу.<br>4. Продавайте шмотки: 1000 голдов = 1 уровень.<br>5. Победить на 10 уровне можно ТОЛЬКО в бою.`
 };
 
-const MONSTER_INFO = {
-  'Гоблин': { power: 1, levels: 1, treasures: 1, iconName: 'goblin' },
-  'Скелет': { power: 2, levels: 1, treasures: 1, iconName: 'skeleton' },
-  'Орк':    { power: 3, levels: 1, treasures: 2, iconName: 'orc' },
-  'Огр':    { power: 5, levels: 2, treasures: 2, iconName: 'ogre' },
-  'Дракон': { power: 15, levels: 3, treasures: 4, iconName: 'dragon' }
+/* ============================================================
+   38 МОНСТРОВ ИЗ КЛАССИЧЕСКОГО «МАНЧКИНА»
+   ============================================================ */
+const MONSTERS_DB = {
+  "3 872 орка":          { level: 10, treasures: 3, icon: 'orc',      badstuff: "🎲 Брось кубик: 1–2 — затоптали насмерть; 3+ — минус столько уровней." },
+  "Амазонка":            { level: 8,  treasures: 2, icon: 'civilian', badstuff: "Теряешь класс; без класса — минус 3 уровня." },
+  "Древний Младенец":    { level: 8,  treasures: 2, icon: 'ghost',    badstuff: "Андед. Эффект по карте (≈)." },
+  "Бигфут":              { level: 12, treasures: 3, icon: 'ogre',     badstuff: "Расплющил и съел шляпу — теряй головняк." },
+  "Быкарог":             { level: 18, treasures: 5, icon: 'ogre',     badstuff: "☠️ Сдёргивает кожу — смерть." },
+  "Крабы":               { level: 1,  treasures: 1, icon: 'crab',     badstuff: "Сбрось броню и всё надетое ниже пояса." },
+  "Сочащаяся Слизь":     { level: 1,  treasures: 1, icon: 'ghost',    badstuff: "Сбрось обувку; нет её — минус 1 уровень." },
+  "Лицо-Сосальщик":      { level: 8,  treasures: 2, icon: 'ghost',    badstuff: "Андед. Присасывается к лицу (≈)." },
+  "Парящий Нос":         { level: 10, treasures: 2, icon: 'ghost',    badstuff: "Андед. Смыться нельзя. Высасывает жизнь." },
+  "Летучие Лягушки":     { level: 2,  treasures: 1, icon: 'goblin',   badstuff: "Болезненные укусы — минус 2 уровня." },
+  "Беседка":             { level: 8,  treasures: 2, icon: 'package',  badstuff: "Минус 3 уровня." },
+  "Желейный Октаэдр":    { level: 4,  treasures: 2, icon: 'gem',      badstuff: "Эффект по карте (≈)." },
+  "Гульфренды":          { level: 9,  treasures: 2, icon: 'ghost',    badstuff: "Андед. Эффект по карте (≈)." },
+  "Гул-Братья":          { level: 9,  treasures: 4, icon: 'skeleton', badstuff: "Трое гулей. Эффект по карте (≈)." },
+  "Гарпии":              { level: 4,  treasures: 2, icon: 'goblin',   badstuff: "Ужасное пение — минус 2 уровня." },
+  "Грифон":              { level: 16, treasures: 4, icon: 'dragon',   badstuff: "Каждый соперник забирает шмотку или карту с руки." },
+  "Страховой Агент":     { level: 14, treasures: 4, icon: 'civilian', badstuff: "Оформил страховку: сбрось шмоток на 1000 г; не наберётся — всё." },
+  "Царь Тут":            { level: 16, treasures: 4, icon: 'skeleton', badstuff: "Андед. Потеряй все шмотки и все карты с руки." },
+  "Хромой Гоблин":       { level: 1,  treasures: 1, icon: 'goblin',   badstuff: "Минус 1 уровень." },
+  "Большая Злая Курица": { level: 2,  treasures: 1, icon: 'goblin',   badstuff: "Клевание — минус 1 уровень." },
+  "Адвокаты":            { level: 6,  treasures: 2, icon: 'civilian', badstuff: "Каждый соперник берёт карту с руки, остаток в сброс." },
+  "Лепрекон":            { level: 8,  treasures: 3, icon: 'goblin',   badstuff: "Эффект по карте (≈)." },
+  "Крыса-Разрушитель":   { level: 1,  treasures: 1, icon: 'monster',  badstuff: "Сбрось одну шмотку." },
+  "Мистер Кости":        { level: 18, treasures: 4, icon: 'skeleton', badstuff: "Андед. Минус 2 уровня." },
+  "Сетевой Тролль":      { level: 10, treasures: 3, icon: 'ogre',     badstuff: "Затаскивает в сеть — минус 2 уровня." },
+  "Питбуль":             { level: 2,  treasures: 1, icon: 'monster',  badstuff: "Минус 2 уровня." },
+  "Утконос-Демон":       { level: 6,  treasures: 2, icon: 'monster',  badstuff: "Эффект по карте (≈)." },
+  "Плутониевый Дракон":  { level: 20, treasures: 5, icon: 'dragon',   badstuff: "☠️ Пламенное дыхание — смерть." },
+  "Растение в Горшке":   { level: 1,  treasures: 1, icon: 'package',  badstuff: "Непотребства нет." },
+  "Пукадзю":             { level: 6,  treasures: 2, icon: 'monster',  badstuff: "Струйная рвота — сбрось всю руку." },
+  "Вопящий Гик":         { level: 6,  treasures: 2, icon: 'civilian', badstuff: "Эффект по карте (≈)." },
+  "Улитки под Кайфом":   { level: 4,  treasures: 2, icon: 'monster',  badstuff: "Брось кубик и сбрось столько шмоток или карт с руки." },
+  "Кальмарозавр":        { level: 18, treasures: 4, icon: 'monster',  badstuff: "Хватает шмотку и уплывает." },
+  "Каменный Голем":      { level: 8,  treasures: 2, icon: 'ogre',     badstuff: "Эффект по карте (≈)." },
+  "Демон-Язык":          { level: 12, treasures: 3, icon: 'monster',  badstuff: "Отвратительный поцелуй — минус 2 уровня (эльфам −3)." },
+  "Мёртвая Лошадь":      { level: 4,  treasures: 2, icon: 'horse',    badstuff: "Андед. Пинает — минус 2 уровня." },
+  "Невыразимо Ужасный Невыразимый Ужас": { level: 14, treasures: 4, icon: 'ghost', badstuff: "☠️ Смерть для всех, кроме волшебника." },
+  "Начинающий Вампир":   { level: 12, treasures: 3, icon: 'ghost',    badstuff: "Андес. Минус 3 уровня." }
 };
+
+// Утилита: найти монстра с fallback
+function getMonsterInfo(name) {
+  if (!name) return null;
+  if (MONSTERS_DB[name]) return MONSTERS_DB[name];
+  // Частичное совпадение (на случай, если с сервера пришло с изменениями)
+  const found = Object.keys(MONSTERS_DB).find(k => k.toLowerCase() === String(name).toLowerCase());
+  if (found) return MONSTERS_DB[found];
+  return { level: 1, treasures: 1, icon: 'monster', badstuff: "—" };
+}
 
 const CONFIG = {
   SUPABASE_URL: 'https://jgjereoejdipaqwjhexc.supabase.co',
@@ -776,9 +664,30 @@ const state = {
   balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null,
   userIsHost: false, currentGame: null, munchkinData: null,
   lastRenderHash: null, chatOpen: false, votedRound: 0, diceRolling: false,
-  lastMonsterName: null, lastMonsterId: null, lastSpeakerId: null
+  lastMonsterName: null, lastSpeakerId: null,
+  // Локальный трекер золота (fallback, если бэкенд не отдаёт)
+  gold: 0, marketOpen: false
 };
 const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
+
+// Ключ для локального хранения золота по комнате
+function goldKey(roomId) { return `munchkin_gold_${roomId}_${myId}`; }
+
+function loadGold() {
+  if (!state.currentRoom) return;
+  try {
+    const saved = localStorage.getItem(goldKey(state.currentRoom.id));
+    state.gold = saved ? parseInt(saved) || 0 : 0;
+  } catch(e) { state.gold = 0; }
+}
+function saveGold() {
+  if (!state.currentRoom) return;
+  try { localStorage.setItem(goldKey(state.currentRoom.id), String(state.gold)); } catch(e) {}
+}
+function addGold(amount) {
+  state.gold = Math.max(0, state.gold + amount);
+  saveGold();
+}
 
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -829,12 +738,14 @@ function resetRoomState() {
   state.votedRound = 0;
   state.diceRolling = false;
   state.lastMonsterName = null;
-  state.lastMonsterId = null;
   state.lastSpeakerId = null;
+  state.gold = 0;
+  state.marketOpen = false;
   const chat = document.getElementById('chatMessages');
   if (chat) chat.innerHTML = '';
   document.getElementById('votingModal').classList.remove('active');
   document.getElementById('diceModal').classList.remove('active');
+  document.getElementById('marketOverlay').classList.remove('active');
   toggleChat(false);
 }
 
@@ -918,19 +829,15 @@ async function goRooms(game) {
 }
 
 async function joinRoom(roomId) {
-  if (isGuest && guestRoundsPlayed >= GUEST_LIMIT) {
-    showToast('Лимит гостя. Перейдите в бота.', 'error'); return;
-  }
+  if (isGuest && guestRoundsPlayed >= GUEST_LIMIT) { showToast('Лимит гостя. Перейдите в бота.', 'error'); return; }
   try {
     const room = await api(`/api/rooms/${roomId}/join`, 'POST');
     if (!room || room.error) { showToast(room?.error || 'Не удалось войти', 'error'); return; }
     resetRoomState();
     state.currentRoom = room;
     state.currentGame = room.game_type || state.currentGame;
-    if (isGuest) {
-      guestRoundsPlayed++;
-      try { localStorage.setItem('guestRounds', String(guestRoundsPlayed)); } catch(e){}
-    }
+    loadGold();
+    if (isGuest) { guestRoundsPlayed++; try { localStorage.setItem('guestRounds', String(guestRoundsPlayed)); } catch(e){} }
     if (room.status === 'waiting') await goLobby(); else await goGame();
   } catch (e) { showToast('Не удалось войти', 'error'); }
 }
@@ -959,9 +866,7 @@ async function refreshLobby() {
     if (!data || !data.room) return;
     state.currentRoom = data.room;
     state.userIsHost = data.room.host_id === myId;
-
     if (data.room.status !== 'waiting') { await goGame(); return; }
-
     document.getElementById('playersCount').textContent = (data.players || []).length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type || '';
     document.getElementById('lobbyPlayers').innerHTML = (data.players || []).map(p => `
@@ -971,12 +876,10 @@ async function refreshLobby() {
         ${data.room.host_id === p.user_id ? `<div style="position: absolute; top: -6px; right: -6px; background: var(--accent); border-radius: 50%; padding: 2px; color: #000;">${icon('crown', 10)}</div>` : ''}
       </div>
     `).join('');
-
     const startBtn = document.getElementById('startBtn');
     const waitText = document.getElementById('hostWaitText');
     const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : 3;
     const canStart = (data.players || []).length >= minPlayers;
-
     if (state.userIsHost || data.room.host_id === -1) {
       startBtn.style.display = 'flex';
       startBtn.disabled = !canStart;
@@ -1014,6 +917,7 @@ async function goGame() {
   const leaveBtn = document.getElementById('leaveGameBtn');
   leaveBtn.innerHTML = icon('back', 16) + ' Выйти';
   leaveBtn.onclick = leaveRoom;
+  loadGold();
   await refreshGame();
   startPolling(refreshGame, 1500);
 }
@@ -1036,22 +940,18 @@ async function refreshGame() {
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
     if (!data || !data.room) return;
-
     if (data.room.status === 'waiting') { await goLobby(); return; }
-
     state.currentRoom = data.room;
     state.munchkinData = data.munchkin_data;
     const players = data.players || [];
     const me = players.find(p => p.user_id === myId);
 
-    // Кубик
     if (data.room.status === 'dice') {
       showDiceModal(data.room, players, me);
     } else {
       document.getElementById('diceModal').classList.remove('active');
     }
 
-    // Голосование (Бункер)
     const canVote = data.room.game_type === 'bunker'
       && (data.room.status === 'discussion' || data.room.status === 'voting')
       && me?.is_alive && !me?.is_spectator
@@ -1067,12 +967,13 @@ async function refreshGame() {
       p: data.room.turn_phase,
       sp: data.room.current_speaker_id,
       r: data.room.current_round,
-      m: data.room.active_monster_id,
+      mn: data.room.monster_name,
+      mp: data.room.monster_power,
       g: data.room.pending_guess,
       h: data.room.host_id,
       hand: (data.munchkin_data?.hand || []).map(c => c.id),
       eq: (data.munchkin_data?.equipped || []).map(c => c.id),
-      me: me ? [me.role, me.word, me.is_alive, me.munchkin_level, me.munchkin_power] : null,
+      me: me ? [me.role, me.word, me.is_alive, me.munchkin_level, me.munchkin_power, me.munchkin_class, me.munchkin_race] : null,
       pl: players.length,
       alive: players.filter(p => p.is_alive).length,
     });
@@ -1084,7 +985,6 @@ async function refreshGame() {
     }
 
     if (data.room.status === 'finished') stopPolling();
-
     appendMessages(data.messages || []);
   } catch (e) { console.error('refreshGame', e); }
 }
@@ -1093,7 +993,6 @@ function showDiceModal(room, players, me) {
   document.getElementById('diceModal').classList.add('active');
   const allRolled = players.length > 0 && players.every(p => p.dice_roll > 0);
   const meRolled = me && me.dice_roll > 0;
-
   if (allRolled && room.current_speaker_id) {
     document.getElementById('diceRollView').style.display = 'none';
     document.getElementById('diceScoreboard').style.display = 'block';
@@ -1110,17 +1009,15 @@ function showDiceModal(room, players, me) {
     document.getElementById('diceRollView').style.display = 'block';
     document.getElementById('diceScoreboard').style.display = 'none';
     const btn = document.getElementById('rollDiceBtn');
-    if (state.diceRolling) {
-      btn.textContent = 'БРОСАЕМ...'; btn.disabled = true;
-    } else if (meRolled) {
-      btn.textContent = 'ЖДЁМ ОСТАЛЬНЫХ...'; btn.disabled = true;
-    } else {
-      btn.textContent = 'КИНУТЬ КУБИК'; btn.disabled = false;
-    }
+    if (state.diceRolling) { btn.textContent = 'БРОСАЕМ...'; btn.disabled = true; }
+    else if (meRolled) { btn.textContent = 'ЖДЁМ ОСТАЛЬНЫХ...'; btn.disabled = true; }
+    else { btn.textContent = 'КИНУТЬ КУБИК'; btn.disabled = false; }
   }
 }
 
-/* ---------- РЕНДЕР ВСЕХ КАРТОЧЕК ---------- */
+/* ============================================================
+   РЕНДЕР ВСЕХ ИГР
+   ============================================================ */
 function renderGameContent(room, players, me) {
   const el = document.getElementById('gameContent');
   if (!room) { el.innerHTML = ''; return; }
@@ -1129,7 +1026,6 @@ function renderGameContent(room, players, me) {
     el.innerHTML = `<div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);"><div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div><div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Определяем, кто ходит первым</div></div>`;
     return;
   }
-
   if (room.status === 'finished') {
     el.innerHTML = `
       <div style="text-align: center; padding: 24px 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);">
@@ -1226,10 +1122,7 @@ function renderGameContent(room, players, me) {
               </div>
               <div class="card-face back bunker-card">
                 <div class="bunker-card-header">${icon(cfg.icon, 12)} ${cfg.title}</div>
-                <div class="bunker-card-body">
-                  <div class="bunker-card-emoji">${cfg.emoji}</div>
-                  <div>${esc(cards[cfg.key])}</div>
-                </div>
+                <div class="bunker-card-body"><div class="bunker-card-emoji">${cfg.emoji}</div><div>${esc(cards[cfg.key])}</div></div>
               </div>
             </div>
           </div>
@@ -1244,18 +1137,22 @@ function renderGameContent(room, players, me) {
   if (room.game_type === 'munchkin') {
     const mData = state.munchkinData || { hand: [], equipped: [], active_monster: null };
     const isMyTurn = room.current_speaker_id === myId;
-    const monsterName = mData.active_monster?.name;
-    const monsterInfo = monsterName ? (MONSTER_INFO[monsterName] || { iconName: 'monster', levels: '?', treasures: '?' }) : null;
+    const monsterName = room.monster_name || mData.active_monster?.name;
+    const monsterInfo = monsterName ? getMonsterInfo(monsterName) : null;
 
-    // Определяем, новый ли монстр — для анимации summon
+    const equipped = mData.equipped || [];
+    const equippedPower = equipped.reduce((sum, c) => sum + (parseInt(c.power) || 0), 0);
+    const equippedGold = equipped.reduce((sum, c) => sum + (parseInt(c.price) || 0), 0);
+    const playerLevel = me?.munchkin_level || 1;
+    const playerClass = me?.munchkin_class || '—';
+    const playerRace = me?.munchkin_race || 'Человек';
+    const totalPower = playerLevel + equippedPower;
+
+    // Определяем, новый ли монстр — для анимации
     const isNewMonster = monsterName && (monsterName !== state.lastMonsterName);
     state.lastMonsterName = monsterName || null;
 
-    // Определяем, сменился ли ход — для эффекта
-    const turnChanged = room.current_speaker_id !== state.lastSpeakerId;
-    state.lastSpeakerId = room.current_speaker_id;
-
-    // Частицы при появлении монстра
+    // Частицы при появлении
     let particles = '';
     if (monsterName && isNewMonster) {
       const parts = [];
@@ -1270,37 +1167,51 @@ function renderGameContent(room, players, me) {
     }
 
     el.innerHTML = `
-      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 12px 10px; text-align: center; border: 1px solid var(--border); animation: statReveal 0.5s ease;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px;">УРОВЕНЬ</div>
-          <div style="font-size: 28px; font-weight: 900; color: var(--accent); text-shadow: 0 0 20px var(--accent-soft);">${me?.munchkin_level || 1}</div>
+      <!-- КАРТОЧКА ПЕРСОНАЖА -->
+      <div class="hero-panel">
+        <div class="hero-title">${icon('user', 14)} Твой манчкин</div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-label">Уровень</div>
+            <div class="hero-stat-value">${playerLevel}</div>
+          </div>
+          <div class="hero-stat power">
+            <div class="hero-stat-label">Сила</div>
+            <div class="hero-stat-value">${totalPower}</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Бонус</div>
+            <div class="hero-stat-value">+${equippedPower}</div>
+          </div>
+          <div class="hero-stat gold">
+            <div class="hero-stat-label">Голды</div>
+            <div class="hero-stat-value">${state.gold}</div>
+          </div>
         </div>
-        <div style="flex: 1; background: var(--surface); border-radius: var(--radius-md); padding: 12px 10px; text-align: center; border: 1px solid var(--border); animation: statReveal 0.5s ease 0.1s both;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px;">СИЛА</div>
-          <div style="font-size: 28px; font-weight: 900; color: var(--accent); text-shadow: 0 0 20px var(--accent-soft);">${me?.munchkin_power || 1}</div>
+        <div class="hero-class-race">
+          <div class="hero-tag">${icon('shield', 12)} ${esc(playerRace)}</div>
+          <div class="hero-tag">${icon('sword', 12)} ${esc(playerClass)}</div>
         </div>
       </div>
 
-      ${mData.active_monster ? `
+      <!-- КНОПКА РЫНКА -->
+      <button class="market-btn" onclick="openMarket()">
+        ${icon('shop', 20)} Рынок · Продать за голды
+      </button>
+
+      <!-- МОНСТР -->
+      ${monsterName ? `
         <div class="monster-stage">
           <div class="monster-shadow"></div>
           <div class="monster-particles">${particles}</div>
           <div class="monster-card ${isNewMonster ? 'anim-summon anim-shake' : 'idle'}">
-            <div class="monster-big-icon">${icon(monsterInfo?.iconName || 'monster', 64)}</div>
-            <div class="monster-name-big">${esc(mData.active_monster.name)}</div>
+            <div class="monster-big-icon">${icon(monsterInfo.icon, 64)}</div>
+            <div class="monster-name-big">${esc(monsterName)}</div>
+            <div class="monster-badstuff"><b>Непотребство:</b> ${monsterInfo.badstuff}</div>
             <div class="monster-stats">
-              <div class="monster-stat">
-                <div class="monster-stat-label">${icon('sword', 12)} Сила</div>
-                <div class="monster-stat-value">${mData.active_monster.power}</div>
-              </div>
-              <div class="monster-stat">
-                <div class="monster-stat-label">${icon('trophy', 12)} Уровни</div>
-                <div class="monster-stat-value">+${monsterInfo?.levels || '?'}</div>
-              </div>
-              <div class="monster-stat">
-                <div class="monster-stat-label">${icon('gem', 12)} Награда</div>
-                <div class="monster-stat-value">${monsterInfo?.treasures || '?'}</div>
-              </div>
+              <div class="monster-stat"><div class="monster-stat-label">${icon('sword', 12)} Сила</div><div class="monster-stat-value">${monsterInfo.level}</div></div>
+              <div class="monster-stat"><div class="monster-stat-label">${icon('trophy', 12)} Уровни</div><div class="monster-stat-value">+1</div></div>
+              <div class="monster-stat"><div class="monster-stat-label">${icon('gem', 12)} Награда</div><div class="monster-stat-value">${monsterInfo.treasures}</div></div>
             </div>
             ${isMyTurn ? `
               <div class="monster-actions">
@@ -1324,45 +1235,142 @@ function renderGameContent(room, players, me) {
         </div>
       ` : `<div style="text-align: center; padding: 14px; color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Ждем хода соперника...</div>`}
 
-      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('shield', 14)} Экипировка</h3>
+      <!-- ЭКИПИРОВКА -->
+      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('shield', 14)} Экипировка <span style="margin-left:auto;color:var(--gold);font-size:10px;">${equippedGold} 💰</span></h3>
       <div class="hand-scroll">
-        ${(mData.equipped || []).length ? mData.equipped.map((c, i) => `
+        ${equipped.length ? equipped.map((c, i) => `
           <div class="m-card-slot">
-            <div class="m-card item anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('unequip', ${c.id})">
+            <div class="m-card treasure anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('unequip', ${c.id})">
+              <div class="m-card-header"><span>ЭКИП.</span><span>👕</span></div>
               <div class="m-card-title">${esc(c.name || 'Шмотка')}</div>
               <div class="m-card-icon">${icon('shield', 32)}</div>
-              <div class="m-card-power">+${c.power || 0}</div>
+              <div class="m-card-footer">
+                <div class="m-card-badge m-card-power">+${c.power || 0}</div>
+                <div class="m-card-badge m-card-price">${c.price || 0}💰</div>
+              </div>
             </div>
           </div>
-        `).join('') : `<div style="font-size: 12px; color: var(--text-muted); padding: 10px;">Пусто</div>`}
+        `).join('') : `<div class="empty-slot">Нет экипировки. Играй карты из руки.</div>`}
       </div>
 
-      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('package', 14)} В руке</h3>
+      <!-- РУКА -->
+      <h3 style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">${icon('package', 14)} В руке (${(mData.hand || []).length})</h3>
       <div class="hand-scroll">
-        ${(mData.hand || []).length ? mData.hand.map((c, i) => `
+        ${(mData.hand || []).length ? mData.hand.map((c, i) => {
+          const isMonster = c.card_type === 'monster';
+          return `
           <div class="m-card-slot">
-            <div class="m-card item ${c.deck_type === 'door' && c.is_monster ? 'monster' : ''} anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('play_card', ${c.id})">
+            <div class="m-card ${isMonster ? 'monster' : 'treasure'} anim-deal" style="animation-delay:${i*0.08}s" onclick="event.stopPropagation(); munchkinAction('play_card', ${c.id})">
+              <div class="m-card-header"><span>${c.deck_type === 'door' ? 'ДВЕРЬ' : 'СОКР.'}</span><span>${isMonster ? '👹' : '💎'}</span></div>
               <div class="m-card-title">${esc(c.name || 'Карта')}</div>
-              <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'gem', 32)}</div>
-              <div class="m-card-power">${c.deck_type === 'door' ? 'ДВЕРЬ' : 'СОКРОВИЩЕ'}</div>
+              <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'gem', 28)}</div>
+              <div class="m-card-footer">
+                <div class="m-card-badge m-card-power">${isMonster ? (c.power || 1) : '+' + (c.power || 0)}</div>
+                <div class="m-card-badge m-card-price">${c.price || 0}💰</div>
+              </div>
             </div>
           </div>
-        `).join('') : `<div style="font-size: 12px; color: var(--text-muted); padding: 10px;">Пусто</div>`}
+        `}).join('') : `<div class="empty-slot">Пусто. Вышиби дверь или почисть нычки.</div>`}
       </div>
     `;
 
-    // Тряска экрана при появлении нового монстра
     if (isNewMonster) {
       const gameTop = document.getElementById('gameScroll');
-      if (gameTop) {
-        gameTop.classList.add('screen-shake');
-        setTimeout(() => gameTop.classList.remove('screen-shake'), 400);
-      }
+      if (gameTop) { gameTop.classList.add('screen-shake'); setTimeout(() => gameTop.classList.remove('screen-shake'), 400); }
     }
     return;
   }
 
   el.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Ожидание игры...</div>`;
+}
+
+/* ============================================================
+   РЫНОК
+   ============================================================ */
+function openMarket() {
+  if (!state.currentRoom) return;
+  state.marketOpen = true;
+  renderMarket();
+  document.getElementById('marketOverlay').classList.add('active');
+}
+
+function closeMarket() {
+  state.marketOpen = false;
+  document.getElementById('marketOverlay').classList.remove('active');
+}
+
+function renderMarket() {
+  const body = document.getElementById('marketBody');
+  const mData = state.munchkinData || { equipped: [] };
+  const equipped = mData.equipped || [];
+  const playerLevel = state.currentRoom && state.lastRenderHash ? (function(){
+    // получаем уровень из gameContent, если есть, иначе 1
+    return 1;
+  })() : 1;
+
+  const progress = Math.min(100, (state.gold / 1000) * 100);
+  const canBuyLevel = state.gold >= 1000;
+
+  body.innerHTML = `
+    <div class="market-gold">
+      <div class="market-gold-label">Голды в кошельке</div>
+      <div class="market-gold-value">${icon('coin', 28)} ${state.gold}</div>
+      <div class="market-progress"><div class="market-progress-bar" style="width:${progress}%"></div></div>
+      <div class="market-progress-text">${state.gold} / 1000 = 1 уровень</div>
+    </div>
+
+    <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-top: 4px;">
+      Экипировка (${equipped.length}) · продать
+    </div>
+
+    ${equipped.length ? equipped.map(c => `
+      <div class="sell-item">
+        <div class="sell-item-icon">${icon('shield', 22)}</div>
+        <div class="sell-item-info">
+          <div class="sell-item-name">${esc(c.name || 'Шмотка')}</div>
+          <div class="sell-item-meta">
+            <span class="sell-item-power">+${c.power || 0} силы</span>
+            <span class="sell-item-price">${c.price || 0}💰</span>
+          </div>
+        </div>
+        <button class="sell-item-btn" onclick="sellItem(${c.id}, ${c.price || 0})">Продать</button>
+      </div>
+    `).join('') : `<div class="market-empty">Нет экипировки для продажи.<br>Сначала надень шмотки.</div>`}
+
+    <button class="market-lvl-btn" onclick="buyLevel()" ${canBuyLevel ? '' : 'disabled'}>
+      ${icon('trophy', 18)} Получить уровень за 1000 голдов
+    </button>
+
+    <p style="font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.4;">
+      ⚠️ Победный 10-й уровень нельзя купить. Только в бою.
+    </p>
+  `;
+}
+
+async function sellItem(cardId, price) {
+  if (!state.currentRoom) return;
+  if (!confirm(`Продать эту шмотку за ${price} голдов?`)) return;
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/munchkin`, 'POST', { action: 'sell', card_id: cardId });
+    addGold(price);
+    showToast(`+${price} 💰`, 'success');
+    state.lastRenderHash = null;
+    await refreshGame();
+    if (state.marketOpen) renderMarket();
+  } catch (e) { showToast('Ошибка продажи', 'error'); }
+}
+
+async function buyLevel() {
+  if (!state.currentRoom) return;
+  if (state.gold < 1000) { showToast('Нужно 1000 голдов', 'error'); return; }
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/munchkin`, 'POST', { action: 'buy_level' });
+    addGold(-1000);
+    showToast('Уровень куплен!', 'success');
+    state.lastRenderHash = null;
+    await refreshGame();
+    if (state.marketOpen) renderMarket();
+  } catch (e) { showToast('Ошибка покупки (может, макс. уровень?)', 'error'); }
 }
 
 /* ============================================================
@@ -1436,9 +1444,7 @@ async function rollDice() {
     } catch(e) {
       showToast('Ошибка броска', 'error');
       btn.disabled = false; btn.textContent = 'КИНУТЬ КУБИК';
-    } finally {
-      state.diceRolling = false;
-    }
+    } finally { state.diceRolling = false; }
   }, 1000);
 }
 
@@ -1457,10 +1463,8 @@ function showVotingModal(room, players) {
 async function vote(targetId) {
   document.getElementById('votingModal').classList.remove('active');
   if (state.currentRoom) state.votedRound = state.currentRoom.current_round || 0;
-  try {
-    await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId });
-    showToast('Голос учтен', 'success');
-  } catch (e) { showToast('Ошибка', 'error'); }
+  try { await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId }); showToast('Голос учтен', 'success'); }
+  catch (e) { showToast('Ошибка', 'error'); }
 }
 
 async function surrender() {
@@ -1501,9 +1505,7 @@ async function goProfile() {
   if (isGuest) {
     document.getElementById('profileBalance').textContent = '0';
     document.getElementById('profileGames').textContent = String(guestRoundsPlayed);
-  } else {
-    await refreshBalance();
-  }
+  } else { await refreshBalance(); }
 }
 
 /* ============================================================
