@@ -79,6 +79,7 @@
   .btn:active { transform: scale(.98); }
   .btn-primary { background: var(--accent-grad); color: #fff; }
   .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+  .btn-danger { background: var(--danger); color: #fff; }
   .btn:disabled { opacity: .5; pointer-events: none; }
   
   .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
@@ -109,7 +110,7 @@
   .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
   .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
-  /* Chat Container (Фиксированная высота) */
+  /* Chat Container */
   .chat-container { 
     display: flex; flex-direction: column; 
     height: 45vh; min-height: 250px; 
@@ -274,7 +275,7 @@
 
 <script>
 /* ============================================================
-   SVG ICONS (ТОЛЬКО ИКОНКИ)
+   SVG ICONS
    ============================================================ */
 const ICON_PATHS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
@@ -535,11 +536,18 @@ async function refreshLobby() {
 
     document.getElementById('playersCount').textContent = data.players.length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
+    
+    // Рендер игроков с кнопкой Кик
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
       <div class="player-item">
         <div class="player-avatar">${esc((p.username || 'И')[0].toUpperCase())}</div>
         <div class="player-name">${esc(p.username || 'Игрок')} ${p.user_id === myId ? '(вы)' : ''}</div>
         ${data.room.host_id === p.user_id ? `<span style="color:gold;">${icon('crown', 16)}</span>` : ''}
+        ${state.userIsHost && p.user_id !== myId ? `
+          <button class="icon-btn" onclick="kickPlayer(${p.user_id})" style="width:28px;height:28px;border:none;background:none;color:var(--danger);margin-left:8px;">
+            ${icon('x', 16)}
+          </button>
+        ` : ''}
       </div>
     `).join('');
 
@@ -554,10 +562,21 @@ async function refreshLobby() {
   } catch (e) {}
 }
 
-document.getElementById('startBtn').onclick = async () => { try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) {} };
+document.getElementById('startBtn').onclick = async () => { try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) { showToast('Ошибка старта', 'error'); } };
+
+async function kickPlayer(targetId) {
+  if (!confirm('Кикнуть игрока?')) return;
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/kick`, 'POST', { target_id: targetId });
+    showToast('Игрок кикнут', 'success');
+    refreshLobby();
+  } catch (e) { showToast('Ошибка кика', 'error'); }
+}
+
 document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
 async function leaveRoom() {
   if (!state.currentRoom) return;
+  if (!confirm('Выйти из комнаты?')) return;
   try { await api(`/api/rooms/${state.currentRoom.id}/leave`, 'POST'); } catch {}
   state.currentRoom = null; stopPolling(); goHome();
 }
@@ -606,6 +625,7 @@ function renderGameContent(room, players, me) {
         <div class="state-subtitle">${room.game_type === 'shpion' ? 'Слово: ' + room.pending_guess : ''}</div>
       </div>
       <button class="btn btn-primary" onclick="playAgain()">${icon('refresh', 16)} Играть снова</button>
+      <button class="btn btn-secondary" onclick="leaveRoom()">${icon('arrowLeft', 16)} Выйти в меню</button>
     `;
     return;
   }
