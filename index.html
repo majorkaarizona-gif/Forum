@@ -35,10 +35,8 @@
   input, textarea { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* Layout — Full Screen on Desktop */
+  /* Layout */
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; position: relative; }
-  
-  /* Sidebar (Desktop) */
   .sidebar { display: none; width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 16px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
   
@@ -53,12 +51,10 @@
   
   .content { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   
-  /* Screens */
   .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); z-index: 1; overflow: hidden; }
   .screen.active { display: flex; z-index: 5; }
   .scroll-area { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
 
-  /* Bottom Nav (Mobile) */
   .bottom-nav {
     display: flex; background: var(--surface); border-top: 1px solid var(--border);
     padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); flex-shrink: 0; z-index: 10;
@@ -66,7 +62,6 @@
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 6px; border-radius: var(--radius-sm); }
   .nav-item.active { color: var(--accent); background: var(--accent-soft); }
 
-  /* UI Elements */
   .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
   .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
   
@@ -79,9 +74,9 @@
   .btn:active { transform: scale(.98); }
   .btn-primary { background: var(--accent-grad); color: #fff; }
   .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+  .btn-danger { background: var(--danger); color: #fff; }
   .btn:disabled { opacity: .5; pointer-events: none; }
   
-  /* Games Grid */
   .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
   .game-card { border-radius: var(--radius-lg); padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; position: relative; overflow: hidden; }
   .game-card.spy { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
@@ -91,7 +86,6 @@
   .game-card svg { width: 48px; height: 48px; position: relative; z-index: 2; opacity: 0.9; }
   .game-card::after { content: ''; position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; }
 
-  /* Rooms List */
   .room-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
   .room-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
   .room-info { flex: 1; }
@@ -101,28 +95,24 @@
   .status-dot.waiting { background: var(--success); }
   .status-dot.playing { background: var(--danger); }
 
-  /* Player List */
   .player-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius-md); margin-bottom: 6px; }
-  .player-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-grad); color: #fff; font-weight: 700; font-size: 13px; }
+  .player-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
   .player-name { flex: 1; font-weight: 600; font-size: 14px; }
 
-  /* Game UI */
   .state-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
   .state-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
   .state-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
   .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
   .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
-  /* Chat & Audio Player */
   .chat-container { display: flex; flex-direction: column; height: 45vh; min-height: 250px; border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; }
   .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
   .msg { max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: 14px; word-break: break-word; }
   .msg-me { align-self: flex-end; background: var(--chat-me); color: #fff; border-bottom-right-radius: 4px; }
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 12px; text-align: center; }
+  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 12px; text-align: center; }
   .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
   
-  /* Custom Audio Player */
   .audio-player { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 20px; margin-top: 4px; }
   .audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
   .audio-progress { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; position: relative; }
@@ -146,14 +136,13 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
 
-  /* Guest Mode Modal */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  /* Modals */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
   .modal-overlay.active { display: flex; }
   .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; width: 100%; text-align: center; }
   .modal-content h2 { font-size: 20px; margin-bottom: 12px; }
-  .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+  .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
 
-  /* DESKTOP STYLES (PC) */
   @media (min-width: 768px) {
     .sidebar { display: flex; }
     .bottom-nav { display: none; }
@@ -168,7 +157,6 @@
 </head>
 <body>
 <div class="app">
-  <!-- SIDEBAR (Только для ПК) -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo" id="sideBrandIcon"></div>
@@ -193,7 +181,6 @@
     </header>
 
     <main class="content" id="content">
-      <!-- HOME -->
       <section class="screen active" id="screen-home">
         <div class="scroll-area">
           <h1 class="page-title">Привет, <span id="userName">Игрок</span></h1>
@@ -204,7 +191,6 @@
         </div>
       </section>
 
-      <!-- ROOMS -->
       <section class="screen" id="screen-rooms">
         <div class="scroll-area">
           <button class="btn btn-secondary" id="backBtn" style="width:auto; align-self:flex-start; padding:8px 12px; margin-bottom:16px;"></button>
@@ -214,7 +200,6 @@
         </div>
       </section>
 
-      <!-- LOBBY -->
       <section class="screen" id="screen-lobby">
         <div class="scroll-area">
           <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
@@ -244,7 +229,6 @@
         </div>
       </section>
 
-      <!-- GAME -->
       <section class="screen" id="screen-game">
         <div class="scroll-area" id="gameScroll">
           <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
@@ -264,7 +248,6 @@
         </div>
       </section>
 
-      <!-- PROFILE -->
       <section class="screen" id="screen-profile">
         <div class="scroll-area">
           <h1 class="page-title">Профиль</h1>
@@ -296,12 +279,25 @@
   </div>
 </div>
 
-<!-- Модальное окно для гостей -->
+<!-- Модальное окно: Лимит гостя -->
 <div class="modal-overlay" id="guestModal">
   <div class="modal-content">
     <h2>Лимит раундов исчерпан</h2>
-    <p>Вы сыграли 3 раунда как гость. Чтобы продолжить игру без ограничений, перейдите в нашего Telegram-бота.</p>
+    <p>Вы сыграли 3 раунда как гость. Чтобы продолжить, перейдите в Telegram-бота.</p>
     <a href="https://t.me/MajorkaAdmin_Bot" target="_blank" class="btn btn-primary" style="text-decoration:none;">Перейти в бота</a>
+  </div>
+</div>
+
+<!-- Модальное окно: Приветствие и правила -->
+<div class="modal-overlay" id="welcomeModal">
+  <div class="modal-content">
+    <h2>Добро пожаловать! 👋</h2>
+    <p>Здесь ты можешь играть с друзьями.</p>
+    <div style="text-align:left; font-size:13px; color:var(--text-muted); margin-bottom:20px;">
+      <p style="margin-bottom:8px;"><b>🕵️ Шпион:</b> от 3 до 20 игроков. Найдите шпиона среди мирных.</p>
+      <p><b>🐊 Крокодил:</b> от 2 до 20 игроков. Объясните слово, не называя его.</p>
+    </div>
+    <button class="btn btn-primary" onclick="closeWelcome()">Понятно</button>
   </div>
 </div>
 
@@ -309,8 +305,34 @@
 
 <script>
 /* ============================================================
-   SVG ICONS (Обновленные, ровные)
+   SVG ICONS & AVATARS (20 штук)
    ============================================================ */
+const AVATARS = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M9 9h.01M15 9h.01"/></svg>', // Призрак
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>', // Смайл
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', // Звезда
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>', // Сердце
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>', // Молния
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>', // Часы
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', // Чат
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>', // Плюс
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', // Щит
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>', // Флаг
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>', // Минус
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>', // Звезда 2
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>', // Уведомление
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg>', // Круг
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', // Молния 2
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>', // Квадрат
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>', // Компас
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>', // Луна
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' // Солнце
+];
+
+function getAvatar(userId) {
+  return AVATARS[Math.abs(userId) % AVATARS.length];
+}
+
 const ICON_PATHS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
   spy: '<path d="M12 4a8 8 0 0 0-8 8c0 3 2 5 5 5h6c3 0 5-2 5-5a8 8 0 0 0-8-8z"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M10 14h4"/>',
@@ -352,16 +374,14 @@ const CONFIG = {
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); }
 
-// Проверка на гостя (если открыто не через Telegram)
 const isGuest = !tg || !tg.initData || !tg.initDataUnsafe?.user;
 const telegramUser = tg?.initDataUnsafe?.user || { id: 0, first_name: 'Гость', username: 'guest' };
 const myId = telegramUser.id || 0;
 
-// Гостевой счетчик (3 раунда)
 let guestRoundsPlayed = parseInt(localStorage.getItem('guestRounds') || '0');
 
 /* ============================================================
-   THEME
+   THEME & MODALS
    ============================================================ */
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
@@ -370,6 +390,15 @@ function setTheme(theme) {
   if (tg) { tg.setHeaderColor(theme === 'dark' ? '#141828' : '#ffffff'); tg.setBackgroundColor(theme === 'dark' ? '#080b14' : '#eef2f8'); }
 }
 document.getElementById('themeBtn').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+
+function closeWelcome() {
+  document.getElementById('welcomeModal').classList.remove('active');
+  localStorage.setItem('welcomeShown', 'true');
+}
+
+if (!localStorage.getItem('welcomeShown')) {
+  document.getElementById('welcomeModal').classList.add('active');
+}
 
 /* ============================================================
    API & AUDIO
@@ -590,9 +619,10 @@ async function refreshLobby() {
 
     document.getElementById('playersCount').textContent = data.players.length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
+    
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
       <div class="player-item">
-        <div class="player-avatar">${esc((p.username || 'И')[0].toUpperCase())}</div>
+        <div class="player-avatar">${getAvatar(p.user_id)}</div>
         <div class="player-name">${esc(p.username || 'Игрок')} ${p.user_id === myId ? '(вы)' : ''}</div>
         ${data.room.host_id === p.user_id ? `<span style="color:gold;">${icon('crown', 16)}</span>` : ''}
         ${state.userIsHost && p.user_id !== myId ? `
@@ -661,7 +691,6 @@ async function refreshGame() {
 
     if (data.room.status === 'waiting') { goLobby(); return; }
 
-    // Гостевой лимит
     if (isGuest && data.room.status === 'finished') {
       guestRoundsPlayed++;
       localStorage.setItem('guestRounds', guestRoundsPlayed);
@@ -673,7 +702,10 @@ async function refreshGame() {
     document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
     renderGameContent(data.room, data.players, me);
     appendMessages(data.messages || [], 'gameChat');
-    document.getElementById('gameInputBar').style.display = (data.room.status === 'finished' || data.room.status === 'countdown') ? 'none' : 'flex';
+    
+    // Скрываем ввод, если игра окончена или мы наблюдатель
+    const isSpectator = me && (!me.is_alive || me.is_spectator);
+    document.getElementById('gameInputBar').style.display = (data.room.status === 'finished' || data.room.status === 'countdown' || isSpectator) ? 'none' : 'flex';
   } catch (e) {}
 }
 
@@ -689,7 +721,7 @@ function renderGameContent(room, players, me) {
       <div class="state-card" style="text-align:center;">
         ${icon('trophy', 32)}
         <div class="state-title">Игра окончена</div>
-        <div class="state-subtitle">${room.game_type === 'shpion' ? 'Слово: ' + room.pending_guess : ''}</div>
+        <div class="state-subtitle" style="font-size:18px; margin-top:8px;">Слово: <b>${esc(room.pending_guess || '...')}</b></div>
       </div>
       <button class="btn btn-primary" onclick="playAgain()">${icon('refresh', 16)} Играть снова</button>
       <button class="btn btn-secondary" onclick="leaveRoom()">${icon('arrowLeft', 16)} Выйти в меню</button>
@@ -700,17 +732,21 @@ function renderGameContent(room, players, me) {
     el.innerHTML = `<div class="state-card"><div class="state-label">Последний шанс</div><div class="state-title">${room.guesser_id === myId ? 'Вы Мистер Уайт' : 'Мистер Уайт угадывает'}</div><div class="state-desc">${room.guesser_id === myId ? 'Напишите догадку в чат!' : 'Ждем ответа...'}</div></div>`;
     return;
   }
+  
   if (room.game_type === 'crocodile' && room.status === 'playing') {
     const isHost = room.current_speaker_id === myId;
+    const isSpectator = me && (!me.is_alive || me.is_spectator);
     el.innerHTML = `
       <div class="state-card">
-        <div class="state-label">${isHost ? 'Ты ведущий' : 'Ведущий'}</div>
+        <div class="state-label">${isHost ? 'Ты ведущий' : (isSpectator ? 'Вы наблюдатель' : 'Ведущий')}</div>
         <div class="state-title">${isHost ? 'Объясни слово' : (players.find(p => p.user_id === room.current_speaker_id)?.username || '...') + ' объясняет'}</div>
         ${isHost ? `<div class="secret-word">${esc(room.pending_guess || '...')}</div>` : ''}
       </div>
+      ${isHost ? `<button class="btn btn-danger" onclick="surrender()">${icon('skull', 16)} Сдаться</button>` : ''}
     `;
     return;
   }
+
   if (room.game_type === 'shpion' && room.status === 'playing') {
     const isMyTurn = room.current_speaker_id === myId;
     const speaker = players.find(p => p.user_id === room.current_speaker_id);
@@ -718,6 +754,7 @@ function renderGameContent(room, players, me) {
     const myWord = me?.word;
     const roleLabel = myRole === 'civilian' ? 'Мирный' : myRole === 'undercover' ? 'Шпион' : 'Мистер Уайт';
     const roleIcon = myRole === 'civilian' ? 'user' : myRole === 'undercover' ? 'spy' : 'ghost';
+    const isSpectator = me && (!me.is_alive || me.is_spectator);
 
     el.innerHTML = `
       <div class="state-card">
@@ -725,23 +762,26 @@ function renderGameContent(room, players, me) {
           <div class="state-label">Раунд ${room.current_round}</div>
           <div style="font-size:12px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:4px;">${icon(roleIcon, 14)} ${roleLabel}</div>
         </div>
-        ${myWord ? `<div class="secret-word">${esc(myWord)}</div>` : `<div style="text-align:center; color:var(--text-muted); font-style:italic; margin-top:10px;">Нет слова — блефуй!</div>`}
+        ${isSpectator ? `<div style="text-align:center; color:var(--text-muted); font-style:italic;">Вы наблюдатель</div>` : (myWord ? `<div class="secret-word">${esc(myWord)}</div>` : `<div style="text-align:center; color:var(--text-muted); font-style:italic; margin-top:10px;">Нет слова — блефуй!</div>`)}
       </div>
       <div class="state-card">
         <div class="state-label">${isMyTurn ? 'Твоя очередь' : 'Сейчас говорит'}</div>
         <div class="state-title">${isMyTurn ? 'Опиши слово' : esc(speaker?.username || '...')}</div>
         ${isMyTurn && (myRole === 'undercover' || myRole === 'mrwhite') ? `<button class="btn btn-secondary" onclick="guessWord()" style="margin-top:12px;">${icon('zap', 16)} Угадать слово</button>` : ''}
+        ${isMyTurn ? `<button class="btn btn-danger" onclick="surrender()" style="margin-top:12px;">${icon('skull', 16)} Сдаться</button>` : ''}
       </div>
     `;
     return;
   }
   if (room.game_type === 'shpion' && room.status === 'discussion') {
     const alive = players.filter(p => p.is_alive && !p.is_spectator);
+    const isSpectator = me && (!me.is_alive || me.is_spectator);
     el.innerHTML = `
       <div class="state-card">
         <div class="state-label">Обсуждение</div>
         <div class="state-title">Кто шпион?</div>
       </div>
+      ${!isSpectator ? `
       <div class="state-card">
         <div class="state-label" style="margin-bottom:10px;">Голосование</div>
         <div class="vote-grid">
@@ -749,7 +789,7 @@ function renderGameContent(room, players, me) {
             <button class="btn btn-secondary" onclick="vote(${p.user_id}, this)">${icon('user', 16)} ${esc(p.username || 'Игрок')}</button>
           `).join('')}
         </div>
-      </div>
+      </div>` : ''}
     `;
   }
 }
@@ -776,7 +816,6 @@ function appendMessages(messages, targetId) {
       if (!isMe) content += `<div class="msg-meta">${esc(m.username)}</div>`;
       
       if (m.is_voice && m.voice_url) {
-        // Кастомный плеер для ГС
         const uniqueId = 'audio_' + m.id;
         content += `
           <div class="audio-player" id="player_${uniqueId}">
@@ -800,7 +839,6 @@ function appendMessages(messages, targetId) {
   container.scrollTop = container.scrollHeight;
 }
 
-// Управление кастомным плеером
 window.toggleAudio = function(id) {
   const audio = document.getElementById(id);
   const btn = document.querySelector(`#player_${id} .audio-play-btn`);
@@ -864,6 +902,14 @@ async function guessWord() {
   if (word) { try { await api(`/api/rooms/${state.currentRoom.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); } }
 }
 
+async function surrender() {
+  if (!confirm('Вы уверены, что хотите сдаться? Вы станете наблюдателем.')) return;
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/surrender`, 'POST');
+    showToast('Вы сдались', 'info');
+  } catch (e) { showToast('Ошибка', 'error'); }
+}
+
 async function playAgain() {
   try { await api(`/api/rooms/${state.currentRoom.id}/play_again`, 'POST'); showToast('Готовы!', 'success'); } catch (e) { showToast('Ошибка', 'error'); }
 }
@@ -876,7 +922,7 @@ async function goProfile() {
   document.getElementById('headerTitle').textContent = 'Профиль';
   document.getElementById('profileName').textContent = telegramUser.first_name;
   document.getElementById('profileId').textContent = isGuest ? 'Режим гостя' : 'ID: ' + myId;
-  document.getElementById('profileAvatar').textContent = (telegramUser.first_name || 'U')[0].toUpperCase();
+  document.getElementById('profileAvatar').innerHTML = getAvatar(myId);
   await refreshBalance();
 }
 
