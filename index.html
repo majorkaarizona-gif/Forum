@@ -8,8 +8,11 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
-    --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-pill: 999px;
-    --transition: .18s cubic-bezier(.4,0,.2,1);
+    --radius-sm: 8px; 
+    --radius-md: 12px; 
+    --radius-lg: 16px; 
+    --radius-pill: 999px;
+    --transition: .2s ease;
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
   }
   [data-theme="dark"] {
@@ -58,293 +61,132 @@
   html, body {
     height: 100dvh; overflow: hidden;
     font-family: var(--font); background: var(--bg-grad); background-attachment: fixed;
-    color: var(--text); transition: background var(--transition), color var(--transition);
-    -webkit-font-smoothing: antialiased;
+    color: var(--text); -webkit-font-smoothing: antialiased;
   }
-  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; display: flex; align-items: center; justify-content: center; }
   input, textarea { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* Layout */
-  .app { display: grid; grid-template-columns: 1fr; height: 100dvh; }
-  .main { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
-  .sidebar { display: none; }
-
+  /* Layout Core */
+  .app { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+  .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; }
   .header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px; padding-top: max(14px, env(safe-area-inset-top));
-    background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10;
+    padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
+    background: var(--surface); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+    flex-shrink: 0; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; letter-spacing: -.3px; }
-  .brand-logo {
-    width: 34px; height: 34px; border-radius: 11px;
-    background: var(--accent-grad); display: grid; place-items: center;
-    color: #fff; box-shadow: 0 4px 14px var(--accent-soft);
-  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
+  .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); display: grid; place-items: center; color: #fff; }
   .header-actions { display: flex; align-items: center; gap: 8px; }
-  .icon-btn {
-    width: 38px; height: 38px; border-radius: 11px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    display: grid; place-items: center; color: var(--text);
-    transition: all var(--transition);
+  .balance-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--accent-soft); border-radius: var(--radius-pill); font-weight: 700; font-size: 13px; color: var(--accent); }
+  
+  /* Screens Container - Crucial for fixing overlaps */
+  .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  
+  .screen { 
+    display: none; 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 16px; 
+    -webkit-overflow-scrolling: touch;
   }
-  .icon-btn:active { transform: scale(.94); background: var(--accent-soft); color: var(--accent); }
-  .balance-pill {
-    display: flex; align-items: center; gap: 6px; padding: 7px 12px;
-    background: var(--accent-soft); border-radius: var(--radius-pill);
-    font-weight: 700; font-size: 13px; color: var(--accent);
-    border: 1px solid var(--border);
-  }
-
-  .content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 18px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-  .content::-webkit-scrollbar { width: 6px; }
-  .content::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-  .content.with-chat { padding: 0; display: flex; flex-direction: column; }
-  .content.with-chat .screen { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 16px; padding-bottom: 0; }
-
+  .screen.active { display: flex; flex-direction: column; }
+  .screen.with-chat { padding: 0; overflow: hidden; }
+  .screen.with-chat .scroll-area { flex: 1; overflow-y: auto; padding: 16px; }
+  
+  /* Bottom Nav */
   .bottom-nav {
-    display: flex; background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    display: flex; background: var(--surface); backdrop-filter: blur(20px);
     border-top: 1px solid var(--border); padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
-    flex-shrink: 0; z-index: 10; gap: 2px;
+    flex-shrink: 0; z-index: 10;
   }
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 8px 4px; border-radius: var(--radius-sm);
-    color: var(--text-muted); font-size: 10px; font-weight: 600;
-    transition: all var(--transition);
-  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px; border-radius: var(--radius-sm); color: var(--text-muted); font-size: 10px; font-weight: 600; }
   .nav-item.active { color: var(--accent); background: var(--accent-soft); }
 
-  /* Screens */
-  .screen { display: none; animation: fadeIn .22s ease; }
-  .screen.active { display: block; }
-  .screen.flex-screen.active { display: flex; flex-direction: column; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
-  .page-title { font-size: 24px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 4px; }
-  .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; }
-
-  .card {
-    background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  /* Games */
-  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-  .game-card {
-    position: relative; overflow: hidden; border-radius: var(--radius-lg); padding: 18px;
-    min-height: 150px; display: flex; flex-direction: column; justify-content: space-between;
-    color: #fff; box-shadow: var(--shadow); cursor: pointer;
-    transition: transform var(--transition);
-  }
-  .game-card::before { content: ''; position: absolute; inset: 0; background: var(--game-grad); z-index: -1; transition: transform var(--transition); }
-  .game-card:active { transform: scale(.97); }
-  .game-card.spy { --game-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-  .game-card.crocodile { --game-grad: linear-gradient(135deg, #10b981 0%, #06b6d4 100%); }
-  .game-card h3 { font-size: 18px; font-weight: 800; letter-spacing: -.3px; margin-top: 10px; }
-  .game-card p { font-size: 12px; opacity: .85; margin-top: 2px; }
-  .game-card .badge {
-    position: absolute; top: 12px; right: 12px;
-    background: rgba(255,255,255,.22); backdrop-filter: blur(10px);
-    padding: 4px 10px; border-radius: var(--radius-pill);
-    font-size: 11px; font-weight: 700;
-  }
-
-  /* Buttons */
+  /* UI Elements */
+  .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
+  
   .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 13px 18px; border-radius: var(--radius-md);
-    font-weight: 700; font-size: 15px; transition: all var(--transition);
-    border: 1px solid transparent; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 16px; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 14px; transition: all var(--transition);
+    border: 1px solid transparent; width: 100%; margin-bottom: 8px;
   }
-  .btn:active { transform: scale(.97); }
-  .btn-primary { background: var(--accent-grad); color: #fff; box-shadow: 0 6px 18px var(--accent-soft); }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--accent-grad); color: #fff; }
   .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-  .btn-secondary:hover { color: var(--accent); }
   .btn-danger { background: var(--danger); color: #fff; }
-  .btn-success { background: var(--success); color: #fff; }
-  .btn-block { width: 100%; }
   .btn:disabled { opacity: .5; pointer-events: none; }
-  .btn-sm { padding: 9px 14px; font-size: 13px; }
+  
+  /* Game Cards */
+  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .game-card { border-radius: var(--radius-lg); padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; }
+  .game-card.spy { background: linear-gradient(135deg, #6366f1, #a855f7); }
+  .game-card.crocodile { background: linear-gradient(135deg, #10b981, #06b6d4); }
+  .game-card h3 { font-size: 16px; font-weight: 800; margin-top: 8px; }
+  .game-card p { font-size: 11px; opacity: .85; }
 
-  /* Room list */
-  .room-list { display: flex; flex-direction: column; gap: 10px; }
-  .room-item {
-    display: flex; align-items: center; gap: 14px; padding: 16px;
-    background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border);
-    border-radius: var(--radius-md); transition: all var(--transition); cursor: pointer;
-  }
-  .room-item:active { transform: scale(.99); border-color: var(--accent); }
-  .room-icon {
-    width: 44px; height: 44px; border-radius: 13px; background: var(--accent-soft);
-    display: grid; place-items: center; color: var(--accent); flex-shrink: 0;
-  }
-  .room-info { flex: 1; min-width: 0; }
-  .room-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  /* Room List */
+  .room-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
+  .room-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
+  .room-info { flex: 1; }
+  .room-name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
   .room-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-  .status-dot.waiting { background: var(--success); box-shadow: 0 0 8px var(--success); }
-  .status-dot.playing { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .status-dot.waiting { background: var(--success); }
+  .status-dot.playing { background: var(--danger); }
 
-  /* Player */
-  .player-list { display: flex; flex-direction: column; gap: 6px; }
-  .player-item {
-    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-    background: var(--surface-2); border-radius: var(--radius-md); border: 1px solid var(--border);
-  }
-  .player-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--accent-grad); display: grid; place-items: center;
-    color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0;
-  }
-  .player-name { flex: 1; font-weight: 600; font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .player-badge { display: flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: 12px; }
-  .player-badge.dead { color: var(--danger); }
-
-  /* Chat */
-  .chat-wrap { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  .chat-messages {
-    flex: 1; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 8px;
-    scroll-behavior: smooth;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
-
-  .msg { max-width: 78%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 1.35; word-break: break-word; animation: msgIn .2s ease; }
-  @keyframes msgIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  /* Chat & Game UI */
+  .chat-wrap { display: flex; flex-direction: column; background: var(--bg); width: 100%; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 80%; padding: 8px 12px; border-radius: 14px; font-size: 14px; }
   .msg-me { align-self: flex-end; background: var(--chat-me); color: #fff; border-bottom-right-radius: 4px; }
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-  .msg-meta { font-size: 11px; opacity: .7; margin-bottom: 3px; font-weight: 700; }
-  .msg-system {
-    align-self: center; background: var(--accent-soft); color: var(--accent);
-    font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius-pill);
-    max-width: 90%; text-align: center;
-  }
-  .msg-voice { display: flex; align-items: center; gap: 8px; }
+  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 12px; text-align: center; }
+  .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
+  
+  .chat-input-bar { display: flex; gap: 8px; padding: 10px 16px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
+  .chat-input-bar input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); }
+  .icon-btn.send { background: var(--accent-grad); color: #fff; border: none; }
 
-  .chat-input-bar {
-    display: flex; gap: 8px; padding: 10px 0 14px;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0;
-  }
-  .chat-input-bar input {
-    flex: 1; padding: 12px 16px; border-radius: var(--radius-pill);
-    border: 1px solid var(--border); background: var(--surface-2);
-    color: var(--text); font-size: 15px; outline: none; transition: border-color var(--transition);
-  }
-  .chat-input-bar input:focus { border-color: var(--accent); }
-  .send-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--accent-grad); color: #fff; display: grid; place-items: center;
-    transition: transform var(--transition);
-  }
-  .send-btn:active { transform: scale(.92); }
-  .send-btn:disabled { opacity: .4; }
+  /* Player List */
+  .player-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--surface-2); border-radius: var(--radius-md); margin-bottom: 6px; }
+  .player-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-grad); color: #fff; font-weight: 700; font-size: 12px; }
+  .player-name { flex: 1; font-weight: 600; font-size: 14px; }
 
-  /* Game state card */
-  .state-card {
-    background: var(--surface); backdrop-filter: blur(20px);
-    border: 1px solid var(--border); border-radius: var(--radius-lg);
-    padding: 16px; margin-bottom: 12px; flex-shrink: 0;
-  }
-  .state-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
-  .state-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; line-height: 1.25; }
-  .state-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
-
-  .secret-word {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    padding: 18px; margin-top: 12px; border-radius: var(--radius-md);
-    background: var(--accent-soft); border: 1px dashed var(--accent);
-    font-size: 24px; font-weight: 800; color: var(--accent); letter-spacing: -.5px;
-  }
-
-  /* Vote buttons */
-  .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .vote-btn {
-    padding: 10px; border-radius: var(--radius-sm);
-    background: var(--surface-2); border: 1px solid var(--border);
-    font-size: 13px; font-weight: 700; transition: all var(--transition);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .vote-btn:active { background: var(--accent-soft); color: var(--accent); }
+  /* Game Cards inside Game */
+  .state-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
+  .state-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+  .state-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
+  .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
   /* Toast */
-  .toast-wrap {
-    position: fixed; top: calc(env(safe-area-inset-top) + 60px); left: 50%;
-    transform: translateX(-50%); z-index: 1000;
-    display: flex; flex-direction: column; gap: 8px;
-    pointer-events: none; width: calc(100% - 32px); max-width: 380px;
-  }
-  .toast {
-    padding: 12px 16px; background: var(--surface-solid);
-    border: 1px solid var(--border-strong); border-radius: var(--radius-md);
-    box-shadow: var(--shadow); font-size: 14px; font-weight: 600;
-    animation: toastIn .25s ease; pointer-events: auto;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .toast.success { border-left: 3px solid var(--success); color: var(--success); }
-  .toast.error { border-left: 3px solid var(--danger); color: var(--danger); }
-  .toast.info { border-left: 3px solid var(--accent); color: var(--accent); }
-  @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  .toast-wrap { position: fixed; top: calc(env(safe-area-inset-top) + 60px); left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: calc(100% - 32px); max-width: 380px; }
+  .toast { padding: 10px 14px; background: var(--surface-solid); border: 1px solid var(--border-strong); border-radius: var(--radius-md); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; animation: slideDown .3s ease; }
+  .toast.success { border-left: 3px solid var(--success); }
+  .toast.error { border-left: 3px solid var(--danger); }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
 
-  .spinner {
-    width: 28px; height: 28px; border: 3px solid var(--border);
-    border-top-color: var(--accent); border-radius: 50%;
-    animation: spin .8s linear infinite; margin: 40px auto;
-  }
+  .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
 
-  .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
-  .empty-state svg { margin: 0 auto 12px; opacity: .4; }
-
-  /* Responsive */
-  @media (min-width: 640px) {
-    .content { padding: 24px 28px; }
-    .content.with-chat .screen { padding: 24px 28px; padding-bottom: 0; }
-    .game-grid { gap: 16px; }
-    .game-card { min-height: 170px; padding: 22px; }
-    .game-card h3 { font-size: 20px; }
-  }
-  @media (min-width: 1024px) {
-    .app { grid-template-columns: 250px 1fr; }
-    .bottom-nav { display: none; }
-    .sidebar {
-      display: flex; flex-direction: column; gap: 4px;
-      background: var(--surface); backdrop-filter: blur(20px);
-      border-right: 1px solid var(--border); padding: 20px 14px;
-    }
-    .sidebar .brand { padding: 4px 10px 22px; font-size: 18px; }
-    .sidebar-nav { display: flex; flex-direction: column; gap: 3px; }
-    .sidebar-nav .nav-item {
-      flex-direction: row; justify-content: flex-start;
-      padding: 11px 14px; gap: 12px; font-size: 14px;
-      border-radius: var(--radius-md);
-    }
-    .sidebar-footer { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
-    .content { padding: 28px 44px; }
-    .content.with-chat .screen { padding: 28px 44px; padding-bottom: 0; max-width: 780px; margin: 0 auto; width: 100%; }
-    .page-title { font-size: 30px; }
-    .header { padding: 16px 44px; }
-    .chat-input-bar { padding-bottom: 14px; }
+  /* Desktop adjustments */
+  @media (min-width: 768px) {
+    .app { flex-direction: row; justify-content: center; background: #000; }
+    .main { width: 100%; max-width: 600px; background: var(--bg-grad); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .bottom-nav { display: none; } /* Hide bottom nav on PC for simplicity, or keep it */
+    .header { padding: 16px 20px; }
+    .screen { padding: 20px; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- SIDEBAR (desktop) -->
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo" id="sideBrandIcon"></div>
-      <span>Игровой хаб</span>
-    </div>
-    <nav class="sidebar-nav" id="sideNav"></nav>
-    <div class="sidebar-footer">
-      <button class="nav-item" id="themeBtnSide"></button>
-    </div>
-  </aside>
-
   <div class="main">
     <header class="header">
       <div class="brand">
@@ -366,85 +208,89 @@
         <h1 class="page-title">Привет, <span id="userName">Игрок</span></h1>
         <p class="page-subtitle">Выбирай игру и присоединяйся</p>
         <div class="game-grid" id="gameGrid"></div>
-        <h2 style="font-size:15px;margin-bottom:12px;font-weight:700;">Активные комнаты</h2>
-        <div id="activeRooms" class="room-list"><div class="spinner"></div></div>
+        
+        <h2 style="font-size:16px; margin-bottom:12px; font-weight:700;">Активные комнаты</h2>
+        <div id="activeRooms"></div>
       </section>
 
       <!-- ROOMS -->
       <section class="screen" id="screen-rooms">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <button class="btn btn-secondary btn-sm" id="backBtn"></button>
-          <button class="btn btn-secondary btn-sm" id="refreshRoomsBtn" title="Обновить"></button>
-        </div>
+        <button class="btn btn-secondary" id="backBtn" style="width:auto; align-self:flex-start; padding:8px 12px; margin-bottom:16px;"></button>
         <h1 class="page-title" id="roomsTitle">Комнаты</h1>
-        <p class="page-subtitle" id="roomsSubtitle">Выбери свободную комнату</p>
-        <div id="roomList" class="room-list"></div>
+        <p class="page-subtitle">Выбери свободную комнату</p>
+        <div id="roomList"></div>
       </section>
 
       <!-- LOBBY -->
-      <section class="screen flex-screen" id="screen-lobby">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <button class="btn btn-secondary btn-sm" id="leaveLobbyBtn"></button>
-          <span style="font-size:12px;color:var(--text-muted);" id="lobbyStatus"></span>
-        </div>
-        <h1 class="page-title" id="lobbyTitle" style="margin-bottom:2px;">Лобби</h1>
-        <p class="page-subtitle" id="lobbySubtitle">Ожидание игроков</p>
-
-        <div class="card" style="margin-bottom:12px;padding:12px 14px;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <span id="playersIcon" style="color:var(--accent);"></span>
-            <span style="font-weight:700;font-size:14px;">Игроки (<span id="playersCount">0</span>/20)</span>
+      <section class="screen with-chat" id="screen-lobby">
+        <div class="scroll-area" id="lobbyScroll">
+          <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <button class="btn btn-secondary" id="leaveLobbyBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
+            <span style="font-size:12px; align-self:center; color:var(--text-muted);" id="lobbyStatus"></span>
           </div>
-          <div class="player-list" id="lobbyPlayers"></div>
+          <h1 class="page-title" id="lobbyTitle">Лобби</h1>
+          <p class="page-subtitle" id="lobbySubtitle">Ожидание игроков</p>
+
+          <div class="state-card">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span id="playersIcon" style="color:var(--accent);"></span>
+              <span style="font-weight:700; font-size:14px;">Игроки (<span id="playersCount">0</span>/20)</span>
+            </div>
+            <div id="lobbyPlayers"></div>
+          </div>
+          <button class="btn btn-primary" id="startBtn">Начать игру</button>
         </div>
-
-        <button class="btn btn-primary btn-block" id="startBtn" style="margin-bottom:12px;">Начать игру</button>
-
-        <div class="chat-wrap">
+        
+        <div class="chat-wrap" style="flex: 1;">
           <div class="chat-messages" id="lobbyChat"></div>
-        </div>
-        <div class="chat-input-bar">
-          <input type="text" id="lobbyInput" placeholder="Написать сообщение..." autocomplete="off" />
-          <button class="send-btn" id="lobbySendBtn"></button>
+          <div class="chat-input-bar">
+            <button class="icon-btn" id="lobbyVoiceBtn" title="Голосовое сообщение"></button>
+            <input type="text" id="lobbyInput" placeholder="Сообщение..." autocomplete="off" />
+            <button class="icon-btn send" id="lobbySendBtn"></button>
+          </div>
         </div>
       </section>
 
       <!-- GAME -->
-      <section class="screen flex-screen" id="screen-game">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <button class="btn btn-secondary btn-sm" id="leaveGameBtn"></button>
-          <span style="font-size:12px;color:var(--text-muted);" id="gameStatus"></span>
+      <section class="screen with-chat" id="screen-game">
+        <div class="scroll-area" id="gameScroll">
+          <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <button class="btn btn-secondary" id="leaveGameBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
+            <span style="font-size:12px; align-self:center; color:var(--text-muted);" id="gameStatus"></span>
+          </div>
+          <div id="gameContent"></div>
         </div>
-        <div id="gameContent"></div>
-        <div class="chat-wrap">
+
+        <div class="chat-wrap" style="flex: 1;">
           <div class="chat-messages" id="gameChat"></div>
-        </div>
-        <div class="chat-input-bar" id="gameInputBar">
-          <input type="text" id="gameInput" placeholder="Написать..." autocomplete="off" />
-          <button class="send-btn" id="gameSendBtn"></button>
+          <div class="chat-input-bar" id="gameInputBar">
+            <button class="icon-btn" id="gameVoiceBtn" title="Голосовое сообщение"></button>
+            <input type="text" id="gameInput" placeholder="Сообщение..." autocomplete="off" />
+            <button class="icon-btn send" id="gameSendBtn"></button>
+          </div>
         </div>
       </section>
 
       <!-- PROFILE -->
       <section class="screen" id="screen-profile">
         <h1 class="page-title">Профиль</h1>
-        <p class="page-subtitle">Статистика и настройки</p>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
-            <div class="player-avatar" id="profileAvatar" style="width:56px;height:56px;font-size:22px;">U</div>
+        <p class="page-subtitle">Твоя статистика</p>
+        <div class="state-card">
+          <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+            <div class="player-avatar" id="profileAvatar" style="width:56px; height:56px; font-size:22px;">U</div>
             <div>
-              <div style="font-weight:800;font-size:17px;" id="profileName">Игрок</div>
-              <div style="color:var(--text-muted);font-size:12px;" id="profileId">ID: —</div>
+              <div style="font-weight:800; font-size:18px;" id="profileName">Игрок</div>
+              <div style="color:var(--text-muted); font-size:13px;" id="profileId">ID: —</div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <div style="padding:14px;background:var(--surface-2);border-radius:var(--radius-md);">
-              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Баланс</div>
-              <div style="font-weight:800;font-size:20px;color:var(--accent);" id="profileBalance">0</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Баланс</div>
+              <div style="font-weight:800; font-size:20px; color:var(--accent);" id="profileBalance">0</div>
             </div>
-            <div style="padding:14px;background:var(--surface-2);border-radius:var(--radius-md);">
-              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Игр сыграно</div>
-              <div style="font-weight:800;font-size:20px;" id="profileGames">0</div>
+            <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Игр сыграно</div>
+              <div style="font-weight:800; font-size:20px;" id="profileGames">0</div>
             </div>
           </div>
         </div>
@@ -459,107 +305,6 @@
 
 <script>
 /* ============================================================
-   СЛОВАРИ (250 пар для Шпиона, 250 слов для Крокодила)
-   (В будущем они будут использоваться в функции API)
-   ============================================================ */
-const SPY_WORDS = [
-  ["Врач", "Медсестра"], ["Пилот", "Стюардесса"], ["Футбол", "Баскетбол"], ["Кошка", "Собака"], ["Зима", "Осень"],
-  ["Пицца", "Бургер"], ["Кофе", "Чай"], ["Такси", "Автобус"], ["Гитара", "Пианино"], ["Смартфон", "Планшет"],
-  ["Компьютер", "Ноутбук"], ["Телевизор", "Монитор"], ["Микроволновка", "Духовка"], ["Кровать", "Диван"],
-  ["Окно", "Дверь"], ["Зубная щётка", "Расчёска"], ["Мыло", "Шампунь"], ["Ножницы", "Нож"], ["Тарелка", "Миска"],
-  ["Чашка", "Стакан"], ["Холодильник", "Морозилка"], ["Пылесос", "Швабра"], ["Стиралка", "Посудомойка"],
-  ["Теннис", "Бадминтон"], ["Шахматы", "Шашки"], ["Лыжи", "Сноуборд"], ["Коньки", "Ролики"], ["Солнце", "Луна"],
-  ["Снег", "Дождь"], ["Ветер", "Ураган"], ["Цветок", "Роза"], ["Дерево", "Куст"], ["Звезда", "Планета"],
-  ["Стул", "Кресло"], ["Камин", "Печь"], ["Ковёр", "Линолеум"], ["Шкаф", "Комод"], ["Люстра", "Лампа"],
-  ["Зеркало", "Окно"], ["Подушка", "Одеяло"], ["Простыня", "Матрас"], ["Шапка", "Кепка"], ["Куртка", "Пальто"],
-  ["Шарф", "Галстук"], ["Ботинки", "Кроссовки"], ["Носки", "Перчатки"], ["Джинсы", "Брюки"], ["Рубашка", "Футболка"],
-  ["Юрист", "Прокурор"], ["Пожарный", "Спасатель"], ["Полицейский", "Охранник"], ["Учитель", "Воспитатель"],
-  ["Программист", "Хакер"], ["Сантехник", "Электрик"], ["Парикмахер", "Стилист"], ["Повар", "Кондитер"],
-  ["Актер", "Певец"], ["Художник", "Скульптор"], ["Писатель", "Поэт"], ["Ветеринар", "Зоолог"],
-  ["Экономист", "Бухгалтер"], ["Маркетолог", "Рекламщик"], ["Журналист", "Блогер"], ["Фотограф", "Оператор"],
-  ["Самолет", "Вертолет"], ["Поезд", "Электричка"], ["Метро", "Трамвай"], ["Корабль", "Яхта"],
-  ["Велосипед", "Самокат"], ["Мотоцикл", "Скутер"], ["Ракета", "Спутник"], ["Подводная лодка", "Батискаф"],
-  ["Сыр", "Творог"], ["Молоко", "Кефир"], ["Мясо", "Рыба"], ["Курица", "Индейка"], ["Хлеб", "Батон"],
-  ["Булочка", "Круассан"], ["Торт", "Пирожное"], ["Мороженое", "Сорбет"], ["Шоколад", "Конфета"],
-  ["Яблоко", "Груша"], ["Банан", "Апельсин"], ["Лимон", "Лайм"], ["Арбуз", "Дыня"], ["Виноград", "Вишня"],
-  ["Клубника", "Малина"], ["Картошка", "Морковка"], ["Помидор", "Огурец"], ["Лук", "Чеснок"], ["Капуста", "Салат"],
-  ["Суп", "Борщ"], ["Пельмени", "Вареники"], ["Блины", "Оладьи"], ["Макароны", "Рис"], ["Гречка", "Овсянка"],
-  ["Соль", "Сахар"], ["Перец", "Корица"], ["Мед", "Варенье"], ["Кетчуп", "Майонез"], ["Горчица", "Хрен"],
-  ["Тигр", "Лев"], ["Слон", "Жираф"], ["Зебра", "Лошадь"], ["Медведь", "Волк"], ["Лиса", "Песец"],
-  ["Заяц", "Кролик"], ["Ёж", "Дикобраз"], ["Мышь", "Крыса"], ["Попугай", "Орел"], ["Сова", "Филин"],
-  ["Пингвин", "Дельфин"], ["Акула", "Кит"], ["Осьминог", "Кальмар"], ["Краб", "Рак"], ["Черепаха", "Змея"],
-  ["Лягушка", "Жаба"], ["Крокодил", "Аллигатор"], ["Обезьяна", "Горилла"], ["Верблюд", "Лама"], ["Корова", "Коза"],
-  ["Свинья", "Овца"], ["Курица", "Утка"], ["Гусь", "Лебедь"], ["Индюк", "Фазан"], ["Павлин", "Фламинго"],
-  ["Кресло-мешок", "Пуфик"], ["Табуретка", "Скамейка"], ["Гардероб", "Вешалка"], ["Тумбочка", "Полка"],
-  ["Балкон", "Лоджия"], ["Подвал", "Чердак"], ["Крыша", "Фундамент"], ["Лестница", "Эскалатор"],
-  ["Лифт", "Подъемник"], ["Дверь", "Калитка"], ["Замок", "Задвижка"], ["Ключ", "Шпингалет"],
-  ["Обои", "Краска"], ["Плитка", "Паркет"], ["Линолеум", "Ковролин"], ["Гипсокартон", "Кирпич"],
-  ["Штора", "Жалюзи"], ["Гардина", "Тюль"], ["Ковер", "Коврик"], ["Плед", "Покрывало"],
-  ["Холодильник", "Морозильник"], ["Плита", "Варочная панель"], ["Вытяжка", "Вентилятор"],
-  ["Тостер", "Миксер"], ["Блендер", "Мясорубка"], ["Мультиварка", "Скороварка"], ["Чайник", "Кофемашина"],
-  ["Пылесос", "Робот-пылесос"], ["Утюг", "Отпариватель"], ["Фен", "Плойка"], ["Зарядка", "Павербанк"],
-  ["Наушники", "Колонки"], ["Клавиатура", "Мышка"], ["Вебкамера", "Микрофон"], ["Принтер", "Сканер"],
-  ["Флешка", "Жесткий диск"], ["Роутер", "Модем"], ["Сервер", "Дата-центр"], ["Облако", "Флешка"],
-  ["Сайт", "Приложение"], ["Пароль", "Логин"], ["Курсор", "Указатель"], ["Файл", "Папка"],
-  ["Футболка", "Майка"], ["Свитер", "Кофта"], ["Кардиган", "Пиджак"], ["Жилет", "Безрукавка"],
-  ["Платье", "Сарафан"], ["Юбка", "Шорты"], ["Колготки", "Чулки"], ["Носки", "Гольфы"],
-  ["Ботинки", "Туфли"], ["Кроссовки", "Кеды"], ["Сандалии", "Шлепанцы"], ["Валенки", "Угги"],
-  ["Шляпа", "Панама"], ["Бейсболка", "Кепка"], ["Берет", "Шапка"], ["Капюшон", "Воротник"],
-  ["Ремень", "Подтяжки"], ["Галстук", "Бабочка"], ["Шарф", "Снуд"], ["Варежки", "Перчатки"],
-  ["Очки", "Линзы"], ["Часы", "Браслет"], ["Кольцо", "Серьги"], ["Кулон", "Брошь"],
-  ["Рюкзак", "Сумка"], ["Чемодан", "Портфель"], ["Кошелек", "Клатч"], ["Зонт", "Дождевик"],
-  ["Город", "Деревня"], ["Столица", "Мегаполис"], ["Дом", "Квартира"], ["Дача", "Коттедж"],
-  ["Парк", "Сквер"], ["Лес", "Роща"], ["Река", "Озеро"], ["Море", "Океан"],
-  ["Гора", "Холм"], ["Пустыня", "Степь"], ["Болото", "Топь"], ["Водопад", "Родник"],
-  ["Вулкан", "Гейзер"], ["Пещера", "Грот"], ["Остров", "Полуостров"], ["Пляж", "Набережная"],
-  ["Кинотеатр", "Театр"], ["Музей", "Выставка"], ["Библиотека", "Книжный магазин"], ["Стадион", "Спортзал"],
-  ["Кафе", "Ресторан"], ["Столовая", "Фастфуд"], ["Бар", "Паб"], ["Клуб", "Дискотека"],
-  ["Аптека", "Больница"], ["Поликлиника", "Стационар"], ["Школа", "Университет"], ["Детский сад", "Ясли"],
-  ["Магазин", "Супермаркет"], ["Рынок", "Торговый центр"], ["Банк", "Биржа"], ["Почта", "Курьерская служба"],
-  ["Вокзал", "Аэропорт"], ["Порт", "Пристань"], ["Автовокзал", "Остановка"], ["Парковка", "Гараж"],
-  ["Дождь", "Град"], ["Снег", "Иней"], ["Гроза", "Молния"], ["Туман", "Мгла"],
-  ["Жара", "Зной"], ["Мороз", "Холод"], ["Ветер", "Сквозняк"], ["Радуга", "Северное сияние"],
-  ["Рассвет", "Закат"], ["Полдень", "Полночь"], ["Сутки", "Неделя"], ["Месяц", "Год"],
-  ["Весна", "Лето"], ["Осень", "Зима"], ["Январь", "Февраль"], ["Июль", "Август"],
-  ["Понедельник", "Вторник"], ["Суббота", "Воскресенье"], ["Утро", "Вечер"], ["День", "Ночь"],
-  ["Секунда", "Минута"], ["Час", "Сутки"], ["Век", "Тысячелетие"], ["Мгновение", "Миг"],
-  ["Радость", "Восторг"], ["Грусть", "Печаль"], ["Злость", "Ярость"], ["Страх", "Ужас"],
-  ["Удивление", "Изумление"], ["Спокойствие", "Умиротворение"], ["Скука", "Тоска"], ["Интерес", "Любопытство"],
-  ["Смех", "Хохот"], ["Плач", "Рыдание"], ["Улыбка", "Ухмылка"], ["Вздох", "Всхлип"]
-];
-
-const CROCODILE_WORDS = [
-  "Стиральная машина", "Кошка", "Собака", "Пицца", "Бургер", "Суши", "Чай", "Кофе", "Мороженое", "Шоколад",
-  "Торт", "Хлеб", "Сыр", "Молоко", "Яблоко", "Банан", "Апельсин", "Арбуз", "Виноград", "Лимон", "Помидор",
-  "Огурец", "Картошка", "Морковка", "Суп", "Борщ", "Салат", "Пельмени", "Блины", "Макароны", "Рис",
-  "Тигр", "Лев", "Слон", "Жираф", "Зебра", "Медведь", "Волк", "Лиса", "Заяц", "Кролик", "Ёж", "Мышь",
-  "Попугай", "Орел", "Сова", "Пингвин", "Дельфин", "Акула", "Кит", "Осьминог", "Краб", "Черепаха", "Змея",
-  "Лягушка", "Крокодил", "Обезьяна", "Верблюд", "Лошадь", "Корова", "Свинья", "Овца", "Коза", "Курица",
-  "Утка", "Гусь", "Лебедь", "Павлин", "Фламинго", "Страус", "Пингвин", "Кенгуру", "Коала", "Панда",
-  "Пылесос", "Холодильник", "Телевизор", "Компьютер", "Ноутбук", "Смартфон", "Планшет", "Наушники",
-  "Клавиатура", "Мышка", "Принтер", "Сканер", "Фотоаппарат", "Видеокамера", "Микрофон", "Колонка",
-  "Вентилятор", "Кондиционер", "Обогреватель", "Микроволновка", "Духовка", "Мультиварка", "Блендер",
-  "Миксер", "Тостер", "Кофемашина", "Чайник", "Утюг", "Фен", "Плойка", "Бритва", "Зубная щетка",
-  "Самолет", "Вертолет", "Поезд", "Электричка", "Метро", "Трамвай", "Троллейбус", "Автобус",
-  "Такси", "Корабль", "Яхта", "Лодка", "Катер", "Подводная лодка", "Велосипед", "Самокат",
-  "Мотоцикл", "Скутер", "Ракета", "Спутник", "Танк", "Трактор", "Экскаватор", "Бульдозер",
-  "Светофор", "Зебра", "Пешеход", "Водитель", "Пассажир", "Билет", "Остановка", "Вокзал",
-  "Аэропорт", "Порт", "Пристань", "Гараж", "Парковка", "Заправка", "Мойка", "Шиномонтаж",
-  "Врач", "Медсестра", "Учитель", "Полицейский", "Пожарный", "Программист", "Повар", "Официант",
-  "Парикмахер", "Стоматолог", "Юрист", "Бухгалтер", "Актер", "Певец", "Художник", "Писатель",
-  "Фотограф", "Журналист", "Блогер", "Блоггер", "Строитель", "Сантехник", "Электрик", "Сварщик",
-  "Карандаш", "Ручка", "Ластик", "Линейка", "Тетрадь", "Дневник", "Учебник", "Книга",
-  "Журнал", "Газета", "Открытка", "Конверт", "Марка", "Посылка", "Письмо", "Телеграмма",
-  "Гитара", "Пианино", "Скрипка", "Барабан", "Флейта", "Саксофон", "Труба", "Гармонь",
-  "Балалайка", "Арфа", "Виолончель", "Контрабас", "Синтезатор", "Аккордеон", "Бубен", "Маракас",
-  "Кровать", "Диван", "Шкаф", "Стол", "Стул", "Кресло", "Комод", "Тумбочка",
-  "Полка", "Вешалка", "Зеркало", "Ковер", "Люстра", "Лампа", "Торшер", "Бра",
-  "Подушка", "Одеяло", "Простыня", "Матрас", "Плед", "Штора", "Гардина", "Коврик",
-  "Молоток", "Отвертка", "Пила", "Топор", "Рубанок", "Дрель", "Шуруповерт", "Гвоздь",
-  "Шуруп", "Гайка", "Болт", "Веревка", "Цепь", "Проволока", "Скотч", "Клей"
-];
-
-/* ============================================================
    SVG ICONS
    ============================================================ */
 const ICON_PATHS = {
@@ -572,7 +317,6 @@ const ICON_PATHS = {
   coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a2 2 0 0 1 0 4h-3a2 2 0 0 0 0 4h4"/>',
   play: '<polygon points="6 3 20 12 6 21 6 3"/>',
   arrowLeft: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
-  door: '<path d="M13 4h3a2 2 0 0 1 2 2v14M2 20h3M13 20h9"/><path d="M10 12v.01"/><path d="M13 4 7 6v14l6 2V4z"/>',
   send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
   crown: '<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/>',
   check: '<polyline points="20 6 9 17 4 12"/>',
@@ -585,13 +329,14 @@ const ICON_PATHS = {
   skull: '<circle cx="12" cy="9" r="7"/><path d="M9 16v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/>',
   ghost: '<path d="M9 10h.01M15 10h.01M12 2a8 8 0 0 0-8 8v12l3-3 3 3 2-2 2 2 3-3 3 3V10a8 8 0 0 0-8-8z"/>',
   zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/>'
 };
 function icon(name, size = 20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[name] || ''}</svg>`;
 }
 
 /* ============================================================
-   CONFIG
+   CONFIG & INIT
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://jgjereoejdipaqwjhexc.supabase.co',
@@ -599,27 +344,18 @@ const CONFIG = {
   FUNCTIONS_URL: 'https://jgjereoejdipaqwjhexc.supabase.co/functions/v1',
 };
 
-/* ============================================================
-   TELEGRAM
-   ============================================================ */
 const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.disableVerticalSwipes?.();
-}
+if (tg) { tg.ready(); tg.expand(); tg.disableVerticalSwipes?.(); }
 const telegramUser = tg?.initDataUnsafe?.user || { id: 123456789, first_name: 'Гость', username: 'guest' };
 const myId = telegramUser.id;
 
 /* ============================================================
-   THEME
+   THEME (Только одна кнопка в хедере)
    ============================================================ */
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
-  const iconName = theme === 'dark' ? 'sun' : 'moon';
-  document.getElementById('themeBtn').innerHTML = icon(iconName, 18);
-  document.getElementById('themeBtnSide').innerHTML = icon(iconName, 18) + `<span>${theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}</span>`;
+  document.getElementById('themeBtn').innerHTML = icon(theme === 'dark' ? 'sun' : 'moon', 18);
   if (tg) {
     tg.setHeaderColor(theme === 'dark' ? '#080b14' : '#eef2f8');
     tg.setBackgroundColor(theme === 'dark' ? '#080b14' : '#eef2f8');
@@ -627,11 +363,9 @@ function setTheme(theme) {
 }
 function initTheme() {
   const saved = localStorage.getItem('theme');
-  if (saved) return setTheme(saved);
-  setTheme(tg?.colorScheme === 'light' ? 'light' : 'dark');
+  setTheme(saved || (tg?.colorScheme === 'light' ? 'light' : 'dark'));
 }
 document.getElementById('themeBtn').addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-document.getElementById('themeBtnSide').addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
 
 /* ============================================================
    API
@@ -648,62 +382,15 @@ async function api(path, method = 'GET', body = null) {
       },
       body: body ? JSON.stringify(body) : undefined,
     });
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(errText || `HTTP ${res.status}`);
-    }
+    if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
     return await res.json();
-  } catch (e) {
-    console.error("API Error:", e);
-    throw e;
-  }
+  } catch (e) { console.error("API Error:", e); throw e; }
 }
 
 /* ============================================================
-   STATE
+   STATE & NAVIGATION
    ============================================================ */
-const state = {
-  balance: 0,
-  currentGame: null,
-  currentRoom: null,
-  currentPlayers: [],
-  currentMessages: [],
-  lastMessageId: 0,
-  currentScreen: 'home',
-  pollingTimer: null,
-  userIsHost: false,
-};
-
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
-const NAV_ITEMS = [
-  { id: 'home', icon: 'home', label: 'Главная' },
-  { id: 'shpion', icon: 'eye', label: 'Шпион' },
-  { id: 'crocodile', icon: 'croc', label: 'Крокодил' },
-  { id: 'profile', icon: 'user', label: 'Профиль' },
-];
-
-function renderNav() {
-  const html = NAV_ITEMS.map(n => `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 20)}<span>${n.label}</span></button>`).join('');
-  document.getElementById('bottomNav').innerHTML = html;
-  document.getElementById('sideNav').innerHTML = html;
-  document.querySelectorAll('.nav-item[data-nav]').forEach(el => {
-    el.addEventListener('click', () => handleNav(el.dataset.nav));
-  });
-}
-
-function updateNavActive(id) {
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.nav === id));
-}
-
-function handleNav(id) {
-  if (id === 'home') return goHome();
-  if (id === 'profile') return goProfile();
-  if (id === 'shpion') return goRooms('shpion');
-  if (id === 'crocodile') return goRooms('crocodile');
-}
-
+const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null };
 const screens = {
   home: document.getElementById('screen-home'),
   rooms: document.getElementById('screen-rooms'),
@@ -715,42 +402,50 @@ const screens = {
 function showScreen(name) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   screens[name]?.classList.add('active');
-  state.currentScreen = name;
-  const content = document.getElementById('content');
-  content.classList.toggle('with-chat', name === 'lobby' || name === 'game');
-  if (name !== 'lobby' && name !== 'game') content.scrollTop = 0;
+}
+
+const NAV_ITEMS = [
+  { id: 'home', icon: 'home', label: 'Главная' },
+  { id: 'shpion', icon: 'eye', label: 'Шпион' },
+  { id: 'crocodile', icon: 'croc', label: 'Крокодил' },
+  { id: 'profile', icon: 'user', label: 'Профиль' },
+];
+
+function renderNav() {
+  document.getElementById('bottomNav').innerHTML = NAV_ITEMS.map(n => 
+    `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 20)}<span>${n.label}</span></button>`
+  ).join('');
+  document.querySelectorAll('.nav-item[data-nav]').forEach(el => {
+    el.addEventListener('click', () => {
+      const nav = el.dataset.nav;
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      if (nav === 'home') goHome();
+      if (nav === 'profile') goProfile();
+      if (nav === 'shpion') goRooms('shpion');
+      if (nav === 'crocodile') goRooms('crocodile');
+    });
+  });
 }
 
 /* ============================================================
-   HOME
+   SCREENS: HOME & ROOMS
    ============================================================ */
 async function goHome() {
-  stopPolling();
-  updateNavActive('home');
-  showScreen('home');
+  stopPolling(); showScreen('home');
   document.getElementById('headerTitle').textContent = 'Игровой хаб';
-  document.getElementById('userName').textContent = telegramUser.first_name || 'Игрок';
+  document.getElementById('userName').textContent = telegramUser.first_name;
+  
   document.getElementById('gameGrid').innerHTML = `
-    <div class="game-card spy" data-game="shpion">
-      <div>
-        <div style="opacity:.95;">${icon('eye', 32)}</div>
-        <h3>Шпион</h3>
-        <p>Найди шпиона среди своих</p>
-      </div>
-      <span class="badge">3+ игрока</span>
+    <div class="game-card spy" onclick="goRooms('shpion')">
+      <div>${icon('eye', 28)}</div>
+      <div><h3>Шпион</h3><p>Найди шпиона</p></div>
     </div>
-    <div class="game-card crocodile" data-game="crocodile">
-      <div>
-        <div style="opacity:.95;">${icon('croc', 32)}</div>
-        <h3>Крокодил</h3>
-        <p>Угадай слово по описанию</p>
-      </div>
-      <span class="badge">2+ игрока</span>
+    <div class="game-card crocodile" onclick="goRooms('crocodile')">
+      <div>${icon('croc', 28)}</div>
+      <div><h3>Крокодил</h3><p>Угадай слово</p></div>
     </div>
   `;
-  document.querySelectorAll('.game-card[data-game]').forEach(el => {
-    el.addEventListener('click', () => goRooms(el.dataset.game));
-  });
 
   await Promise.all([refreshBalance(), loadActiveRooms()]);
 }
@@ -763,13 +458,10 @@ async function refreshBalance() {
     document.getElementById('profileBalance').textContent = state.balance;
     document.getElementById('profileGames').textContent = data.games_played ?? 0;
     
+    // Если игрок уже в комнате (например, зашел с телефона, пока играл в боте)
     if (data.current_room && !state.currentRoom) {
       state.currentRoom = data.current_room;
-      if (data.current_room.status === 'waiting') {
-        setTimeout(() => goLobby(), 50);
-      } else {
-        setTimeout(() => goGame(), 50);
-      }
+      if (data.current_room.status === 'waiting') goLobby(); else goGame();
     }
   } catch (e) { console.error(e); }
 }
@@ -779,107 +471,69 @@ async function loadActiveRooms() {
   container.innerHTML = '<div class="spinner"></div>';
   try {
     const rooms = await api('/api/rooms');
-    const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 6);
-    if (!active.length) {
-      container.innerHTML = `<div class="empty-state">${icon('ghost', 40)}<div>Пока нет активных комнат</div></div>`;
-      return;
-    }
-    container.innerHTML = active.map(r => renderRoomItem(r)).join('');
-    container.querySelectorAll('.room-item').forEach(item => {
-      item.addEventListener('click', () => joinRoom(parseInt(item.dataset.roomId)));
-    });
-  } catch (e) {
-    container.innerHTML = `<div class="empty-state">${icon('x', 40)}<div>Не удалось загрузить</div></div>`;
-  }
-}
-
-function renderRoomItem(r) {
-  const isPlaying = r.status !== 'waiting';
-  const gameIcon = r.game_type === 'shpion' ? 'eye' : 'croc';
-  const gameName = r.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
-  return `
-    <div class="room-item" data-room-id="${r.id}">
-      <div class="room-icon">${icon(gameIcon, 22)}</div>
-      <div class="room-info">
-        <div class="room-name">${esc(r.code)}</div>
-        <div class="room-meta">
-          <span class="status-dot ${isPlaying ? 'playing' : 'waiting'}"></span>
-          ${gameName} · ${isPlaying ? 'Играют' : `${r.players_count || 0}/20`}
+    const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 4);
+    if (!active.length) { container.innerHTML = `<div class="empty-state">Пока нет активных комнат</div>`; return; }
+    
+    container.innerHTML = active.map(r => `
+      <div class="room-item" onclick="joinRoom(${r.id})">
+        <div class="room-icon">${icon(r.game_type === 'shpion' ? 'eye' : 'croc', 20)}</div>
+        <div class="room-info">
+          <div class="room-name">${esc(r.code)}</div>
+          <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Играют' : `${r.players_count}/20`}</div>
         </div>
+        ${icon('arrowLeft', 16)}
       </div>
-      <span style="color:var(--text-muted);">${icon(isPlaying ? 'x' : 'arrowLeft', 18)}</span>
-    </div>
-  `;
+    `).join('');
+  } catch (e) { container.innerHTML = `<div class="empty-state">Ошибка загрузки</div>`; }
 }
 
-/* ============================================================
-   ROOMS
-   ============================================================ */
 async function goRooms(game) {
   state.currentGame = game;
-  updateNavActive(game);
   showScreen('rooms');
-  const title = game === 'shpion' ? 'Шпион' : 'Крокодил';
-  document.getElementById('headerTitle').textContent = title;
-  document.getElementById('roomsTitle').textContent = title;
-  document.getElementById('backBtn').innerHTML = icon('arrowLeft', 16) + '<span>Назад</span>';
-  document.getElementById('refreshRoomsBtn').innerHTML = icon('refresh', 16);
-  await loadRooms(game);
-  startPolling(() => loadRooms(game), 3000);
-}
+  document.getElementById('headerTitle').textContent = game === 'shpion' ? 'Шпион' : 'Крокодил';
+  document.getElementById('roomsTitle').textContent = game === 'shpion' ? 'Шпион' : 'Крокодил';
+  document.getElementById('backBtn').innerHTML = icon('arrowLeft', 16) + ' Назад';
+  document.getElementById('backBtn').onclick = goHome;
 
-document.getElementById('backBtn').addEventListener('click', () => goHome());
-document.getElementById('refreshRoomsBtn').addEventListener('click', () => { if (state.currentGame) loadRooms(state.currentGame); });
-
-async function loadRooms(game) {
   const container = document.getElementById('roomList');
-  if (!container.children.length) container.innerHTML = '<div class="spinner"></div>';
+  container.innerHTML = '<div class="spinner"></div>';
   try {
     const rooms = await api(`/api/rooms?game=${game}`);
-    if (!rooms || !rooms.length) {
-      container.innerHTML = `<div class="empty-state">${icon('ghost', 40)}<div>Нет комнат</div></div>`;
-      return;
-    }
-    container.innerHTML = rooms.map(r => renderRoomItem(r)).join('');
-    container.querySelectorAll('.room-item').forEach(item => {
-      const room = rooms.find(r => String(r.id) === item.dataset.roomId);
-      if (room && room.status === 'waiting') {
-        item.addEventListener('click', () => joinRoom(parseInt(item.dataset.roomId)));
-      }
-    });
-  } catch (e) {
-    container.innerHTML = `<div class="empty-state">${icon('x', 40)}<div>Ошибка загрузки</div></div>`;
-  }
+    container.innerHTML = rooms.map(r => `
+      <div class="room-item" ${r.status === 'waiting' ? `onclick="joinRoom(${r.id})"` : ''}>
+        <div class="room-icon">${icon(r.status === 'waiting' ? 'door' : 'x', 20)}</div>
+        <div class="room-info">
+          <div class="room-name">${esc(r.code)}</div>
+          <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Игра уже идет' : `${r.players_count}/20`}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) { container.innerHTML = `<div class="empty-state">Ошибка загрузки</div>`; }
 }
 
-/* ============================================================
-   JOIN
-   ============================================================ */
 async function joinRoom(roomId) {
   try {
     const room = await api(`/api/rooms/${roomId}/join`, 'POST');
-    state.currentRoom = room;
-    state.lastMessageId = 0;
-    state.currentMessages = [];
+    state.currentRoom = room; state.lastMessageId = 0;
     showToast('Вы вошли в комнату', 'success');
     if (room.status === 'waiting') goLobby(); else goGame();
-  } catch (e) {
-    showToast('Не удалось войти: ' + (e.message || ''), 'error');
-  }
+  } catch (e) { showToast('Не удалось войти', 'error'); }
 }
 
 /* ============================================================
-   LOBBY
+   SCREENS: LOBBY
    ============================================================ */
 async function goLobby() {
-  if (!state.currentRoom) return goHome();
-  updateNavActive(state.currentGame || state.currentRoom.game_type);
   showScreen('lobby');
-  document.getElementById('headerTitle').textContent = state.currentRoom.code || 'Лобби';
-  document.getElementById('lobbyTitle').textContent = state.currentRoom.code || 'Лобби';
-  document.getElementById('leaveLobbyBtn').innerHTML = icon('arrowLeft', 16) + '<span>Выйти</span>';
-  document.getElementById('playersIcon').innerHTML = icon('users', 18);
-  document.getElementById('lobbySendBtn').innerHTML = icon('send', 18);
+  document.getElementById('headerTitle').textContent = state.currentRoom.code;
+  document.getElementById('lobbyTitle').textContent = state.currentRoom.code;
+  document.getElementById('leaveLobbyBtn').innerHTML = icon('arrowLeft', 16) + ' Выйти';
+  document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
+  document.getElementById('playersIcon').innerHTML = icon('users', 16);
+  document.getElementById('lobbySendBtn').innerHTML = icon('send', 16);
+  document.getElementById('lobbyVoiceBtn').innerHTML = icon('mic', 16);
+  document.getElementById('lobbyVoiceBtn').onclick = () => showToast('Запись ГС скоро появится!', 'info');
+  
   await refreshLobby();
   startPolling(refreshLobby, 2000);
 }
@@ -888,64 +542,171 @@ async function refreshLobby() {
   if (!state.currentRoom) return;
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
-    state.currentRoom = data.room;
-    state.currentPlayers = data.players;
-    state.userIsHost = data.room.host_id === myId;
-
+    state.currentRoom = data.room; state.userIsHost = data.room.host_id === myId;
+    
     if (data.room.status !== 'waiting') return goGame();
 
     document.getElementById('playersCount').textContent = data.players.length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
-    document.getElementById('lobbySubtitle').textContent = `Ожидание игроков · ${data.players.length}/20`;
-
-    document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => renderPlayer(p, data.room.host_id)).join('');
+    
+    document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
+      <div class="player-item">
+        <div class="player-avatar">${esc((p.username || 'И')[0].toUpperCase())}</div>
+        <div class="player-name">${esc(p.username || 'Игрок')} ${p.user_id === myId ? '(вы)' : ''}</div>
+        ${data.room.host_id === p.user_id ? icon('crown', 16) : ''}
+      </div>
+    `).join('');
 
     const startBtn = document.getElementById('startBtn');
     const minPlayers = data.room.game_type === 'crocodile' ? 2 : 3;
     const canStart = data.players.length >= minPlayers;
+    
     startBtn.style.display = (state.userIsHost || data.room.host_id === -1) ? 'flex' : 'none';
     startBtn.disabled = !canStart;
-    startBtn.innerHTML = icon('play', 16) + `<span>${canStart ? 'Начать игру' : `Нужно ещё ${minPlayers - data.players.length}`}</span>`;
+    startBtn.innerHTML = icon('play', 16) + (canStart ? ' Начать игру' : ` Нужно ещё ${minPlayers - data.players.length}`);
 
     appendMessages(data.messages || [], 'lobbyChat');
-  } catch (e) { console.error('refreshLobby', e); }
+  } catch (e) { console.error(e); }
 }
 
-function renderPlayer(p, hostId) {
-  const initial = (p.username || 'И')[0].toUpperCase();
-  const isHost = hostId === p.user_id;
-  const isMe = p.user_id === myId;
-  return `
-    <div class="player-item">
-      <div class="player-avatar">${esc(initial)}</div>
-      <div class="player-name">${esc(p.username || 'Игрок')}${isMe ? ' (вы)' : ''}</div>
-      ${isHost ? `<span style="color:var(--warning);">${icon('crown', 16)}</span>` : ''}
-      ${!p.is_alive ? `<span class="player-badge dead">${icon('skull', 14)}</span>` : ''}
-      ${p.is_spectator ? `<span class="player-badge">${icon('ghost', 14)}</span>` : ''}
-    </div>
-  `;
-}
+document.getElementById('startBtn').onclick = async () => {
+  try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); }
+  catch (e) { showToast('Ошибка старта', 'error'); }
+};
 
-document.getElementById('leaveLobbyBtn').addEventListener('click', () => leaveRoom());
-document.getElementById('startBtn').addEventListener('click', async () => {
-  try {
-    await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST');
-    showToast('Игра запускается', 'success');
-  } catch (e) { showToast('Ошибка: ' + (e.message || ''), 'error'); }
-});
-
+document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
 async function leaveRoom() {
-  if (!state.currentRoom) return goHome();
+  if (!state.currentRoom) return;
   try { await api(`/api/rooms/${state.currentRoom.id}/leave`, 'POST'); } catch {}
-  state.currentRoom = null;
-  state.currentMessages = [];
-  state.lastMessageId = 0;
-  stopPolling();
-  goHome();
+  state.currentRoom = null; stopPolling(); goHome();
 }
 
 /* ============================================================
-   CHAT MESSAGES
+   SCREENS: GAME
+   ============================================================ */
+async function goGame() {
+  showScreen('game');
+  document.getElementById('headerTitle').textContent = state.currentRoom.code;
+  document.getElementById('leaveGameBtn').innerHTML = icon('arrowLeft', 16) + ' Выйти';
+  document.getElementById('leaveGameBtn').onclick = leaveRoom;
+  document.getElementById('gameSendBtn').innerHTML = icon('send', 16);
+  document.getElementById('gameVoiceBtn').innerHTML = icon('mic', 16);
+  document.getElementById('gameVoiceBtn').onclick = () => showToast('Запись ГС скоро появится!', 'info');
+  
+  await refreshGame();
+  startPolling(refreshGame, 1500);
+}
+
+async function refreshGame() {
+  if (!state.currentRoom) return;
+  try {
+    const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
+    state.currentRoom = data.room;
+    const me = data.players.find(p => p.user_id === myId);
+
+    if (data.room.status === 'waiting') { goLobby(); return; }
+
+    document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
+    renderGameContent(data.room, data.players, me);
+    appendMessages(data.messages || [], 'gameChat');
+    updateGameInput(data.room, me);
+  } catch (e) { console.error(e); }
+}
+
+function renderGameContent(room, players, me) {
+  const el = document.getElementById('gameContent');
+  
+  if (room.status === 'countdown') {
+    el.innerHTML = `<div class="state-card" style="text-align:center;">${icon('clock', 32)}<div class="state-title">Игра начинается...</div></div>`;
+    return;
+  }
+
+  if (room.status === 'finished') {
+    el.innerHTML = `
+      <div class="state-card" style="text-align:center;">
+        ${icon('trophy', 32)}
+        <div class="state-title">Игра окончена</div>
+        <div class="state-subtitle">${room.game_type === 'shpion' ? 'Слово: ' + room.pending_guess : ''}</div>
+      </div>
+      <button class="btn btn-primary" onclick="playAgain()">${icon('refresh', 16)} Играть снова</button>
+    `;
+    return;
+  }
+
+  if (room.status === 'guessing') {
+    el.innerHTML = `<div class="state-card"><div class="state-label">Последний шанс</div><div class="state-title">${room.guesser_id === myId ? 'Вы Мистер Уайт' : 'Мистер Уайт угадывает'}</div><div class="state-desc">${room.guesser_id === myId ? 'Напишите догадку в чат!' : 'Ждем ответа...'}</div></div>`;
+    return;
+  }
+
+  if (room.game_type === 'crocodile' && room.status === 'playing') {
+    const isHost = room.current_speaker_id === myId;
+    el.innerHTML = `
+      <div class="state-card">
+        <div class="state-label">${isHost ? 'Ты ведущий' : 'Ведущий'}</div>
+        <div class="state-title">${isHost ? 'Объясни слово' : (players.find(p => p.user_id === room.current_speaker_id)?.username || '...') + ' объясняет'}</div>
+        ${isHost ? `<div class="secret-word">${esc(room.pending_guess || '...')}</div>` : ''}
+      </div>
+    `;
+    return;
+  }
+
+  if (room.game_type === 'shpion' && room.status === 'playing') {
+    const isMyTurn = room.current_speaker_id === myId;
+    const speaker = players.find(p => p.user_id === room.current_speaker_id);
+    const myRole = me?.role;
+    const myWord = me?.word;
+    const roleLabel = myRole === 'civilian' ? 'Мирный' : myRole === 'undercover' ? 'Шпион' : 'Мистер Уайт';
+    const roleIcon = myRole === 'civilian' ? 'user' : myRole === 'undercover' ? 'eye' : 'ghost';
+
+    el.innerHTML = `
+      <div class="state-card">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <div class="state-label">Раунд ${room.current_round}</div>
+          <div style="font-size:12px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:4px;">${icon(roleIcon, 14)} ${roleLabel}</div>
+        </div>
+        ${myWord ? `<div class="secret-word">${esc(myWord)}</div>` : `<div style="text-align:center; color:var(--text-muted); font-style:italic; margin-top:10px;">Нет слова — блефуй!</div>`}
+      </div>
+      <div class="state-card">
+        <div class="state-label">${isMyTurn ? 'Твоя очередь' : 'Сейчас говорит'}</div>
+        <div class="state-title">${isMyTurn ? 'Опиши слово' : esc(speaker?.username || '...')}</div>
+        ${isMyTurn && (myRole === 'undercover' || myRole === 'mrwhite') ? `<button class="btn btn-secondary" onclick="guessWord()" style="margin-top:12px;">${icon('zap', 16)} Угадать слово</button>` : ''}
+      </div>
+    `;
+    return;
+  }
+
+  if (room.game_type === 'shpion' && room.status === 'discussion') {
+    const alive = players.filter(p => p.is_alive && !p.is_spectator);
+    el.innerHTML = `
+      <div class="state-card">
+        <div class="state-label">Обсуждение</div>
+        <div class="state-title">Кто шпион?</div>
+      </div>
+      <div class="state-card">
+        <div class="state-label" style="margin-bottom:10px;">Голосование</div>
+        <div class="vote-grid">
+          ${alive.filter(p => p.user_id !== myId).map(p => `
+            <button class="btn btn-secondary" onclick="vote(${p.user_id}, this)">
+              ${icon('user', 16)} ${esc(p.username || 'Игрок')}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+}
+
+function updateGameInput(room, me) {
+  const bar = document.getElementById('gameInputBar');
+  if (room.status === 'finished' || room.status === 'countdown' || (!me?.is_alive && room.status !== 'finished')) {
+    bar.style.display = 'none';
+  } else {
+    bar.style.display = 'flex';
+  }
+}
+
+/* ============================================================
+   CHAT & ACTIONS
    ============================================================ */
 function appendMessages(messages, targetId) {
   if (!messages || !messages.length) return;
@@ -958,307 +719,78 @@ function appendMessages(messages, targetId) {
     const el = document.createElement('div');
     el.dataset.msgId = m.id;
     if (m.is_system) {
-      el.className = 'msg msg-system';
-      el.textContent = m.text;
+      el.className = 'msg msg-system'; el.textContent = m.text;
     } else {
       const isMe = m.user_id === myId;
-      el.className = 'msg ' + (isMe ? 'msg-me' : 'msg-other');
-      let content = '';
-      if (!isMe) content += `<div class="msg-meta">${esc(m.username || 'Игрок')}</div>`;
-      if (m.is_voice) content += `<div class="msg-voice">${icon('message', 16)}<span>Голосовое</span></div>`;
-      else content += esc(m.text);
-      el.innerHTML = content;
+      el.className = `msg ${isMe ? 'msg-me' : 'msg-other'}`;
+      el.innerHTML = `${!isMe ? `<div class="msg-meta">${esc(m.username)}</div>` : ''}${esc(m.text)}`;
     }
     container.appendChild(el);
   });
   container.scrollTop = container.scrollHeight;
 }
 
-async function sendChatMessage(inputId, targetRoomId) {
+async function sendChatMessage(inputId) {
   const input = document.getElementById(inputId);
   const text = input.value.trim();
-  if (!text || !targetRoomId) return;
-  input.value = '';
-  input.disabled = true;
+  if (!text || !state.currentRoom) return;
+  input.value = ''; input.disabled = true;
+  try { await api(`/api/rooms/${state.currentRoom.id}/message`, 'POST', { text }); }
+  catch (e) { showToast('Ошибка отправки', 'error'); input.value = text; }
+  finally { input.disabled = false; input.focus(); }
+}
+
+document.getElementById('lobbySendBtn').onclick = () => sendChatMessage('lobbyInput');
+document.getElementById('lobbyInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage('lobbyInput'); };
+document.getElementById('gameSendBtn').onclick = () => sendChatMessage('gameInput');
+document.getElementById('gameInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage('gameInput'); };
+
+async function vote(targetId, btn) {
   try {
-    await api(`/api/rooms/${targetRoomId}/message`, 'POST', { text });
-  } catch (e) {
-    showToast('Не отправлено: ' + (e.message || ''), 'error');
-    input.value = text;
-  } finally {
-    input.disabled = false;
-    input.focus();
+    await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId });
+    showToast('Голос учтён', 'success'); btn.disabled = true;
+  } catch (e) { showToast('Ошибка', 'error'); }
+}
+
+async function guessWord() {
+  const word = prompt('Твоя догадка:');
+  if (word) {
+    try { await api(`/api/rooms/${state.currentRoom.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); }
   }
 }
 
-document.getElementById('lobbySendBtn').addEventListener('click', () => sendChatMessage('lobbyInput', state.currentRoom?.id));
-document.getElementById('lobbyInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendChatMessage('lobbyInput', state.currentRoom?.id); });
-document.getElementById('gameSendBtn').addEventListener('click', () => sendChatMessage('gameInput', state.currentRoom?.id));
-document.getElementById('gameInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendChatMessage('gameInput', state.currentRoom?.id); });
+async function playAgain() {
+  try { await api(`/api/rooms/${state.currentRoom.id}/play_again`, 'POST'); showToast('Готовы!', 'success'); } catch (e) { showToast('Ошибка', 'error'); }
+}
 
 /* ============================================================
-   GAME
-   ============================================================ */
-async function goGame() {
-  if (!state.currentRoom) return goHome();
-  showScreen('game');
-  document.getElementById('headerTitle').textContent = state.currentRoom.code || 'Игра';
-  document.getElementById('leaveGameBtn').innerHTML = icon('arrowLeft', 16) + '<span>Выйти</span>';
-  document.getElementById('gameSendBtn').innerHTML = icon('send', 18);
-  await refreshGame();
-  startPolling(refreshGame, 1500);
-}
-
-async function refreshGame() {
-  if (!state.currentRoom) return;
-  try {
-    const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
-    state.currentRoom = data.room;
-    state.currentPlayers = data.players;
-    const room = data.room;
-    const me = data.players.find(p => p.user_id === myId);
-
-    if (room.status === 'waiting') { goLobby(); return; }
-
-    document.getElementById('gameStatus').textContent = room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
-    renderGameContent(room, data.players, me);
-    appendMessages(data.messages || [], 'gameChat');
-    updateGameInputPlaceholder(room, me);
-  } catch (e) { console.error('refreshGame', e); }
-}
-
-function renderGameContent(room, players, me) {
-  const el = document.getElementById('gameContent');
-  const gameType = room.game_type;
-
-  if (room.status === 'countdown') {
-    el.innerHTML = `
-      <div class="state-card" style="text-align:center;">
-        <div style="color:var(--accent);margin:0 auto 12px;width:fit-content;">${icon('clock', 40)}</div>
-        <div class="state-title">Игра начинается...</div>
-        <div class="state-desc">Приготовься</div>
-      </div>
-    `;
-    return;
-  }
-
-  if (room.status === 'finished') {
-    const roles = players.map(p => {
-      const roleName = p.role === 'civilian' ? 'Мирный'
-        : p.role === 'undercover' ? 'Шпион'
-        : p.role === 'mrwhite' ? 'Мистер Уайт'
-        : 'Наблюдатель';
-      const roleIcon = p.role === 'civilian' ? 'user' : p.role === 'undercover' ? 'eye' : p.role === 'mrwhite' ? 'ghost' : 'ghost';
-      return `<div class="player-item">
-        <div class="player-avatar">${esc((p.username || 'И')[0].toUpperCase())}</div>
-        <div class="player-name">${esc(p.username || 'Игрок')}${p.user_id === myId ? ' (вы)' : ''}</div>
-        <span class="player-badge">${icon(roleIcon, 14)} ${roleName}</span>
-      </div>`;
-    }).join('');
-    el.innerHTML = `
-      <div class="state-card" style="text-align:center;">
-        <div style="color:var(--warning);margin:0 auto 10px;width:fit-content;">${icon('trophy', 44)}</div>
-        <div class="state-title">Игра окончена</div>
-        <div class="state-desc">${esc(room.pending_guess || '')}</div>
-      </div>
-      <div class="card" style="margin-bottom:12px;">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px;">Роли</div>
-        <div class="player-list">${roles}</div>
-      </div>
-      <button class="btn btn-primary btn-block" id="playAgainBtn" style="margin-bottom:12px;">Играть снова</button>
-    `;
-    document.getElementById('playAgainBtn')?.addEventListener('click', async () => {
-      try { await api(`/api/rooms/${room.id}/play_again`, 'POST'); showToast('Готовы!', 'success'); }
-      catch (e) { showToast('Ошибка', 'error'); }
-    });
-    return;
-  }
-
-  if (room.status === 'guessing') {
-    if (room.guesser_id === myId) {
-      el.innerHTML = `
-        <div class="state-card">
-          <div class="state-label">Последний шанс</div>
-          <div class="state-title">Вы были Мистером Уайтом</div>
-          <div class="state-desc">Напишите слово в чат ниже — если угадаете, победите!</div>
-        </div>
-      `;
-    } else {
-      el.innerHTML = `
-        <div class="state-card">
-          <div class="state-label">Ожидание</div>
-          <div class="state-title">Мистер Уайт угадывает</div>
-          <div class="state-desc">Ждём его ответ...</div>
-        </div>
-      `;
-    }
-    return;
-  }
-
-  if (gameType === 'crocodile' && room.status === 'playing') {
-    const isHost = room.current_speaker_id === myId;
-    const speaker = players.find(p => p.user_id === room.current_speaker_id);
-    if (isHost) {
-      el.innerHTML = `
-        <div class="state-card">
-          <div class="state-label">Ты ведущий</div>
-          <div class="state-title">Объясни это слово</div>
-          <div class="secret-word">${esc(room.pending_guess || '...')}</div>
-          <div class="state-desc" style="margin-top:10px;">Пиши подсказки в чат. Не называй слово напрямую!</div>
-        </div>
-      `;
-    } else {
-      el.innerHTML = `
-        <div class="state-card">
-          <div class="state-label">Раунд ${room.current_round || 1}</div>
-          <div class="state-title">${esc(speaker?.username || 'Игрок')} объясняет</div>
-          <div class="state-desc">Пиши свои варианты в чат ниже</div>
-        </div>
-      `;
-    }
-    return;
-  }
-
-  if (gameType === 'shpion' && room.status === 'playing') {
-    const isMyTurn = room.current_speaker_id === myId;
-    const speaker = players.find(p => p.user_id === room.current_speaker_id);
-    const myRole = me?.role;
-    const myWord = me?.word;
-    const roleLabel = myRole === 'civilian' ? 'Мирный' : myRole === 'undercover' ? 'Шпион' : myRole === 'mrwhite' ? 'Мистер Уайт' : '';
-    const roleIcon = myRole === 'civilian' ? 'user' : myRole === 'undercover' ? 'eye' : 'ghost';
-
-    el.innerHTML = `
-      <div class="state-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div class="state-label">Раунд ${room.current_round || 1}</div>
-          <div style="display:flex;align-items:center;gap:6px;color:var(--accent);font-size:12px;font-weight:700;">
-            ${icon(roleIcon, 14)} ${roleLabel}
-          </div>
-        </div>
-        ${myWord ? `<div class="secret-word">${esc(myWord)}</div>` : `<div style="padding:10px;text-align:center;color:var(--text-muted);font-style:italic;">Нет слова — блефуй!</div>`}
-      </div>
-      <div class="state-card">
-        <div class="state-label">${isMyTurn ? 'Твоя очередь' : 'Сейчас говорит'}</div>
-        <div class="state-title">${isMyTurn ? 'Опиши своё слово' : esc(speaker?.username || '...')}</div>
-        <div class="state-desc">${isMyTurn ? 'Напиши в чат описание. Не называй слово!' : 'Подожди своей очереди'}</div>
-        ${isMyTurn && (myRole === 'undercover' || myRole === 'mrwhite') ? `<button class="btn btn-secondary btn-sm" id="spyGuessBtn" style="margin-top:10px;">${icon('zap', 14)} Угадать слово</button>` : ''}
-      </div>
-    `;
-    document.getElementById('spyGuessBtn')?.addEventListener('click', async () => {
-      const word = prompt('Твоя догадка:');
-      if (word) {
-        try { await api(`/api/rooms/${room.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); }
-      }
-    });
-    return;
-  }
-
-  if (gameType === 'shpion' && room.status === 'discussion') {
-    const alive = players.filter(p => p.is_alive && !p.is_spectator);
-    el.innerHTML = `
-      <div class="state-card">
-        <div class="state-label">Обсуждение</div>
-        <div class="state-title">Кто шпион?</div>
-        <div class="state-desc">Общайтесь в чате и голосуйте</div>
-      </div>
-      <div class="card" style="margin-bottom:12px;">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px;">Голосование</div>
-        <div class="vote-grid">
-          ${alive.filter(p => p.user_id !== myId).map(p => `
-            <button class="vote-btn" data-vote-target="${p.user_id}">
-              ${icon('user', 16)} <span>${esc(p.username || 'Игрок')}</span>
-            </button>
-          `).join('')}
-        </div>
-      </div>
-    `;
-    document.querySelectorAll('[data-vote-target]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        try {
-          await api(`/api/rooms/${room.id}/vote`, 'POST', { target_id: parseInt(btn.dataset.voteTarget) });
-          showToast('Голос учтён', 'success');
-          btn.disabled = true;
-        } catch (e) { showToast('Ошибка: ' + (e.message || ''), 'error'); }
-      });
-    });
-    return;
-  }
-
-  el.innerHTML = '';
-}
-
-function updateGameInputPlaceholder(room, me) {
-  const input = document.getElementById('gameInput');
-  const bar = document.getElementById('gameInputBar');
-  if (!me || !room) return;
-
-  if (room.status === 'finished' || room.status === 'countdown') {
-    bar.style.display = 'none';
-    return;
-  }
-  bar.style.display = 'flex';
-
-  if (room.game_type === 'crocodile' && room.status === 'playing') {
-    input.placeholder = room.current_speaker_id === myId ? 'Твоя подсказка...' : 'Твой вариант...';
-    return;
-  }
-  if (room.game_type === 'shpion' && room.status === 'playing') {
-    input.placeholder = room.current_speaker_id === myId ? 'Опиши слово...' : 'Написать в чат...';
-    return;
-  }
-  if (room.status === 'discussion') { input.placeholder = 'Обсуждение...'; return; }
-  if (room.status === 'guessing' && room.guesser_id === myId) { input.placeholder = 'Твоя догадка...'; return; }
-  input.placeholder = 'Написать...';
-}
-
-document.getElementById('leaveGameBtn').addEventListener('click', () => leaveRoom());
-
-/* ============================================================
-   PROFILE
+   PROFILE & UTILS
    ============================================================ */
 async function goProfile() {
-  stopPolling();
-  updateNavActive('profile');
-  showScreen('profile');
+  stopPolling(); showScreen('profile');
   document.getElementById('headerTitle').textContent = 'Профиль';
-  document.getElementById('profileName').textContent = telegramUser.first_name + (telegramUser.last_name ? ' ' + telegramUser.last_name : '');
+  document.getElementById('profileName').textContent = telegramUser.first_name;
   document.getElementById('profileId').textContent = 'ID: ' + myId;
   document.getElementById('profileAvatar').textContent = (telegramUser.first_name || 'U')[0].toUpperCase();
   await refreshBalance();
 }
 
-/* ============================================================
-   POLLING
-   ============================================================ */
 function startPolling(fn, ms) { stopPolling(); state.pollingTimer = setInterval(fn, ms); }
-function stopPolling() { if (state.pollingTimer) { clearInterval(state.pollingTimer); state.pollingTimer = null; } }
-
-/* ============================================================
-   TOAST
-   ============================================================ */
+function stopPolling() { if (state.pollingTimer) clearInterval(state.pollingTimer); }
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function showToast(text, type = 'info') {
   const wrap = document.getElementById('toastWrap');
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  const iconName = type === 'success' ? 'check' : type === 'error' ? 'x' : 'message';
-  toast.innerHTML = `${icon(iconName, 16)}<span>${esc(text)}</span>`;
+  toast.innerHTML = `${icon(type === 'success' ? 'check' : 'x', 16)} <span>${esc(text)}</span>`;
   wrap.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0'; toast.style.transform = 'translateY(-8px)'; toast.style.transition = 'all .25s';
-    setTimeout(() => toast.remove(), 250);
-  }, 2800);
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
-
-/* ============================================================
-   UTILS
-   ============================================================ */
-function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 /* ============================================================
    INIT
    ============================================================ */
 document.getElementById('headerBrandIcon').innerHTML = icon('zap', 18);
-document.getElementById('sideBrandIcon').innerHTML = icon('zap', 18);
 document.getElementById('balanceIcon').innerHTML = icon('coin', 14);
 initTheme();
 renderNav();
