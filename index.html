@@ -20,7 +20,8 @@
     --accent: #8b5cf6; --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
     --accent-soft: rgba(139,92,246,.14); --danger: #ef4444; --success: #22c55e;
     --chat-me: linear-gradient(135deg, #8b5cf6, #3b82f6); --chat-other: #252a44;
-    --bunker-bg: linear-gradient(135deg, #4b5563, #1f2937);
+    --card-door: linear-gradient(135deg, #78350f, #451a03);
+    --card-treasure: linear-gradient(135deg, #b45309, #78350f);
   }
   [data-theme="light"] {
     --bg: #eef2f8; --surface: #ffffff; --surface-2: #f6f8fc; --surface-3: #e8edf5;
@@ -29,7 +30,8 @@
     --accent: #7c3aed; --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
     --accent-soft: rgba(124,58,237,.1); --danger: #dc2626; --success: #16a34a;
     --chat-me: linear-gradient(135deg, #7c3aed, #2563eb); --chat-other: #f6f8fc;
-    --bunker-bg: linear-gradient(135deg, #9ca3af, #4b5563);
+    --card-door: linear-gradient(135deg, #d97706, #b45309);
+    --card-treasure: linear-gradient(135deg, #f59e0b, #d97706);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
@@ -42,11 +44,7 @@
   .sidebar { display: none; width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 16px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
   
-  .header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
-    background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10;
-  }
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
   .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); color: #fff; }
   .balance-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--accent-soft); border-radius: var(--radius-pill); font-weight: 700; font-size: 13px; color: var(--accent); }
@@ -76,7 +74,8 @@
   .game-card { border-radius: var(--radius-lg); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; position: relative; overflow: hidden; }
   .game-card.spy { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
   .game-card.crocodile { background: linear-gradient(135deg, #059669, #0891b2); }
-  .game-card.bunker { background: var(--bunker-bg); }
+  .game-card.bunker { background: linear-gradient(135deg, #4b5563, #1f2937); }
+  .game-card.munchkin { background: linear-gradient(135deg, #78350f, #b45309); }
   .game-card h3 { font-size: 18px; font-weight: 800; margin-top: 8px; }
   .game-card p { font-size: 12px; opacity: .85; }
   .game-card svg { width: 40px; height: 40px; position: absolute; right: 16px; top: 16px; opacity: 0.3; }
@@ -129,11 +128,11 @@
   .modal-content h2 { font-size: 20px; margin-bottom: 12px; }
   .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
 
-  /* BUNKER CARD ANIMATIONS */
+  /* MUNCHKIN CARD ANIMATIONS */
   .card-container {
     perspective: 1000px;
     width: 100%;
-    height: 120px;
+    height: 160px;
     margin-bottom: 12px;
     cursor: pointer;
   }
@@ -145,9 +144,7 @@
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
   }
-  .card-container.flipped .card-inner {
-    transform: rotateY(180deg);
-  }
+  .card-container.flipped .card-inner { transform: rotateY(180deg); }
   .card-front, .card-back {
     position: absolute;
     width: 100%;
@@ -171,6 +168,8 @@
     transform: rotateY(180deg);
     color: var(--text);
   }
+  .card-front.door { background: var(--card-door); color: #fff; }
+  .card-front.treasure { background: var(--card-treasure); color: #fff; }
   .card-icon { margin-bottom: 8px; color: var(--accent); }
   .card-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
   .card-value { font-size: 16px; font-weight: 800; color: var(--text); }
@@ -303,7 +302,8 @@
     <div style="text-align:left; font-size:13px; color:var(--text-muted); margin-bottom:20px;">
       <p style="margin-bottom:8px;"><b>🕵️ Шпион:</b> от 3 до 20 игроков.</p>
       <p style="margin-bottom:8px;"><b>🐊 Крокодил:</b> от 2 до 20 игроков.</p>
-      <p><b>🏚️ Бункер:</b> от 4 до 16 игроков. Выживите после апокалипсиса.</p>
+      <p style="margin-bottom:8px;"><b>🏚️ Бункер:</b> от 4 до 16 игроков.</p>
+      <p><b>⚔️ Манчкин:</b> от 3 до 6 игроков.</p>
     </div>
     <button class="btn btn-primary" onclick="closeWelcome()">Понятно</button>
   </div>
@@ -343,6 +343,7 @@ const ICON_PATHS = {
   spy: '<path d="M12 4a8 8 0 0 0-8 8c0 3 2 5 5 5h6c3 0 5-2 5-5a8 8 0 0 0-8-8z"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M10 14h4"/>',
   croc: '<path d="M4 16c0-3 2-6 6-6h8a2 2 0 0 1 2 2v2a4 4 0 0 1-4 4H4z"/><circle cx="8" cy="13" r="1.5"/><path d="M14 16l2 2M10 16l2 2"/>',
   bunker: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  munchkin: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
   moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
@@ -363,12 +364,11 @@ const ICON_PATHS = {
   ghost: '<path d="M9 10h.01M15 10h.01M12 2a8 8 0 0 0-8 8v12l3-3 3 3 2-2 2 2 3-3 3 3V10a8 8 0 0 0-8-8z"/>',
   zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
   mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/>',
-  // Bunker icons
-  profession: '<path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5z"/>',
-  health: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-  baggage: '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
-  hobby: '<circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>',
-  fact: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+  // Munchkin icons
+  door: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18"/>',
+  treasure: '<path d="M2 20h20M4 20V8l8-5 8 5v12M12 3v17"/>',
+  monster: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M8 10h.01M16 10h.01M12 14h.01M9 18h6"/>',
+  item: '<path d="M20 7h-4V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z"/><path d="M16 3v4"/>'
 };
 function icon(name, size = 20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[name] || ''}</svg>`;
@@ -470,7 +470,7 @@ async function toggleRecord(btn, roomId) {
 /* ============================================================
    STATE & NAVIGATION
    ============================================================ */
-const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, bunkerCards: null };
+const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinCards: null };
 const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
 
 function showScreen(name) {
@@ -483,6 +483,7 @@ const NAV_ITEMS = [
   { id: 'shpion', icon: 'spy', label: 'Шпион' },
   { id: 'crocodile', icon: 'croc', label: 'Крокодил' },
   { id: 'bunker', icon: 'bunker', label: 'Бункер' },
+  { id: 'munchkin', icon: 'munchkin', label: 'Манчкин' },
   { id: 'profile', icon: 'user', label: 'Профиль' },
 ];
 
@@ -503,6 +504,7 @@ function renderNav() {
       if (nav === 'shpion') goRooms('shpion');
       if (nav === 'crocodile') goRooms('crocodile');
       if (nav === 'bunker') goRooms('bunker');
+      if (nav === 'munchkin') goRooms('munchkin');
     };
   });
 }
@@ -527,6 +529,10 @@ async function goHome() {
     <div class="game-card bunker" onclick="goRooms('bunker')">
       <div>${icon('bunker', 48)}</div>
       <div><h3>Бункер</h3><p>Выживи после апокалипсиса (4-16)</p></div>
+    </div>
+    <div class="game-card munchkin" onclick="goRooms('munchkin')">
+      <div>${icon('munchkin', 48)}</div>
+      <div><h3>Манчкин</h3><p>Мочи монстров, хапай сокровища (3-6)</p></div>
     </div>
   `;
 
@@ -560,7 +566,7 @@ async function loadActiveRooms() {
     if (!active.length) { container.innerHTML = `<div class="empty-state">Пока нет активных комнат</div>`; return; }
     container.innerHTML = active.map(r => `
       <div class="room-item" onclick="joinRoom(${r.id})">
-        <div class="room-icon">${icon(r.game_type === 'shpion' ? 'spy' : r.game_type === 'crocodile' ? 'croc' : 'bunker', 20)}</div>
+        <div class="room-icon">${icon(r.game_type === 'shpion' ? 'spy' : r.game_type === 'crocodile' ? 'croc' : r.game_type === 'bunker' ? 'bunker' : 'munchkin', 20)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Играют' : `${r.players_count}/20`}</div>
@@ -574,7 +580,7 @@ async function loadActiveRooms() {
 async function goRooms(game) {
   state.currentGame = game;
   showScreen('rooms');
-  const title = game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : 'Бункер';
+  const title = game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : game === 'bunker' ? 'Бункер' : 'Манчкин';
   document.getElementById('headerTitle').textContent = title;
   document.getElementById('roomsTitle').textContent = title;
   document.getElementById('backBtn').innerHTML = icon('arrowLeft', 16) + ' Назад';
@@ -636,7 +642,7 @@ async function refreshLobby() {
     if (data.room.status !== 'waiting') return goGame();
 
     document.getElementById('playersCount').textContent = data.players.length;
-    document.getElementById('lobbyStatus').textContent = state.currentGame === 'shpion' ? 'Шпион' : state.currentGame === 'crocodile' ? 'Крокодил' : 'Бункер';
+    document.getElementById('lobbyStatus').textContent = state.currentGame === 'shpion' ? 'Шпион' : state.currentGame === 'crocodile' ? 'Крокодил' : state.currentGame === 'bunker' ? 'Бункер' : 'Манчкин';
     
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
       <div class="player-item">
@@ -650,7 +656,7 @@ async function refreshLobby() {
     `).join('');
 
     const startBtn = document.getElementById('startBtn');
-    const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : 3;
+    const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : data.room.game_type === 'munchkin' ? 3 : 3;
     const canStart = data.players.length >= minPlayers;
     startBtn.style.display = (state.userIsHost || data.room.host_id === -1) ? 'flex' : 'none';
     startBtn.disabled = !canStart;
@@ -700,14 +706,13 @@ async function refreshGame() {
 
     if (data.room.status === 'waiting') { goLobby(); return; }
 
-    // Guest Limit
     if (isGuest && data.room.status === 'finished') {
       guestRoundsPlayed++;
       localStorage.setItem('guestRounds', guestRoundsPlayed);
       if (guestRoundsPlayed >= 3) document.getElementById('guestModal').classList.add('active');
     }
 
-    document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : data.room.game_type === 'crocodile' ? 'Крокодил' : 'Бункер';
+    document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : data.room.game_type === 'crocodile' ? 'Крокодил' : data.room.game_type === 'bunker' ? 'Бункер' : 'Манчкин';
     renderGameContent(data.room, data.players, me);
     appendMessages(data.messages || [], 'gameChat');
     
@@ -784,11 +789,9 @@ function renderGameContent(room, players, me) {
 
   // --- BUNKER ---
   if (room.game_type === 'bunker') {
-    // Если карт еще нет, запрашиваем их один раз
-    if (!state.bunkerCards && me?.word) { // word хранит JSON с картами
+    if (!state.bunkerCards && me?.word) {
       try {
         state.bunkerCards = JSON.parse(me.word);
-        // Автоматически переворачиваем карты через 500мс для анимации
         setTimeout(() => {
           document.querySelectorAll('.card-container').forEach(c => c.classList.add('flipped'));
         }, 500);
@@ -849,7 +852,6 @@ function renderGameContent(room, players, me) {
       `;
     }
 
-    // Если наступила фаза голосования
     if (room.status === 'discussion') {
       const alive = players.filter(p => p.is_alive && !p.is_spectator);
       el.innerHTML += `
@@ -864,6 +866,19 @@ function renderGameContent(room, players, me) {
         </div>
       `;
     }
+    return;
+  }
+
+  // --- MUNCHKIN ---
+  if (room.game_type === 'munchkin') {
+    // Логика для Манчкина будет добавлена в следующем шаге (в функции api)
+    el.innerHTML = `
+      <div class="state-card" style="text-align:center;">
+        <div class="card-icon">${icon('munchkin', 64)}</div>
+        <div class="state-title">Манчкин</div>
+        <div class="state-desc">Подготовка к игре...</div>
+      </div>
+    `;
     return;
   }
 }
