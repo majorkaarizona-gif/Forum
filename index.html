@@ -3,132 +3,91 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#0a0e1a" />
+<meta name="theme-color" content="#080b14" />
 <title>Игровой хаб</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
-    --radius-sm: 8px; 
-    --radius-md: 12px; 
-    --radius-lg: 16px; 
-    --radius-pill: 999px;
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-pill: 999px;
     --transition: .2s ease;
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
   }
   [data-theme="dark"] {
-    --bg: #080b14;
-    --bg-grad: radial-gradient(1200px 600px at 10% -10%, #1e1b4b 0%, transparent 50%),
-               radial-gradient(900px 500px at 100% 0%, #172554 0%, transparent 50%),
-               #080b14;
-    --surface: rgba(20, 24, 42, .82);
-    --surface-solid: #141828;
-    --surface-2: #1c2138;
-    --surface-3: #252a44;
-    --border: rgba(255,255,255,.07);
-    --border-strong: rgba(255,255,255,.14);
+    --bg: #080b14; --surface: #141828; --surface-2: #1c2138; --surface-3: #252a44;
+    --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
     --text: #f1f5f9; --text-muted: #94a3b8;
-    --accent: #8b5cf6; --accent-2: #3b82f6;
-    --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
-    --accent-soft: rgba(139,92,246,.14);
-    --success: #22c55e; --danger: #ef4444; --warning: #f59e0b;
-    --shadow: 0 8px 32px rgba(0,0,0,.5);
-    --shadow-sm: 0 2px 10px rgba(0,0,0,.25);
-    --chat-me: linear-gradient(135deg, #8b5cf6, #3b82f6);
-    --chat-other: #252a44;
+    --accent: #8b5cf6; --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    --accent-soft: rgba(139,92,246,.14); --danger: #ef4444; --success: #22c55e;
+    --chat-me: linear-gradient(135deg, #8b5cf6, #3b82f6); --chat-other: #252a44;
   }
   [data-theme="light"] {
-    --bg: #eef2f8;
-    --bg-grad: radial-gradient(1200px 600px at 10% -10%, #e0e7ff 0%, transparent 50%),
-               radial-gradient(900px 500px at 100% 0%, #dbeafe 0%, transparent 50%),
-               #eef2f8;
-    --surface: rgba(255,255,255,.85);
-    --surface-solid: #ffffff;
-    --surface-2: #f6f8fc;
-    --surface-3: #e8edf5;
-    --border: rgba(15,23,42,.08);
-    --border-strong: rgba(15,23,42,.16);
+    --bg: #eef2f8; --surface: #ffffff; --surface-2: #f6f8fc; --surface-3: #e8edf5;
+    --border: rgba(15,23,42,.08); --border-strong: rgba(15,23,42,.16);
     --text: #0f172a; --text-muted: #64748b;
-    --accent: #7c3aed; --accent-2: #2563eb;
-    --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-    --accent-soft: rgba(124,58,237,.1);
-    --success: #16a34a; --danger: #dc2626; --warning: #d97706;
-    --shadow: 0 8px 32px rgba(15,23,42,.08);
-    --shadow-sm: 0 2px 10px rgba(15,23,42,.05);
-    --chat-me: linear-gradient(135deg, #7c3aed, #2563eb);
-    --chat-other: #f6f8fc;
+    --accent: #7c3aed; --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+    --accent-soft: rgba(124,58,237,.1); --danger: #dc2626; --success: #16a34a;
+    --chat-me: linear-gradient(135deg, #7c3aed, #2563eb); --chat-other: #f6f8fc;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    height: 100dvh; overflow: hidden;
-    font-family: var(--font); background: var(--bg-grad); background-attachment: fixed;
-    color: var(--text); -webkit-font-smoothing: antialiased;
-  }
+  html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; display: flex; align-items: center; justify-content: center; }
   input, textarea { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
   /* Layout Core */
-  .app { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+  .app { display: flex; flex-direction: column; height: 100dvh; width: 100vw; overflow: hidden; position: relative; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; }
+  
   .header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
-    background: var(--surface); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
-    flex-shrink: 0; z-index: 10;
+    background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
-  .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); display: grid; place-items: center; color: #fff; }
-  .header-actions { display: flex; align-items: center; gap: 8px; }
+  .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); color: #fff; }
   .balance-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--accent-soft); border-radius: var(--radius-pill); font-weight: 700; font-size: 13px; color: var(--accent); }
   
-  /* Screens Container - Crucial for fixing overlaps */
-  .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .content { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   
+  /* Screens as Pages (FIX для наложений) */
   .screen { 
-    display: none; 
-    flex: 1; 
-    overflow-y: auto; 
-    padding: 16px; 
-    -webkit-overflow-scrolling: touch;
+    position: absolute; inset: 0; display: none; flex-direction: column; 
+    background: var(--bg); z-index: 1; overflow: hidden;
   }
-  .screen.active { display: flex; flex-direction: column; }
-  .screen.with-chat { padding: 0; overflow: hidden; }
-  .screen.with-chat .scroll-area { flex: 1; overflow-y: auto; padding: 16px; }
+  .screen.active { display: flex; z-index: 5; }
   
+  .scroll-area { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
+
   /* Bottom Nav */
   .bottom-nav {
-    display: flex; background: var(--surface); backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border); padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
-    flex-shrink: 0; z-index: 10;
+    display: flex; background: var(--surface); border-top: 1px solid var(--border);
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); flex-shrink: 0; z-index: 10;
   }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px; border-radius: var(--radius-sm); color: var(--text-muted); font-size: 10px; font-weight: 600; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 6px; border-radius: var(--radius-sm); }
   .nav-item.active { color: var(--accent); background: var(--accent-soft); }
 
   /* UI Elements */
   .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-  .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
+  .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
   
   .btn {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     padding: 12px 16px; border-radius: var(--radius-md);
     font-weight: 700; font-size: 14px; transition: all var(--transition);
-    border: 1px solid transparent; width: 100%; margin-bottom: 8px;
+    border: 1px solid transparent; width: 100%; margin-bottom: 10px;
   }
   .btn:active { transform: scale(.98); }
   .btn-primary { background: var(--accent-grad); color: #fff; }
   .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-  .btn-danger { background: var(--danger); color: #fff; }
   .btn:disabled { opacity: .5; pointer-events: none; }
   
-  /* Game Cards */
-  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
   .game-card { border-radius: var(--radius-lg); padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; }
   .game-card.spy { background: linear-gradient(135deg, #6366f1, #a855f7); }
   .game-card.crocodile { background: linear-gradient(135deg, #10b981, #06b6d4); }
-  .game-card h3 { font-size: 16px; font-weight: 800; margin-top: 8px; }
+  .game-card h3 { font-size: 16px; font-weight: 800; margin-top: 12px; }
   .game-card p { font-size: 11px; opacity: .85; }
 
-  /* Room List */
   .room-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
   .room-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
   .room-info { flex: 1; }
@@ -138,35 +97,40 @@
   .status-dot.waiting { background: var(--success); }
   .status-dot.playing { background: var(--danger); }
 
-  /* Chat & Game UI */
-  .chat-wrap { display: flex; flex-direction: column; background: var(--bg); width: 100%; border-top: 1px solid var(--border); flex-shrink: 0; }
-  .chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .msg { max-width: 80%; padding: 8px 12px; border-radius: 14px; font-size: 14px; }
-  .msg-me { align-self: flex-end; background: var(--chat-me); color: #fff; border-bottom-right-radius: 4px; }
-  .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 12px; text-align: center; }
-  .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
-  
-  .chat-input-bar { display: flex; gap: 8px; padding: 10px 16px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
-  .chat-input-bar input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
-  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); }
-  .icon-btn.send { background: var(--accent-grad); color: #fff; border: none; }
-
   /* Player List */
-  .player-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--surface-2); border-radius: var(--radius-md); margin-bottom: 6px; }
-  .player-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-grad); color: #fff; font-weight: 700; font-size: 12px; }
+  .player-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius-md); margin-bottom: 6px; }
+  .player-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-grad); color: #fff; font-weight: 700; font-size: 13px; }
   .player-name { flex: 1; font-weight: 600; font-size: 14px; }
 
-  /* Game Cards inside Game */
+  /* Game UI */
   .state-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
   .state-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
   .state-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
   .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
   .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
-  /* Toast */
+  /* Chat Container (Фиксированная высота) */
+  .chat-container { 
+    display: flex; flex-direction: column; 
+    height: 45vh; min-height: 250px; 
+    border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; 
+  }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 80%; padding: 8px 12px; border-radius: 14px; font-size: 14px; word-break: break-word; }
+  .msg-me { align-self: flex-end; background: var(--chat-me); color: #fff; border-bottom-right-radius: 4px; }
+  .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 12px; text-align: center; }
+  .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
+  
+  .chat-input-bar { display: flex; gap: 8px; padding: 10px 12px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
+  .chat-input-bar input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
+  .icon-btn.send { background: var(--accent-grad); color: #fff; border: none; }
+  .icon-btn.mic.recording { background: var(--danger); color: #fff; border: none; animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
   .toast-wrap { position: fixed; top: calc(env(safe-area-inset-top) + 60px); left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: calc(100% - 32px); max-width: 380px; }
-  .toast { padding: 10px 14px; background: var(--surface-solid); border: 1px solid var(--border-strong); border-radius: var(--radius-md); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; animation: slideDown .3s ease; }
+  .toast { padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; animation: slideDown .3s ease; }
   .toast.success { border-left: 3px solid var(--success); }
   .toast.error { border-left: 3px solid var(--danger); }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
@@ -175,13 +139,11 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
 
-  /* Desktop adjustments */
   @media (min-width: 768px) {
-    .app { flex-direction: row; justify-content: center; background: #000; }
-    .main { width: 100%; max-width: 600px; background: var(--bg-grad); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-    .bottom-nav { display: none; } /* Hide bottom nav on PC for simplicity, or keep it */
-    .header { padding: 16px 20px; }
-    .screen { padding: 20px; }
+    .app { align-items: center; background: #000; }
+    .main { width: 100%; max-width: 600px; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .bottom-nav { display: none; }
+    .chat-container { height: 50vh; }
   }
 </style>
 </head>
@@ -198,32 +160,35 @@
           <span id="balanceIcon"></span>
           <span id="balanceValue">0</span>
         </div>
-        <button class="icon-btn" id="themeBtn" title="Сменить тему"></button>
+        <button class="icon-btn" id="themeBtn" style="width:36px;height:36px;" title="Сменить тему"></button>
       </div>
     </header>
 
     <main class="content" id="content">
       <!-- HOME -->
       <section class="screen active" id="screen-home">
-        <h1 class="page-title">Привет, <span id="userName">Игрок</span></h1>
-        <p class="page-subtitle">Выбирай игру и присоединяйся</p>
-        <div class="game-grid" id="gameGrid"></div>
-        
-        <h2 style="font-size:16px; margin-bottom:12px; font-weight:700;">Активные комнаты</h2>
-        <div id="activeRooms"></div>
+        <div class="scroll-area">
+          <h1 class="page-title">Привет, <span id="userName">Игрок</span></h1>
+          <p class="page-subtitle">Выбирай игру и присоединяйся</p>
+          <div class="game-grid" id="gameGrid"></div>
+          <h2 style="font-size:16px; margin-bottom:12px; font-weight:700;">Активные комнаты</h2>
+          <div id="activeRooms"></div>
+        </div>
       </section>
 
       <!-- ROOMS -->
       <section class="screen" id="screen-rooms">
-        <button class="btn btn-secondary" id="backBtn" style="width:auto; align-self:flex-start; padding:8px 12px; margin-bottom:16px;"></button>
-        <h1 class="page-title" id="roomsTitle">Комнаты</h1>
-        <p class="page-subtitle">Выбери свободную комнату</p>
-        <div id="roomList"></div>
+        <div class="scroll-area">
+          <button class="btn btn-secondary" id="backBtn" style="width:auto; align-self:flex-start; padding:8px 12px; margin-bottom:16px;"></button>
+          <h1 class="page-title" id="roomsTitle">Комнаты</h1>
+          <p class="page-subtitle">Выбери свободную комнату</p>
+          <div id="roomList"></div>
+        </div>
       </section>
 
       <!-- LOBBY -->
-      <section class="screen with-chat" id="screen-lobby">
-        <div class="scroll-area" id="lobbyScroll">
+      <section class="screen" id="screen-lobby">
+        <div class="scroll-area">
           <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
             <button class="btn btn-secondary" id="leaveLobbyBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
             <span style="font-size:12px; align-self:center; color:var(--text-muted);" id="lobbyStatus"></span>
@@ -241,10 +206,11 @@
           <button class="btn btn-primary" id="startBtn">Начать игру</button>
         </div>
         
-        <div class="chat-wrap" style="flex: 1;">
+        <!-- Lobby Chat -->
+        <div class="chat-container" style="height: 40vh;">
           <div class="chat-messages" id="lobbyChat"></div>
           <div class="chat-input-bar">
-            <button class="icon-btn" id="lobbyVoiceBtn" title="Голосовое сообщение"></button>
+            <button class="icon-btn mic" id="lobbyVoiceBtn" title="Записать ГС"></button>
             <input type="text" id="lobbyInput" placeholder="Сообщение..." autocomplete="off" />
             <button class="icon-btn send" id="lobbySendBtn"></button>
           </div>
@@ -252,7 +218,7 @@
       </section>
 
       <!-- GAME -->
-      <section class="screen with-chat" id="screen-game">
+      <section class="screen" id="screen-game">
         <div class="scroll-area" id="gameScroll">
           <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
             <button class="btn btn-secondary" id="leaveGameBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
@@ -261,10 +227,11 @@
           <div id="gameContent"></div>
         </div>
 
-        <div class="chat-wrap" style="flex: 1;">
+        <!-- Game Chat -->
+        <div class="chat-container">
           <div class="chat-messages" id="gameChat"></div>
           <div class="chat-input-bar" id="gameInputBar">
-            <button class="icon-btn" id="gameVoiceBtn" title="Голосовое сообщение"></button>
+            <button class="icon-btn mic" id="gameVoiceBtn" title="Записать ГС"></button>
             <input type="text" id="gameInput" placeholder="Сообщение..." autocomplete="off" />
             <button class="icon-btn send" id="gameSendBtn"></button>
           </div>
@@ -273,24 +240,26 @@
 
       <!-- PROFILE -->
       <section class="screen" id="screen-profile">
-        <h1 class="page-title">Профиль</h1>
-        <p class="page-subtitle">Твоя статистика</p>
-        <div class="state-card">
-          <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
-            <div class="player-avatar" id="profileAvatar" style="width:56px; height:56px; font-size:22px;">U</div>
-            <div>
-              <div style="font-weight:800; font-size:18px;" id="profileName">Игрок</div>
-              <div style="color:var(--text-muted); font-size:13px;" id="profileId">ID: —</div>
+        <div class="scroll-area">
+          <h1 class="page-title">Профиль</h1>
+          <p class="page-subtitle">Твоя статистика</p>
+          <div class="state-card">
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+              <div class="player-avatar" id="profileAvatar" style="width:56px; height:56px; font-size:22px;">U</div>
+              <div>
+                <div style="font-weight:800; font-size:18px;" id="profileName">Игрок</div>
+                <div style="color:var(--text-muted); font-size:13px;" id="profileId">ID: —</div>
+              </div>
             </div>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
-              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Баланс</div>
-              <div style="font-weight:800; font-size:20px; color:var(--accent);" id="profileBalance">0</div>
-            </div>
-            <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
-              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Игр сыграно</div>
-              <div style="font-weight:800; font-size:20px;" id="profileGames">0</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Баланс</div>
+                <div style="font-weight:800; font-size:20px; color:var(--accent);" id="profileBalance">0</div>
+              </div>
+              <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Игр сыграно</div>
+                <div style="font-weight:800; font-size:20px;" id="profileGames">0</div>
+              </div>
             </div>
           </div>
         </div>
@@ -305,7 +274,7 @@
 
 <script>
 /* ============================================================
-   SVG ICONS
+   SVG ICONS (ТОЛЬКО ИКОНКИ)
    ============================================================ */
 const ICON_PATHS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
@@ -350,25 +319,18 @@ const telegramUser = tg?.initDataUnsafe?.user || { id: 123456789, first_name: '�
 const myId = telegramUser.id;
 
 /* ============================================================
-   THEME (Только одна кнопка в хедере)
+   THEME
    ============================================================ */
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
   document.getElementById('themeBtn').innerHTML = icon(theme === 'dark' ? 'sun' : 'moon', 18);
-  if (tg) {
-    tg.setHeaderColor(theme === 'dark' ? '#080b14' : '#eef2f8');
-    tg.setBackgroundColor(theme === 'dark' ? '#080b14' : '#eef2f8');
-  }
+  if (tg) { tg.setHeaderColor(theme === 'dark' ? '#141828' : '#ffffff'); tg.setBackgroundColor(theme === 'dark' ? '#080b14' : '#eef2f8'); }
 }
-function initTheme() {
-  const saved = localStorage.getItem('theme');
-  setTheme(saved || (tg?.colorScheme === 'light' ? 'light' : 'dark'));
-}
-document.getElementById('themeBtn').addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+document.getElementById('themeBtn').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 
 /* ============================================================
-   API
+   API & AUDIO
    ============================================================ */
 async function api(path, method = 'GET', body = null) {
   try {
@@ -387,21 +349,51 @@ async function api(path, method = 'GET', body = null) {
   } catch (e) { console.error("API Error:", e); throw e; }
 }
 
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+async function toggleRecord(btn, roomId) {
+  if (isRecording) {
+    mediaRecorder.stop();
+    isRecording = false;
+    btn.classList.remove('recording');
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    audioChunks = [];
+    isRecording = true;
+    btn.classList.add('recording');
+
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      reader.onloadend = async () => {
+        const base64data = reader.result.split(',')[1];
+        try {
+          await api(`/api/rooms/${roomId}/voice`, 'POST', { base64: base64data });
+          showToast('ГС отправлено', 'success');
+        } catch (e) { showToast('Ошибка отправки ГС', 'error'); }
+      };
+      stream.getTracks().forEach(t => t.stop());
+    };
+    mediaRecorder.start();
+  } catch (e) { showToast('Нет доступа к микрофону', 'error'); }
+}
+
 /* ============================================================
    STATE & NAVIGATION
    ============================================================ */
 const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null };
-const screens = {
-  home: document.getElementById('screen-home'),
-  rooms: document.getElementById('screen-rooms'),
-  lobby: document.getElementById('screen-lobby'),
-  game: document.getElementById('screen-game'),
-  profile: document.getElementById('screen-profile'),
-};
+const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
 
 function showScreen(name) {
-  Object.values(screens).forEach(s => s.classList.remove('active'));
-  screens[name]?.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screens[name])?.classList.add('active');
 }
 
 const NAV_ITEMS = [
@@ -416,7 +408,7 @@ function renderNav() {
     `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 20)}<span>${n.label}</span></button>`
   ).join('');
   document.querySelectorAll('.nav-item[data-nav]').forEach(el => {
-    el.addEventListener('click', () => {
+    el.onclick = () => {
       const nav = el.dataset.nav;
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       el.classList.add('active');
@@ -424,12 +416,12 @@ function renderNav() {
       if (nav === 'profile') goProfile();
       if (nav === 'shpion') goRooms('shpion');
       if (nav === 'crocodile') goRooms('crocodile');
-    });
+    };
   });
 }
 
 /* ============================================================
-   SCREENS: HOME & ROOMS
+   SCREENS
    ============================================================ */
 async function goHome() {
   stopPolling(); showScreen('home');
@@ -453,17 +445,14 @@ async function goHome() {
 async function refreshBalance() {
   try {
     const data = await api('/api/me');
-    state.balance = data.balance ?? 0;
-    document.getElementById('balanceValue').textContent = state.balance;
-    document.getElementById('profileBalance').textContent = state.balance;
+    document.getElementById('balanceValue').textContent = data.balance ?? 0;
+    document.getElementById('profileBalance').textContent = data.balance ?? 0;
     document.getElementById('profileGames').textContent = data.games_played ?? 0;
-    
-    // Если игрок уже в комнате (например, зашел с телефона, пока играл в боте)
     if (data.current_room && !state.currentRoom) {
       state.currentRoom = data.current_room;
       if (data.current_room.status === 'waiting') goLobby(); else goGame();
     }
-  } catch (e) { console.error(e); }
+  } catch (e) {}
 }
 
 async function loadActiveRooms() {
@@ -473,7 +462,6 @@ async function loadActiveRooms() {
     const rooms = await api('/api/rooms');
     const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 4);
     if (!active.length) { container.innerHTML = `<div class="empty-state">Пока нет активных комнат</div>`; return; }
-    
     container.innerHTML = active.map(r => `
       <div class="room-item" onclick="joinRoom(${r.id})">
         <div class="room-icon">${icon(r.game_type === 'shpion' ? 'eye' : 'croc', 20)}</div>
@@ -481,7 +469,7 @@ async function loadActiveRooms() {
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Играют' : `${r.players_count}/20`}</div>
         </div>
-        ${icon('arrowLeft', 16)}
+        <span style="color:var(--text-muted);">${icon('arrowLeft', 16)}</span>
       </div>
     `).join('');
   } catch (e) { container.innerHTML = `<div class="empty-state">Ошибка загрузки</div>`; }
@@ -501,7 +489,7 @@ async function goRooms(game) {
     const rooms = await api(`/api/rooms?game=${game}`);
     container.innerHTML = rooms.map(r => `
       <div class="room-item" ${r.status === 'waiting' ? `onclick="joinRoom(${r.id})"` : ''}>
-        <div class="room-icon">${icon(r.status === 'waiting' ? 'door' : 'x', 20)}</div>
+        <div class="room-icon">${icon(r.status === 'waiting' ? 'play' : 'x', 20)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Игра уже идет' : `${r.players_count}/20`}</div>
@@ -521,7 +509,7 @@ async function joinRoom(roomId) {
 }
 
 /* ============================================================
-   SCREENS: LOBBY
+   LOBBY & GAME
    ============================================================ */
 async function goLobby() {
   showScreen('lobby');
@@ -532,7 +520,7 @@ async function goLobby() {
   document.getElementById('playersIcon').innerHTML = icon('users', 16);
   document.getElementById('lobbySendBtn').innerHTML = icon('send', 16);
   document.getElementById('lobbyVoiceBtn').innerHTML = icon('mic', 16);
-  document.getElementById('lobbyVoiceBtn').onclick = () => showToast('Запись ГС скоро появится!', 'info');
+  document.getElementById('lobbyVoiceBtn').onclick = function() { toggleRecord(this, state.currentRoom.id); };
   
   await refreshLobby();
   startPolling(refreshLobby, 2000);
@@ -543,37 +531,30 @@ async function refreshLobby() {
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
     state.currentRoom = data.room; state.userIsHost = data.room.host_id === myId;
-    
     if (data.room.status !== 'waiting') return goGame();
 
     document.getElementById('playersCount').textContent = data.players.length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
-    
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
       <div class="player-item">
         <div class="player-avatar">${esc((p.username || 'И')[0].toUpperCase())}</div>
         <div class="player-name">${esc(p.username || 'Игрок')} ${p.user_id === myId ? '(вы)' : ''}</div>
-        ${data.room.host_id === p.user_id ? icon('crown', 16) : ''}
+        ${data.room.host_id === p.user_id ? `<span style="color:gold;">${icon('crown', 16)}</span>` : ''}
       </div>
     `).join('');
 
     const startBtn = document.getElementById('startBtn');
     const minPlayers = data.room.game_type === 'crocodile' ? 2 : 3;
     const canStart = data.players.length >= minPlayers;
-    
     startBtn.style.display = (state.userIsHost || data.room.host_id === -1) ? 'flex' : 'none';
     startBtn.disabled = !canStart;
     startBtn.innerHTML = icon('play', 16) + (canStart ? ' Начать игру' : ` Нужно ещё ${minPlayers - data.players.length}`);
 
     appendMessages(data.messages || [], 'lobbyChat');
-  } catch (e) { console.error(e); }
+  } catch (e) {}
 }
 
-document.getElementById('startBtn').onclick = async () => {
-  try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); }
-  catch (e) { showToast('Ошибка старта', 'error'); }
-};
-
+document.getElementById('startBtn').onclick = async () => { try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) {} };
 document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
 async function leaveRoom() {
   if (!state.currentRoom) return;
@@ -581,9 +562,6 @@ async function leaveRoom() {
   state.currentRoom = null; stopPolling(); goHome();
 }
 
-/* ============================================================
-   SCREENS: GAME
-   ============================================================ */
 async function goGame() {
   showScreen('game');
   document.getElementById('headerTitle').textContent = state.currentRoom.code;
@@ -591,7 +569,7 @@ async function goGame() {
   document.getElementById('leaveGameBtn').onclick = leaveRoom;
   document.getElementById('gameSendBtn').innerHTML = icon('send', 16);
   document.getElementById('gameVoiceBtn').innerHTML = icon('mic', 16);
-  document.getElementById('gameVoiceBtn').onclick = () => showToast('Запись ГС скоро появится!', 'info');
+  document.getElementById('gameVoiceBtn').onclick = function() { toggleRecord(this, state.currentRoom.id); };
   
   await refreshGame();
   startPolling(refreshGame, 1500);
@@ -609,8 +587,8 @@ async function refreshGame() {
     document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
     renderGameContent(data.room, data.players, me);
     appendMessages(data.messages || [], 'gameChat');
-    updateGameInput(data.room, me);
-  } catch (e) { console.error(e); }
+    document.getElementById('gameInputBar').style.display = (data.room.status === 'finished' || data.room.status === 'countdown') ? 'none' : 'flex';
+  } catch (e) {}
 }
 
 function renderGameContent(room, players, me) {
@@ -620,7 +598,6 @@ function renderGameContent(room, players, me) {
     el.innerHTML = `<div class="state-card" style="text-align:center;">${icon('clock', 32)}<div class="state-title">Игра начинается...</div></div>`;
     return;
   }
-
   if (room.status === 'finished') {
     el.innerHTML = `
       <div class="state-card" style="text-align:center;">
@@ -632,12 +609,10 @@ function renderGameContent(room, players, me) {
     `;
     return;
   }
-
   if (room.status === 'guessing') {
     el.innerHTML = `<div class="state-card"><div class="state-label">Последний шанс</div><div class="state-title">${room.guesser_id === myId ? 'Вы Мистер Уайт' : 'Мистер Уайт угадывает'}</div><div class="state-desc">${room.guesser_id === myId ? 'Напишите догадку в чат!' : 'Ждем ответа...'}</div></div>`;
     return;
   }
-
   if (room.game_type === 'crocodile' && room.status === 'playing') {
     const isHost = room.current_speaker_id === myId;
     el.innerHTML = `
@@ -649,7 +624,6 @@ function renderGameContent(room, players, me) {
     `;
     return;
   }
-
   if (room.game_type === 'shpion' && room.status === 'playing') {
     const isMyTurn = room.current_speaker_id === myId;
     const speaker = players.find(p => p.user_id === room.current_speaker_id);
@@ -674,7 +648,6 @@ function renderGameContent(room, players, me) {
     `;
     return;
   }
-
   if (room.game_type === 'shpion' && room.status === 'discussion') {
     const alive = players.filter(p => p.is_alive && !p.is_spectator);
     el.innerHTML = `
@@ -686,22 +659,11 @@ function renderGameContent(room, players, me) {
         <div class="state-label" style="margin-bottom:10px;">Голосование</div>
         <div class="vote-grid">
           ${alive.filter(p => p.user_id !== myId).map(p => `
-            <button class="btn btn-secondary" onclick="vote(${p.user_id}, this)">
-              ${icon('user', 16)} ${esc(p.username || 'Игрок')}
-            </button>
+            <button class="btn btn-secondary" onclick="vote(${p.user_id}, this)">${icon('user', 16)} ${esc(p.username || 'Игрок')}</button>
           `).join('')}
         </div>
       </div>
     `;
-  }
-}
-
-function updateGameInput(room, me) {
-  const bar = document.getElementById('gameInputBar');
-  if (room.status === 'finished' || room.status === 'countdown' || (!me?.is_alive && room.status !== 'finished')) {
-    bar.style.display = 'none';
-  } else {
-    bar.style.display = 'flex';
   }
 }
 
@@ -723,7 +685,11 @@ function appendMessages(messages, targetId) {
     } else {
       const isMe = m.user_id === myId;
       el.className = `msg ${isMe ? 'msg-me' : 'msg-other'}`;
-      el.innerHTML = `${!isMe ? `<div class="msg-meta">${esc(m.username)}</div>` : ''}${esc(m.text)}`;
+      let content = '';
+      if (!isMe) content += `<div class="msg-meta">${esc(m.username)}</div>`;
+      if (m.is_voice) content += `<div style="display:flex;align-items:center;gap:6px;">${icon('mic', 16)}<span>Голосовое</span></div>`;
+      else content += esc(m.text);
+      el.innerHTML = content;
     }
     container.appendChild(el);
   });
@@ -754,9 +720,7 @@ async function vote(targetId, btn) {
 
 async function guessWord() {
   const word = prompt('Твоя догадка:');
-  if (word) {
-    try { await api(`/api/rooms/${state.currentRoom.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); }
-  }
+  if (word) { try { await api(`/api/rooms/${state.currentRoom.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); } }
 }
 
 async function playAgain() {
@@ -792,7 +756,7 @@ function showToast(text, type = 'info') {
    ============================================================ */
 document.getElementById('headerBrandIcon').innerHTML = icon('zap', 18);
 document.getElementById('balanceIcon').innerHTML = icon('coin', 14);
-initTheme();
+setTheme(localStorage.getItem('theme') || (tg?.colorScheme === 'light' ? 'light' : 'dark'));
 renderNav();
 goHome();
 </script>
