@@ -7,9 +7,6 @@
 <title>Игровой хаб</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  /* ============================================================
-     ТЕМЫ И БАЗОВЫЕ ПЕРЕМЕННЫЕ
-     ============================================================ */
   :root {
     --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-pill: 999px;
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
@@ -21,7 +18,6 @@
     --shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
 
-  /* Темы для игр */
   .theme-spy { --bg: #0f172a; --surface: #1e293b; --surface-2: #334155; --accent: #ef4444; --accent-grad: linear-gradient(135deg, #ef4444, #b91c1c); --accent-soft: rgba(239,68,68,.15); --chat-me: #ef4444; }
   .theme-crocodile { --bg: #064e3b; --surface: #065f46; --surface-2: #047857; --accent: #10b981; --accent-grad: linear-gradient(135deg, #10b981, #059669); --accent-soft: rgba(16,185,129,.15); --chat-me: #10b981; }
   .theme-bunker { --bg: #292524; --surface: #44403c; --surface-2: #57534e; --accent: #d97706; --accent-grad: linear-gradient(135deg, #d97706, #b45309); --accent-soft: rgba(217,119,6,.15); --chat-me: #d97706; }
@@ -33,27 +29,19 @@
   input { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* ============================================================
-     АНИМАЦИИ
-     ============================================================ */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  /* Анимации */
   @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-  @keyframes dealCard { 0% { opacity: 0; transform: translateY(40px) rotate(-5deg) scale(0.9); } 100% { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
-  @keyframes diceRoll { 
+  @keyframes slideInBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes rollDice { 
     0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-    25% { transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg); }
-    50% { transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg); }
-    75% { transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+    100% { transform: rotateX(720deg) rotateY(720deg) rotateZ(720deg); }
   }
-  
+
   .animate-slide-up { animation: slideUp 0.3s ease forwards; }
   .animate-pop { animation: popIn 0.2s ease forwards; }
 
-  /* ============================================================
-     LAYOUT (ПК и Мобилки)
-     ============================================================ */
+  /* Layout */
   .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
   .sidebar { display: none; width: 240px; background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 12px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
@@ -122,18 +110,25 @@
   /* Игровой экран */
   .game-layout { display: flex; flex-direction: column; height: 100%; }
   .game-top { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 0; }
-  .game-chat { height: 40vh; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); flex-shrink: 0; }
-  .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
   
-  .msg { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 14px; word-break: break-word; }
-  .msg-me { align-self: flex-end; background: var(--chat-me); color: #000; border-bottom-right-radius: 2px; font-weight: 500; }
-  .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 2px; }
-  .msg-system { align-self: center; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; text-align: center; padding: 4px; }
-  .msg-meta { font-size: 10px; opacity: 0.8; font-weight: 700; margin-bottom: 2px; }
+  /* Выдвижной чат */
+  .fab-chat { position: absolute; bottom: calc(80px + env(safe-area-inset-bottom)); right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent-grad); color: #000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.4); z-index: 100; transition: transform 0.2s; }
+  .fab-chat:active { transform: scale(0.9); }
   
-  .chat-input { display: flex; gap: 8px; padding: 8px 12px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--bg); }
-  .chat-input input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
-  .icon-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
+  .chat-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 500; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .chat-overlay.active { transform: translateY(0); }
+  .chat-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow); }
+  .msg-me { align-self: flex-end; background: var(--chat-me); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
+  .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; }
+  .msg-system { align-self: center; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; text-align: center; padding: 4px; box-shadow: none; }
+  .msg-meta { font-size: 11px; opacity: 0.8; font-weight: 700; margin-bottom: 4px; }
+  
+  .chat-input { display: flex; gap: 8px; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
+  .chat-input input { flex: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 15px; outline: none; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
   .icon-btn.send { background: var(--accent-grad); color: #000; border: none; }
 
   /* Карточки (3D) */
@@ -143,40 +138,44 @@
   .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; border: 2px solid var(--border); background: var(--surface); }
   .card-face.back { transform: rotateY(180deg); background: var(--surface-2); border-color: var(--accent); }
   
-  /* Карты Бункера */
+  /* Карты Бункера и Манчкина */
   .bunker-card { background: #facc15 !important; color: #000 !important; border: 3px solid #000 !important; border-radius: 8px !important; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; }
-  .bunker-card-header { background: #000; color: #facc15; padding: 4px; font-weight: 800; font-size: 10px; text-align: center; letter-spacing: 0.5px; }
+  .bunker-card-header { background: #000; color: #facc15; padding: 4px; font-weight: 800; font-size: 10px; text-align: center; }
   .bunker-card-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px; font-weight: 800; font-size: 14px; text-align: center; }
-
-  /* Карты Манчкина */
+  
   .m-card { min-width: 90px; height: 130px; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: var(--shadow); cursor: pointer; border: 2px solid #000; background: #facc15; color: #000; }
   .m-card.monster { background: #f87171; }
   .m-card-title { font-size: 11px; font-weight: 800; margin-bottom: 4px; line-height: 1.1; }
   .m-card-icon { margin: 6px 0; }
-  .m-card-desc { font-size: 10px; font-weight: 700; }
   .hand-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0; scrollbar-width: none; }
   .hand-scroll::-webkit-scrollbar { display: none; }
 
-  /* Модалки */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+  /* Модалки (Правила, Голосование, Кубик) */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
   .modal.active { display: flex; }
-  .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; text-align: center; }
-  .modal-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
-  
-  /* Кубик */
-  .dice-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-  .dice-overlay.active { display: flex; }
-  .dice-box { width: 80px; height: 80px; background: #fff; border-radius: 16px; display: grid; place-items: center; font-size: 48px; font-weight: 900; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.5); margin-bottom: 20px; }
-  .dice-box.rolling { animation: diceRoll 1s ease-in-out; }
-  .dice-text { color: #fff; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 20px; }
+  .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; animation: popIn 0.3s ease; }
+  .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+  .modal-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+
+  /* 3D Кубик */
+  .dice-scene { width: 80px; height: 80px; perspective: 600px; margin: 0 auto 24px; }
+  .dice-cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(-20deg); }
+  .dice-cube.rolling { animation: rollDice 1s ease-in-out; }
+  .dice-face { position: absolute; width: 80px; height: 80px; background: #fff; border: 2px solid #cbd5e1; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: 900; color: #0f172a; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+  .face-1 { transform: rotateY(0deg) translateZ(40px); }
+  .face-2 { transform: rotateY(90deg) translateZ(40px); }
+  .face-3 { transform: rotateY(180deg) translateZ(40px); }
+  .face-4 { transform: rotateY(-90deg) translateZ(40px); }
+  .face-5 { transform: rotateX(90deg) translateZ(40px); }
+  .face-6 { transform: rotateX(-90deg) translateZ(40px); }
 
   @media (min-width: 1024px) {
     .sidebar { display: flex; }
     .bottom-nav { display: none; }
     .main { max-width: 1000px; margin: 0 auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
     .game-grid { grid-template-columns: 1fr 1fr; }
-    .game-chat { height: 50vh; }
+    .chat-overlay { position: fixed; right: 40px; bottom: 100px; top: auto; width: 400px; height: 600px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+    .fab-chat { bottom: 40px; right: 40px; }
   }
 </style>
 </head>
@@ -207,22 +206,22 @@
             <div class="game-card spy" onclick="goRooms('shpion')">
               <div class="rules-btn" onclick="showRules('shpion', event)">Правила</div>
               <div id="icon-spy"></div>
-              <div><h3>Шпион</h3><p>Найди предателя (3-20 чел.)</p></div>
+              <div><h3>Шпион</h3><p>3-20 игроков</p></div>
             </div>
             <div class="game-card crocodile" onclick="goRooms('crocodile')">
               <div class="rules-btn" onclick="showRules('crocodile', event)">Правила</div>
               <div id="icon-croc"></div>
-              <div><h3>Крокодил</h3><p>Объясни и угадай (2-20 чел.)</p></div>
+              <div><h3>Крокодил</h3><p>2-20 игроков</p></div>
             </div>
             <div class="game-card bunker" onclick="goRooms('bunker')">
               <div class="rules-btn" onclick="showRules('bunker', event)">Правила</div>
               <div id="icon-bunker"></div>
-              <div><h3>Бункер</h3><p>Выживи в апокалипсис (4-16 чел.)</p></div>
+              <div><h3>Бункер</h3><p>4-16 игроков</p></div>
             </div>
             <div class="game-card munchkin" onclick="goRooms('munchkin')">
               <div class="rules-btn" onclick="showRules('munchkin', event)">Правила</div>
               <div id="icon-munchkin"></div>
-              <div><h3>Манчкин</h3><p>Мочи монстров (3-6 чел.)</p></div>
+              <div><h3>Манчкин</h3><p>3-6 игроков</p></div>
             </div>
           </div>
 
@@ -262,9 +261,12 @@
           <button class="btn btn-primary" id="startBtn">Начать игру</button>
           <p id="hostWaitText" style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 8px;"></p>
         </div>
+        <button class="fab-chat" onclick="toggleChat(true)">
+          <div id="fabIconLobby" style="color: #000;"></div>
+        </button>
       </section>
 
-      <!-- ИГРА (С встроенным чатом) -->
+      <!-- ИГРА -->
       <section class="screen" id="screen-game">
         <div class="game-layout">
           <div class="game-top" id="gameScroll">
@@ -274,14 +276,10 @@
             </div>
             <div id="gameContent"></div>
           </div>
-          <div class="game-chat">
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input">
-              <input type="text" id="chatInput" placeholder="Сообщение..." autocomplete="off" />
-              <button class="icon-btn send" id="chatSendBtn"></button>
-            </div>
-          </div>
         </div>
+        <button class="fab-chat" onclick="toggleChat(true)">
+          <div id="fabIconGame" style="color: #000;"></div>
+        </button>
       </section>
 
       <!-- ПРОФИЛЬ -->
@@ -315,6 +313,21 @@
   </div>
 </div>
 
+<!-- ВЫДВИЖНОЙ ЧАТ -->
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-header">
+    <div style="font-weight: 700; font-size: 16px;">Чат комнаты</div>
+    <button class="icon-btn" onclick="toggleChat(false)" style="width: 32px; height: 32px; border: none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Сообщение..." autocomplete="off" />
+    <button class="icon-btn send" id="chatSendBtn"></button>
+  </div>
+</div>
+
 <!-- МОДАЛКА ПРАВИЛ -->
 <div class="modal" id="rulesModal">
   <div class="modal-content">
@@ -324,18 +337,38 @@
   </div>
 </div>
 
-<!-- МОДАЛКА КУБИКА -->
-<div class="dice-overlay" id="diceOverlay">
-  <div class="dice-text" id="diceText">Бросок кубика для определения первого хода</div>
-  <div class="dice-box" id="diceBox">?</div>
-  <button class="btn btn-primary" id="rollDiceBtn" onclick="rollDice()" style="width: 200px;">КИНУТЬ КУБИК</button>
+<!-- МОДАЛКА ГОЛОСОВАНИЯ -->
+<div class="modal" id="votingModal">
+  <div class="modal-content">
+    <div class="modal-title" style="color: #ef4444;">Голосование</div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 16px;">Кого выгоняем?</p>
+    <div id="votingOptions" style="display: flex; flex-direction: column; gap: 8px;"></div>
+  </div>
+</div>
+
+<!-- МОДАЛКА КУБИКА (3D) -->
+<div class="modal active" id="diceModal" style="background: rgba(0,0,0,0.95);">
+  <div class="modal-content" style="background: transparent; border: none; text-align: center; box-shadow: none;">
+    <div class="dice-scene">
+      <div class="dice-cube" id="diceCube">
+        <div class="dice-face face-1">1</div>
+        <div class="dice-face face-2">2</div>
+        <div class="dice-face face-3">3</div>
+        <div class="dice-face face-4">4</div>
+        <div class="dice-face face-5">5</div>
+        <div class="dice-face face-6">6</div>
+      </div>
+    </div>
+    <div style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Определение первого хода</div>
+    <button class="btn btn-primary" id="rollDiceBtn" onclick="rollDice()" style="width: 200px;">КИНУТЬ КУБИК</button>
+  </div>
 </div>
 
 <div id="toastWrap" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
 
 <script>
 /* ============================================================
-   НОРМАЛЬНЫЕ SVG ИКОНКИ (Feather Icons style)
+   SVG ИКОНКИ
    ============================================================ */
 const ICONS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
@@ -360,7 +393,7 @@ const ICONS = {
   door: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18"/>',
   item: '<path d="M20 7h-4V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z"/><path d="M16 3v4"/>',
   monster: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M8 10h.01M16 10h.01M12 14h.01M9 18h6"/>',
-  dice: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="16" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/>'
+  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
 };
 function icon(name, size = 20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
@@ -370,7 +403,7 @@ function icon(name, size = 20) {
    ПРАВИЛА ИГР
    ============================================================ */
 const RULES = {
-  shpion: `<b>Цель:</b> Вычислить шпиона среди игроков.<br><br><b>Как играть:</b><br>1. Все игроки получают секретное слово (например, "Танк").<br>2. Один игрок — Шпион. Ему достается другое слово (например, "БТР") или он не знает слова вообще.<br>3. Игроки по очереди описывают свое слово одним предложением. Шпион должен понять, какое слово у остальных.<br>4. После круга обсуждения все голосуют. Если выгнали шпиона — победили мирные. Если шпион угадал слово или его не вычислили — победил шпион.<br><br><b>Роли:</b> Мирные, Шпион, Мистер Уайт (не знает слова, но должен блефовать).`,
+  shpion: `<b>Цель:</b> Вычислить шпиона среди игроков.<br><br><b>Как играть:</b><br>1. Все игроки получают секретное слово (например, "Танк").<br>2. Один игрок — Шпион. Ему достается другое слово (например, "БТР") или он не знает слова вообще.<br>3. Игроки по очереди описывают свое слово одним предложением. Шпион должен понять, какое слово у остальных.<br>4. После круга обсуждения все голосуют. Если выгнали шпиона — победили мирные. Если шпион угадал слово или его не вычислили — победил шпион.<br><br><b>Роли:</b> Мирные, Шпион, Мистер Уайт.`,
   crocodile: `<b>Цель:</b> Угадать слово по объяснению.<br><br><b>Как играть:</b><br>1. Один игрок (Ведущий) получает слово.<br>2. Он должен объяснить это слово остальным, не называя его и однокоренные слова.<br>3. Игроки пишут варианты в чат.<br>4. Если слово угадано — ведущий получает очки, а угадавший становится новым ведущим.<br>5. У ведущего есть таймер. Если не успел — ход переходит к следующему.`,
   bunker: `<b>Цель:</b> Убедить других, что вы достойны места в бункере.<br><br><b>Как играть:</b><br>1. Случается катастрофа. Все хотят попасть в бункер, но мест мало.<br>2. Каждый игрок получает карточки характеристик (Профессия, Здоровье, Багаж, Факты).<br>3. Игроки по очереди раскрывают карты и доказывают свою полезность.<br>4. После обсуждения проходит голосование. Кого выгоняют, тот становится наблюдателем.<br>5. Игра идет до тех пор, пока не останется столько игроков, сколько мест в бункере.`,
   munchkin: `<b>Цель:</b> Первым достичь 10-го уровня.<br><br><b>Как играть:</b><br>1. В свой ход вы "Вышибаете дверь" и встречаете монстра.<br>2. Сравниваете свою силу (Уровень + Шмотки) с силой монстра.<br>3. Если ваша сила выше — вы побеждаете, получаете уровень и сокровище. Если ниже — бросаете кубик, чтобы смыться (5-6 успех).<br>4. Надевайте шмотки, чтобы повысить силу.<br>5. Чтобы победить, нужно убить монстра на 10-м уровне.`
@@ -539,6 +572,8 @@ async function goLobby() {
   document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
   document.getElementById('playersIcon').innerHTML = icon('users', 16);
   document.getElementById('chatSendBtn').innerHTML = icon('send', 16);
+  document.getElementById('fabIconLobby').innerHTML = icon('chat', 24);
+  document.getElementById('fabIconGame').innerHTML = icon('chat', 24);
   
   await refreshLobby();
   startPolling(refreshLobby, 2000);
@@ -619,12 +654,18 @@ async function refreshGame() {
 
     // Кубик
     if (data.room.status === 'dice' && oldStatus !== 'dice') {
-      document.getElementById('diceOverlay').classList.add('active');
-      document.getElementById('diceText').textContent = 'Бросок кубика для определения первого хода';
-      document.getElementById('diceBox').textContent = '?';
+      document.getElementById('diceModal').classList.add('active');
+      document.getElementById('diceCube').style.transform = 'rotateX(-20deg) rotateY(-20deg)';
       document.getElementById('rollDiceBtn').style.display = 'block';
     } else if (data.room.status !== 'dice') {
-      document.getElementById('diceOverlay').classList.remove('active');
+      document.getElementById('diceModal').classList.remove('active');
+    }
+
+    // Голосование (Бункер и Шпион)
+    if ((data.room.status === 'discussion' && data.room.game_type === 'bunker') || (data.room.status === 'discussion' && data.room.game_type === 'shpion')) {
+      showVotingModal(data.room, data.players);
+    } else {
+      document.getElementById('votingModal').classList.remove('active');
     }
 
     // Победа
@@ -636,9 +677,6 @@ async function refreshGame() {
     document.getElementById('gameStatus').textContent = data.room.status;
     renderGameContent(data.room, data.players, me);
     appendMessages(data.messages || []);
-    
-    const isSpectator = me && (!me.is_alive || me.is_spectator);
-    document.querySelector('.chat-input').style.display = (data.room.status === 'finished' || data.room.status === 'countdown' || data.room.status === 'dice' || isSpectator) ? 'none' : 'flex';
   } catch (e) {}
 }
 
@@ -648,7 +686,7 @@ function renderGameContent(room, players, me) {
   if (room.status === 'dice') {
     el.innerHTML = `
       <div style="text-align: center; padding: 20px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border);">
-        <div style="color: var(--accent); margin-bottom: 12px;">${icon('dice', 48)}</div>
+        <div style="color: var(--accent); margin-bottom: 12px;">${icon('clock', 48)}</div>
         <div style="font-size: 18px; font-weight: 700;">Бросок кубика...</div>
         <div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Определяем, кто ходит первым</div>
       </div>
@@ -802,6 +840,13 @@ function renderGameContent(room, players, me) {
 /* ============================================================
    ЧАТ
    ============================================================ */
+let isChatOpen = false;
+function toggleChat(open) {
+  isChatOpen = open;
+  document.getElementById('chatOverlay').classList.toggle('active', open);
+  if (open) setTimeout(() => document.getElementById('chatInput').focus(), 300);
+}
+
 function appendMessages(messages) {
   if (!messages || !messages.length) return;
   const container = document.getElementById('chatMessages');
@@ -842,25 +887,43 @@ document.getElementById('chatSendBtn').onclick = sendChatMessage;
 document.getElementById('chatInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage(); };
 
 /* ============================================================
-   ДЕЙСТВИЯ И КУБИК
+   ДЕЙСТВИЯ (Кубик, Голосование, Сдача)
    ============================================================ */
 async function rollDice() {
-  const box = document.getElementById('diceBox');
+  const cube = document.getElementById('diceCube');
   const btn = document.getElementById('rollDiceBtn');
-  box.classList.add('rolling');
+  
+  cube.classList.add('rolling');
   btn.disabled = true;
   
-  // Анимация
   setTimeout(async () => {
-    box.classList.remove('rolling');
+    cube.classList.remove('rolling');
     const val = Math.floor(Math.random() * 6) + 1;
-    box.textContent = val;
+    // Поворачиваем кубик на нужную грань
+    const rotations = { 1: [0, 0], 2: [0, -90], 3: [0, 180], 4: [0, 90], 5: [90, 0], 6: [-90, 0] };
+    cube.style.transform = `rotateX(${rotations[val][0] - 20}deg) rotateY(${rotations[val][1] - 20}deg)`;
+    
     try {
       await api(`/api/rooms/${state.currentRoom.id}/roll_dice`, 'POST', { value: val });
       btn.style.display = 'none';
-      document.getElementById('diceText').textContent = 'Ожидание других игроков...';
+      showToast(`Ты выбросил ${val}!`, 'success');
     } catch(e) { showToast('Ошибка броска', 'error'); btn.disabled = false; }
   }, 1000);
+}
+
+function showVotingModal(room, players) {
+  const alive = players.filter(p => p.is_alive && !p.is_spectator && p.user_id !== myId);
+  const options = document.getElementById('votingOptions');
+  options.innerHTML = alive.map(p => `
+    <button class="btn btn-secondary" onclick="vote(${p.user_id})">${esc(p.username)}</button>
+  `).join('');
+  document.getElementById('votingModal').classList.add('active');
+}
+
+async function vote(targetId) {
+  document.getElementById('votingModal').classList.remove('active');
+  try { await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId }); showToast('Голос учтен', 'success'); }
+  catch (e) { showToast('Ошибка', 'error'); }
 }
 
 async function surrender() {
