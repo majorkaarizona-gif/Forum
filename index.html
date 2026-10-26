@@ -490,7 +490,7 @@ function icon(name, size = 20) {
 }
 
 /* ============================================================
-   CONFIG (ТВОИ КЛЮЧИ ВСТАВЛЕНЫ СЮДА)
+   CONFIG
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://jgjereoejdipaqwjhexc.supabase.co',
@@ -507,7 +507,8 @@ if (tg) {
   tg.expand();
   tg.disableVerticalSwipes?.();
 }
-const telegramUser = tg?.initDataUnsafe?.user || { id: 0, first_name: 'Гость', username: 'guest' };
+// Фоллбэк для теста в браузере (если открыто не в ТГ)
+const telegramUser = tg?.initDataUnsafe?.user || { id: 123456789, first_name: 'Гость', username: 'guest' };
 const myId = telegramUser.id;
 
 /* ============================================================
@@ -533,20 +534,29 @@ document.getElementById('themeBtn').addEventListener('click', () => setTheme(doc
 document.getElementById('themeBtnSide').addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
 
 /* ============================================================
-   API
+   API (ИСПРАВЛЕНО: заголовок apikey)
    ============================================================ */
 async function api(path, method = 'GET', body = null) {
-  const res = await fetch(`${CONFIG.FUNCTIONS_URL}${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
-      'x-telegram-init-data': tg?.initData || '',
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
-  return await res.json();
+  try {
+    const res = await fetch(`${CONFIG.FUNCTIONS_URL}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': CONFIG.SUPABASE_ANON_KEY, // ВАЖНО ДЛЯ НОВЫХ КЛЮЧЕЙ
+        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`, // Дублируем для совместимости
+        'x-telegram-init-data': tg?.initData || '',
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || `HTTP ${res.status}`);
+    }
+    return await res.json();
+  } catch (e) {
+    console.error("API Error:", e);
+    throw e;
+  }
 }
 
 /* ============================================================
@@ -652,7 +662,7 @@ async function refreshBalance() {
     document.getElementById('balanceValue').textContent = state.balance;
     document.getElementById('profileBalance').textContent = state.balance;
     document.getElementById('profileGames').textContent = data.games_played ?? 0;
-    // Автовход в комнату, если уже играет (например, из бота)
+    
     if (data.current_room && !state.currentRoom) {
       state.currentRoom = data.current_room;
       if (data.current_room.status === 'waiting') {
@@ -782,17 +792,14 @@ async function refreshLobby() {
     state.currentPlayers = data.players;
     state.userIsHost = data.room.host_id === myId;
 
-    // Редирект в игру
     if (data.room.status !== 'waiting') return goGame();
 
     document.getElementById('playersCount').textContent = data.players.length;
     document.getElementById('lobbyStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : 'Крокодил';
     document.getElementById('lobbySubtitle').textContent = `Ожидание игроков · ${data.players.length}/20`;
 
-    // Игроки
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => renderPlayer(p, data.room.host_id)).join('');
 
-    // Кнопка старта
     const startBtn = document.getElementById('startBtn');
     const minPlayers = data.room.game_type === 'crocodile' ? 2 : 3;
     const canStart = data.players.length >= minPlayers;
@@ -800,7 +807,6 @@ async function refreshLobby() {
     startBtn.disabled = !canStart;
     startBtn.innerHTML = icon('play', 16) + `<span>${canStart ? 'Начать игру' : `Нужно ещё ${minPlayers - data.players.length}`}</span>`;
 
-    // Сообщения
     appendMessages(data.messages || [], 'lobbyChat');
   } catch (e) { console.error('refreshLobby', e); }
 }
@@ -844,12 +850,11 @@ async function leaveRoom() {
 function appendMessages(messages, targetId) {
   if (!messages || !messages.length) return;
   const container = document.getElementById(targetId);
-  // Обновляем lastMessageId
   const maxId = Math.max(...messages.map(m => m.id));
   if (maxId > state.lastMessageId) state.lastMessageId = maxId;
 
   messages.forEach(m => {
-    if (document.querySelector(`[data-msg-id="${m.id}"]`)) return; // уже есть
+    if (document.querySelector(`[data-msg-id="${m.id}"]`)) return; 
     const el = document.createElement('div');
     el.dataset.msgId = m.id;
     if (m.is_system) {
@@ -926,7 +931,6 @@ function renderGameContent(room, players, me) {
   const el = document.getElementById('gameContent');
   const gameType = room.game_type;
 
-  // COUNTDOWN
   if (room.status === 'countdown') {
     el.innerHTML = `
       <div class="state-card" style="text-align:center;">
@@ -938,7 +942,6 @@ function renderGameContent(room, players, me) {
     return;
   }
 
-  // FINISHED
   if (room.status === 'finished') {
     const roles = players.map(p => {
       const roleName = p.role === 'civilian' ? 'Мирный'
@@ -971,7 +974,6 @@ function renderGameContent(room, players, me) {
     return;
   }
 
-  // GUESSING (мистер уайт угадывает)
   if (room.status === 'guessing') {
     if (room.guesser_id === myId) {
       el.innerHTML = `
@@ -993,7 +995,6 @@ function renderGameContent(room, players, me) {
     return;
   }
 
-  // CROCODILE PLAYING
   if (gameType === 'crocodile' && room.status === 'playing') {
     const isHost = room.current_speaker_id === myId;
     const speaker = players.find(p => p.user_id === room.current_speaker_id);
@@ -1018,7 +1019,6 @@ function renderGameContent(room, players, me) {
     return;
   }
 
-  // SPY — PLAYING (описание по очереди)
   if (gameType === 'shpion' && room.status === 'playing') {
     const isMyTurn = room.current_speaker_id === myId;
     const speaker = players.find(p => p.user_id === room.current_speaker_id);
@@ -1053,7 +1053,6 @@ function renderGameContent(room, players, me) {
     return;
   }
 
-  // SPY — DISCUSSION
   if (gameType === 'shpion' && room.status === 'discussion') {
     const alive = players.filter(p => p.is_alive && !p.is_spectator);
     el.innerHTML = `
