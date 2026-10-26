@@ -7,238 +7,329 @@
 <title>Игровой хаб</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+  /* ============================================================
+     ПЕРЕМЕННЫЕ И ТЕМЫ
+     ============================================================ */
   :root {
-    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-pill: 999px;
-    --transition: .2s ease;
+    --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-pill: 999px;
+    --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
-    --sidebar-width: 260px;
-  }
-  [data-theme="dark"] {
-    --bg: #080b14; --surface: #141828; --surface-2: #1c2138; --surface-3: #252a44;
-    --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
+    --sidebar-width: 280px;
+    
+    /* Общие цвета */
     --text: #f1f5f9; --text-muted: #94a3b8;
+    --surface: #141828; --surface-2: #1c2138; --surface-3: #252a44;
+    --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    --chat-me: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    --chat-other: #252a44;
+
+    /* Тема по умолчанию (Главная) */
     --accent: #8b5cf6; --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
-    --accent-soft: rgba(139,92,246,.14); --danger: #ef4444; --success: #22c55e;
-    --chat-me: linear-gradient(135deg, #8b5cf6, #3b82f6); --chat-other: #252a44;
-    --card-door: linear-gradient(135deg, #78350f, #451a03);
-    --card-treasure: linear-gradient(135deg, #b45309, #78350f);
+    --accent-soft: rgba(139,92,246,.14);
   }
+
   [data-theme="light"] {
-    --bg: #eef2f8; --surface: #ffffff; --surface-2: #f6f8fc; --surface-3: #e8edf5;
-    --border: rgba(15,23,42,.08); --border-strong: rgba(15,23,42,.16);
     --text: #0f172a; --text-muted: #64748b;
-    --accent: #7c3aed; --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-    --accent-soft: rgba(124,58,237,.1); --danger: #dc2626; --success: #16a34a;
-    --chat-me: linear-gradient(135deg, #7c3aed, #2563eb); --chat-other: #f6f8fc;
-    --card-door: linear-gradient(135deg, #d97706, #b45309);
-    --card-treasure: linear-gradient(135deg, #f59e0b, #d97706);
+    --surface: #ffffff; --surface-2: #f6f8fc; --surface-3: #e8edf5;
+    --border: rgba(15,23,42,.08); --border-strong: rgba(15,23,42,.16);
+    --shadow-sm: 0 4px 12px rgba(15,23,42,0.05);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,0.1);
+    --chat-other: #f6f8fc;
   }
+
+  /* ТЕМА: ШПИОН */
+  .theme-spy {
+    --bg: #0a0f1c; --bg-grad: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0a0f1c 100%);
+    --surface: #111827; --surface-2: #1f2937; --surface-3: #374151;
+    --accent: #ef4444; --accent-grad: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    --accent-soft: rgba(239,68,68,.15);
+    --card-front: #111827; --card-back: #1f2937; --card-border: #ef4444;
+  }
+
+  /* ТЕМА: КРОКОДИЛ */
+  .theme-crocodile {
+    --bg: #022c22; --bg-grad: radial-gradient(circle at 50% 0%, #064e3b 0%, #022c22 100%);
+    --surface: #064e3b; --surface-2: #065f46; --surface-3: #047857;
+    --accent: #10b981; --accent-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --accent-soft: rgba(16,185,129,.15);
+    --card-front: #064e3b; --card-back: #047857; --card-border: #10b981;
+  }
+
+  /* ТЕМА: БУНКЕР */
+  .theme-bunker {
+    --bg: #1c1917; --bg-grad: radial-gradient(circle at 50% 0%, #292524 0%, #1c1917 100%);
+    --surface: #292524; --surface-2: #44403c; --surface-3: #57534e;
+    --accent: #d97706; --accent-grad: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    --accent-soft: rgba(217,119,6,.15);
+    --card-front: #44403c; --card-back: #292524; --card-border: #d97706;
+  }
+
+  /* ТЕМА: МАНЧКИН */
+  .theme-munchkin {
+    --bg: #2e1002; --bg-grad: radial-gradient(circle at 50% 0%, #451a03 0%, #2e1002 100%);
+    --surface: #451a03; --surface-2: #78350f; --surface-3: #92400e;
+    --accent: #fcd34d; --accent-grad: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+    --accent-soft: rgba(252,211,77,.15);
+    --card-front: #78350f; --card-back: #451a03; --card-border: #fcd34d;
+    --text: #fffbeb;
+  }
+
+  /* ============================================================
+     БАЗОВЫЕ СТИЛИ И АНИМАЦИИ
+     ============================================================ */
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+  html, body { height: 100dvh; overflow: hidden; font-family: var(--font); background: var(--bg, #080b14); color: var(--text); -webkit-font-smoothing: antialiased; }
+  body { transition: background 0.5s ease; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; display: flex; align-items: center; justify-content: center; }
   input, textarea { font-family: inherit; }
   svg { display: block; flex-shrink: 0; }
 
-  /* Layout */
-  .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; position: relative; }
-  .sidebar { display: none; width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--border); flex-direction: column; padding: 20px 16px; flex-shrink: 0; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+  @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+  @keyframes flipIn { 0% { transform: rotateY(90deg); opacity: 0; } 100% { transform: rotateY(0deg); opacity: 1; } }
+
+  .animate-slide-up { animation: slideUp 0.4s ease forwards; }
+  .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+
+  /* ============================================================
+     LAYOUT (ПК и Мобилки)
+     ============================================================ */
+  .app { display: flex; height: 100dvh; width: 100vw; overflow: hidden; background: var(--bg-grad, #080b14); }
+  
+  /* Сайдбар (ПК) */
+  .sidebar { display: none; width: var(--sidebar-width); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); border-right: 1px solid var(--border); flex-direction: column; padding: 24px 16px; flex-shrink: 0; }
   .main { display: flex; flex-direction: column; flex: 1; overflow: hidden; position: relative; width: 100%; }
   
-  .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
-  .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--accent-grad); color: #fff; }
-  .balance-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--accent-soft); border-radius: var(--radius-pill); font-weight: 700; font-size: 13px; color: var(--accent); }
+  /* Шапка */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; padding-top: max(12px, env(safe-area-inset-top)); background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 10; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+  .brand-logo { width: 36px; height: 36px; border-radius: 12px; background: var(--accent-grad); color: #fff; display: grid; place-items: center; box-shadow: var(--shadow-sm); }
+  .balance-pill { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(0,0,0,0.3); border-radius: var(--radius-pill); font-weight: 700; font-size: 14px; color: var(--accent); border: 1px solid var(--border); }
   
   .content { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-  .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); z-index: 1; overflow: hidden; }
+  .screen { position: absolute; inset: 0; display: none; flex-direction: column; overflow: hidden; }
   .screen.active { display: flex; z-index: 5; }
-  .scroll-area { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
+  .scroll-area { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
 
-  /* Bottom Nav */
-  .bottom-nav { display: flex; background: var(--surface); border-top: 1px solid var(--border); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); flex-shrink: 0; z-index: 10; }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 6px; border-radius: var(--radius-sm); }
+  /* Нижняя навигация (Мобилки) */
+  .bottom-nav { display: flex; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); flex-shrink: 0; z-index: 10; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 8px; border-radius: var(--radius-sm); transition: all 0.2s; }
   .nav-item.active { color: var(--accent); background: var(--accent-soft); }
+  .nav-item svg { width: 22px; height: 22px; }
 
-  /* UI Elements */
-  .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-  .page-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
-  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border-radius: var(--radius-md); font-weight: 700; font-size: 14px; transition: all var(--transition); border: 1px solid transparent; width: 100%; margin-bottom: 10px; }
-  .btn:active { transform: scale(.98); }
-  .btn-primary { background: var(--accent-grad); color: #fff; }
-  .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-  .btn-danger { background: var(--danger); color: #fff; }
-  .btn:disabled { opacity: .5; pointer-events: none; }
+  /* ============================================================
+     КОМПОНЕНТЫ
+     ============================================================ */
+  .page-title { font-size: 26px; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .page-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
   
-  .game-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 20px; border-radius: var(--radius-md); font-weight: 800; font-size: 15px; transition: all 0.2s; border: 1px solid transparent; width: 100%; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent-grad); color: #000; text-shadow: 0 1px 2px rgba(255,255,255,0.3); }
+  .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); border-color: var(--border); backdrop-filter: blur(10px); }
+  .btn-danger { background: #ef4444; color: #fff; }
+  .btn:disabled { opacity: 0.5; pointer-events: none; }
+
+  /* Сетка игр */
+  .game-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
   @media (min-width: 640px) { .game-grid { grid-template-columns: 1fr 1fr; } }
-  .game-card { border-radius: var(--radius-lg); padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; position: relative; overflow: hidden; }
-  .game-card.spy { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
-  .game-card.crocodile { background: linear-gradient(135deg, #059669, #0891b2); }
-  .game-card.bunker { background: linear-gradient(135deg, #4b5563, #1f2937); }
-  .game-card.munchkin { background: linear-gradient(135deg, #78350f, #b45309); }
-  .game-card h3 { font-size: 18px; font-weight: 800; margin-top: 8px; }
-  .game-card p { font-size: 12px; opacity: .85; }
-  .game-card svg { width: 40px; height: 40px; position: absolute; right: 16px; top: 16px; opacity: 0.3; }
+  
+  .game-card { position: relative; border-radius: var(--radius-lg); padding: 24px; min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; cursor: pointer; overflow: hidden; box-shadow: var(--shadow-lg); transition: transform 0.3s; }
+  .game-card:hover { transform: translateY(-5px); }
+  .game-card::before { content: ''; position: absolute; inset: 0; opacity: 0.9; z-index: -1; }
+  .game-card.spy::before { background: linear-gradient(135deg, #1e1b4b, #7f1d1d); }
+  .game-card.crocodile::before { background: linear-gradient(135deg, #064e3b, #047857); }
+  .game-card.bunker::before { background: linear-gradient(135deg, #292524, #44403c); }
+  .game-card.munchkin::before { background: linear-gradient(135deg, #451a03, #78350f); }
+  
+  .game-card h3 { font-size: 22px; font-weight: 900; margin-top: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .game-card p { font-size: 13px; opacity: 0.8; font-weight: 600; }
+  .game-card svg { width: 48px; height: 48px; opacity: 0.9; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
 
-  .room-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
-  .room-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
+  /* Комнаты */
+  .room-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 12px; cursor: pointer; transition: background 0.2s; backdrop-filter: blur(10px); }
+  .room-item:active { background: rgba(255,255,255,0.1); }
+  .room-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
   .room-info { flex: 1; }
-  .room-name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
-  .room-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
-  .status-dot.waiting { background: var(--success); }
-  .status-dot.playing { background: var(--danger); }
+  .room-name { font-weight: 800; font-size: 16px; margin-bottom: 4px; }
+  .room-meta { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-dot.waiting { background: #10b981; box-shadow: 0 0 8px #10b981; }
+  .status-dot.playing { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
 
-  .player-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius-md); margin-bottom: 6px; }
-  .player-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
-  .player-name { flex: 1; font-weight: 600; font-size: 14px; }
-
-  .state-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
-  .state-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-  .state-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
-  .secret-word { padding: 16px; margin-top: 12px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px dashed var(--accent); font-size: 22px; font-weight: 800; color: var(--accent); text-align: center; }
-  .vote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-
-  /* Chat */
-  .chat-container { display: flex; flex-direction: column; height: 40vh; min-height: 250px; border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; }
-  .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .msg { max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: 14px; word-break: break-word; }
+  /* Чат */
+  .chat-container { display: flex; flex-direction: column; height: 40vh; min-height: 250px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); flex-shrink: 0; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; word-break: break-word; box-shadow: var(--shadow-sm); }
   .msg-me { align-self: flex-end; background: var(--chat-me); color: #fff; border-bottom-right-radius: 4px; }
   .msg-other { align-self: flex-start; background: var(--chat-other); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-  .msg-system { align-self: center; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 12px; text-align: center; }
-  .msg-meta { font-size: 11px; opacity: .7; font-weight: 700; margin-bottom: 2px; }
+  .msg-system { align-self: center; background: rgba(255,255,255,0.1); color: var(--text-muted); font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: var(--radius-pill); text-align: center; border: 1px solid var(--border); }
+  .msg-meta { font-size: 11px; opacity: 0.7; font-weight: 800; margin-bottom: 4px; }
   
-  .audio-player { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 20px; margin-top: 4px; }
-  .audio-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
-  .audio-progress { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; position: relative; }
-  .audio-progress-fill { height: 100%; background: #fff; border-radius: 2px; width: 0%; transition: width 0.1s linear; }
-  .audio-time { font-size: 11px; opacity: 0.7; min-width: 30px; text-align: right; }
+  .chat-input-bar { display: flex; gap: 10px; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+  .chat-input-bar input { flex: 1; padding: 12px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text); font-size: 15px; outline: none; transition: border 0.2s; }
+  .chat-input-bar input:focus { border-color: var(--accent); }
+  .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--text); }
+  .icon-btn.send { background: var(--accent-grad); color: #000; border: none; }
+  .icon-btn.mic.recording { background: #ef4444; color: #fff; animation: pulseGlow 1s infinite; }
+
+  /* ============================================================
+     ИГРОВЫЕ ЭЛЕМЕНТЫ (Карты, 3D, Анимации)
+     ============================================================ */
+  .player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .player-chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; position: relative; }
+  .player-chip.ready { border-color: #10b981; }
+  .player-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+  .player-name { font-size: 13px; font-weight: 700; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   
-  .chat-input-bar { display: flex; gap: 8px; padding: 10px 12px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); }
-  .chat-input-bar input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 14px; outline: none; }
-  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
-  .icon-btn.send { background: var(--accent-grad); color: #fff; border: none; }
-  .icon-btn.mic.recording { background: var(--danger); color: #fff; border: none; animation: pulse 1s infinite; }
-  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  /* 3D КАРТОЧКИ */
+  .card-3d-wrapper { perspective: 1000px; width: 100%; height: 180px; margin-bottom: 16px; cursor: pointer; }
+  .card-3d { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+  .card-3d.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px solid var(--border-strong); box-shadow: var(--shadow-lg); background: var(--card-front); }
+  .card-face.back { transform: rotateY(180deg); background: var(--card-back); border-color: var(--card-border); }
+  .card-icon-large { margin-bottom: 12px; color: var(--accent); }
+  .card-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+  .card-value { font-size: 22px; font-weight: 900; text-align: center; color: var(--accent); }
 
-  /* Modals */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-  .modal-overlay.active { display: flex; }
-  .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; width: 100%; text-align: center; }
-  .modal-content h2 { font-size: 20px; margin-bottom: 12px; }
-  .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+  /* Карты Манчкина в руке */
+  .hand-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; perspective: 1000px; }
+  .hand-scroll::-webkit-scrollbar { display: none; }
+  .m-card { min-width: 110px; height: 160px; border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: var(--shadow-lg); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 2px solid var(--border-strong); background: var(--surface-2); position: relative; transform-origin: bottom center; }
+  .m-card:hover { transform: translateY(-10px) scale(1.05); z-index: 10; }
+  .m-card.monster { border-color: #ef4444; background: linear-gradient(180deg, #1f2937 0%, #7f1d1d 100%); color: #fff; }
+  .m-card.item { border-color: #f59e0b; background: linear-gradient(180deg, #1f2937 0%, #78350f 100%); color: #fff; }
+  .m-card-title { font-size: 12px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+  .m-card-icon { margin: 10px 0; opacity: 0.8; }
+  .m-card-desc { font-size: 10px; font-weight: 600; opacity: 0.9; }
 
-  /* MUNCHKIN CARD ANIMATIONS */
-  .card-container {
-    perspective: 1000px;
-    width: 100%;
-    height: 160px;
-    margin-bottom: 12px;
-    cursor: pointer;
-  }
-  .card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-  .card-container.flipped .card-inner { transform: rotateY(180deg); }
-  .card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border-radius: var(--radius-lg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    border: 1px solid var(--border);
-  }
-  .card-front {
-    background: var(--surface-2);
-    color: var(--text-muted);
-  }
-  .card-back {
-    background: var(--surface);
-    transform: rotateY(180deg);
-    color: var(--text);
-  }
-  .card-front.door { background: var(--card-door); color: #fff; }
-  .card-front.treasure { background: var(--card-treasure); color: #fff; }
-  .card-icon { margin-bottom: 8px; color: var(--accent); }
-  .card-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
-  .card-value { font-size: 16px; font-weight: 800; color: var(--text); }
+  /* Анимация взятия карты */
+  .deal-animation { animation: dealCard 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  @keyframes dealCard { 0% { opacity: 0; transform: translateY(50px) rotateZ(10deg) scale(0.8); } 100% { opacity: 1; transform: translateY(0) rotateZ(0) scale(1); } }
 
-  @media (min-width: 768px) {
+  /* Анимация победы */
+  .win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .win-overlay.show { opacity: 1; pointer-events: auto; }
+  .win-text { font-size: 48px; font-weight: 900; color: #fcd34d; text-transform: uppercase; text-shadow: 0 4px 20px rgba(252, 211, 77, 0.5); animation: popIn 0.5s forwards; }
+  .win-sub { font-size: 18px; color: #fff; margin-top: 10px; animation: slideUp 0.5s 0.2s forwards; opacity: 0; }
+
+  @media (min-width: 1024px) {
     .sidebar { display: flex; }
     .bottom-nav { display: none; }
-    .main { flex: 1; }
-    .chat-container { height: 50vh; }
-    .side-nav { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-    .side-nav .nav-item { flex-direction: row; justify-content: flex-start; padding: 12px 16px; font-size: 14px; gap: 12px; }
-    .side-nav .nav-item svg { width: 20px; height: 20px; }
+    .main { flex: 1; max-width: 1200px; margin: 0 auto; }
+    .chat-container { height: 50vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border); border-bottom: none; }
+    .game-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
-<body>
+<body class="theme-home">
+
 <div class="app">
+  <!-- САЙДБАР (ПК) -->
   <aside class="sidebar">
-    <div class="brand"><div class="brand-logo" id="sideBrandIcon"></div><span>Игровой хаб</span></div>
-    <div class="side-nav" id="sideNav"></div>
+    <div class="brand">
+      <div class="brand-logo" id="sideBrandIcon"></div>
+      <span>Game Hub</span>
+    </div>
+    <div class="side-nav" id="sideNav" style="margin-top: 40px; display: flex; flex-direction: column; gap: 12px;"></div>
   </aside>
 
   <div class="main">
+    <!-- ШАПКА -->
     <header class="header">
-      <div class="brand"><div class="brand-logo" id="headerBrandIcon"></div><span id="headerTitle">Игровой хаб</span></div>
-      <div class="header-actions">
-        <div class="balance-pill"><span id="balanceIcon"></span><span id="balanceValue">0</span></div>
-        <button class="icon-btn" id="themeBtn" style="width:36px;height:36px;"></button>
+      <div class="brand">
+        <div class="brand-logo" id="headerBrandIcon"></div>
+        <span id="headerTitle">Game Hub</span>
+      </div>
+      <div class="header-actions" style="display: flex; gap: 12px; align-items: center;">
+        <div class="balance-pill">
+          <span id="balanceIcon"></span>
+          <span id="balanceValue">0</span>
+        </div>
+        <button class="icon-btn" id="themeBtn" style="width: 36px; height: 36px; border-radius: 10px;"></button>
       </div>
     </header>
 
+    <!-- КОНТЕНТ -->
     <main class="content">
-      <section class="screen active" id="screen-home">
+      
+      <!-- ЭКРАН 1: ГЛАВНАЯ -->
+      <section class="screen active animate-slide-up" id="screen-home">
         <div class="scroll-area">
-          <h1 class="page-title">Привет, <span id="userName">Игрок</span></h1>
-          <p class="page-subtitle">Выбирай игру и присоединяйся</p>
-          <div class="game-grid" id="gameGrid"></div>
-          <h2 style="font-size:16px; margin-bottom:12px; font-weight:700;">Активные комнаты</h2>
+          <h1 class="page-title">Привет, <span id="userName">Игрок</span>!</h1>
+          <p class="page-subtitle">Выбери свою игру и начни сражение</p>
+          
+          <div class="game-grid">
+            <div class="game-card spy" onclick="goRooms('shpion')">
+              <div id="icon-spy-container"></div>
+              <div>
+                <h3>ШПИОН</h3>
+                <p>Найди предателя (3-20 чел.)</p>
+              </div>
+            </div>
+            <div class="game-card crocodile" onclick="goRooms('crocodile')">
+              <div id="icon-croc-container"></div>
+              <div>
+                <h3>КРОКОДИЛ</h3>
+                <p>Объясни и угадай (2-20 чел.)</p>
+              </div>
+            </div>
+            <div class="game-card bunker" onclick="goRooms('bunker')">
+              <div id="icon-bunker-container"></div>
+              <div>
+                <h3>БУНКЕР</h3>
+                <p>Выживи в апокалипсис (4-16 чел.)</p>
+              </div>
+            </div>
+            <div class="game-card munchkin" onclick="goRooms('munchkin')">
+              <div id="icon-munchkin-container"></div>
+              <div>
+                <h3>МАНЧКИН</h3>
+                <p>Мочи монстров (3-6 чел.)</p>
+              </div>
+            </div>
+          </div>
+
+          <h2 style="font-size: 18px; margin-bottom: 16px; font-weight: 800; text-transform: uppercase;">Активные комнаты</h2>
           <div id="activeRooms"></div>
         </div>
       </section>
 
-      <section class="screen" id="screen-rooms">
+      <!-- ЭКРАН 2: КОМНАТЫ -->
+      <section class="screen animate-slide-up" id="screen-rooms">
         <div class="scroll-area">
-          <button class="btn btn-secondary" id="backBtn" style="width:auto; align-self:flex-start; padding:8px 12px; margin-bottom:16px;"></button>
+          <button class="btn btn-secondary" id="backBtn" style="width: auto; margin-bottom: 20px;"></button>
           <h1 class="page-title" id="roomsTitle">Комнаты</h1>
-          <p class="page-subtitle">Выбери свободную комнату</p>
+          <p class="page-subtitle">Выбери лобби для входа</p>
           <div id="roomList"></div>
         </div>
       </section>
 
+      <!-- ЭКРАН 3: ЛОББИ -->
       <section class="screen" id="screen-lobby">
-        <div class="scroll-area">
-          <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
-            <button class="btn btn-secondary" id="leaveLobbyBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
-            <span style="font-size:12px; align-self:center; color:var(--text-muted);" id="lobbyStatus"></span>
+        <div class="scroll-area animate-slide-up">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button class="btn btn-secondary" id="leaveLobbyBtn" style="width: auto; margin: 0;"></button>
+            <span style="font-size: 14px; font-weight: 800; align-self: center; color: var(--accent);" id="lobbyStatus"></span>
           </div>
           <h1 class="page-title" id="lobbyTitle">Лобби</h1>
-          <p class="page-subtitle" id="lobbySubtitle">Ожидание игроков</p>
-          <div class="state-card">
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-              <span id="playersIcon" style="color:var(--accent);"></span>
-              <span style="font-weight:700; font-size:14px;">Игроки (<span id="playersCount">0</span>/20)</span>
+          <p class="page-subtitle" id="lobbySubtitle">Ожидание игроков...</p>
+          
+          <div style="background: rgba(0,0,0,0.2); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 800;">
+              <span id="playersIcon" style="color: var(--accent);"></span>
+              <span>Игроки (<span id="playersCount">0</span>/20)</span>
             </div>
-            <div id="lobbyPlayers"></div>
+            <div class="player-grid" id="lobbyPlayers"></div>
           </div>
           <button class="btn btn-primary" id="startBtn">Начать игру</button>
         </div>
-        <div class="chat-container" style="height: 35vh;">
+        <div class="chat-container">
           <div class="chat-messages" id="lobbyChat"></div>
           <div class="chat-input-bar">
             <button class="icon-btn mic" id="lobbyVoiceBtn"></button>
@@ -248,11 +339,12 @@
         </div>
       </section>
 
+      <!-- ЭКРАН 4: ИГРА -->
       <section class="screen" id="screen-game">
         <div class="scroll-area" id="gameScroll">
-          <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
-            <button class="btn btn-secondary" id="leaveGameBtn" style="width:auto; margin:0; padding:8px 12px;"></button>
-            <span style="font-size:12px; align-self:center; color:var(--text-muted);" id="gameStatus"></span>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button class="btn btn-secondary" id="leaveGameBtn" style="width: auto; margin: 0;"></button>
+            <span style="font-size: 14px; font-weight: 800; align-self: center; color: var(--accent); text-transform: uppercase;" id="gameStatus"></span>
           </div>
           <div id="gameContent"></div>
         </div>
@@ -266,79 +358,61 @@
         </div>
       </section>
 
-      <section class="screen" id="screen-profile">
+      <!-- ЭКРАН 5: ПРОФИЛЬ -->
+      <section class="screen animate-slide-up" id="screen-profile">
         <div class="scroll-area">
           <h1 class="page-title">Профиль</h1>
           <p class="page-subtitle">Твоя статистика</p>
-          <div class="state-card">
-            <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
-              <div class="player-avatar" id="profileAvatar" style="width:56px; height:56px; font-size:22px;">U</div>
-              <div><div style="font-weight:800; font-size:18px;" id="profileName">Игрок</div><div style="color:var(--text-muted); font-size:13px;" id="profileId">ID: —</div></div>
+          <div style="background: rgba(0,0,0,0.2); border-radius: var(--radius-lg); padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+              <div class="player-avatar" id="profileAvatar" style="width: 64px; height: 64px;"></div>
+              <div>
+                <div style="font-weight: 900; font-size: 20px;" id="profileName">Игрок</div>
+                <div style="color: var(--text-muted); font-size: 14px; font-weight: 600;" id="profileId">ID: —</div>
+              </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);"><div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Баланс</div><div style="font-weight:800; font-size:20px; color:var(--accent);" id="profileBalance">0</div></div>
-              <div style="padding:14px; background:var(--surface-2); border-radius:var(--radius-md);"><div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Игр сыграно</div><div style="font-weight:800; font-size:20px;" id="profileGames">0</div></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Баланс</div>
+                <div style="font-weight: 900; font-size: 24px; color: var(--accent);" id="profileBalance">0</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Побед</div>
+                <div style="font-weight: 900; font-size: 24px;" id="profileGames">0</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
     </main>
+    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
     <nav class="bottom-nav" id="bottomNav"></nav>
   </div>
 </div>
 
-<div class="modal-overlay" id="guestModal">
-  <div class="modal-content">
-    <h2>Лимит раундов исчерпан</h2>
-    <p>Вы сыграли 3 раунда как гость. Чтобы продолжить, перейдите в Telegram-бота.</p>
-    <a href="https://t.me/MajorkaAdmin_Bot" target="_blank" class="btn btn-primary" style="text-decoration:none;">Перейти в бота</a>
+<!-- МОДАЛЬНЫЕ ОКНА -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-text">ПОБЕДА!</div>
+  <div class="win-sub" id="winSubText">Вы выиграли игру</div>
+  <button class="btn btn-primary" style="margin-top: 30px; width: 200px;" onclick="closeWin()">Продолжить</button>
+</div>
+
+<div class="modal-overlay" id="welcomeModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: var(--surface); padding: 24px; border-radius: var(--radius-lg); text-align: center; max-width: 400px; border: 1px solid var(--border);">
+    <h2 style="font-size: 24px; margin-bottom: 12px;">Добро пожаловать!</h2>
+    <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 14px;">Выбери игру, собери друзей и побеждай. Удачи!</p>
+    <button class="btn btn-primary" onclick="closeWelcome()">В бой!</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="welcomeModal">
-  <div class="modal-content">
-    <h2>Добро пожаловать! 👋</h2>
-    <p>Здесь ты можешь играть с друзьями.</p>
-    <div style="text-align:left; font-size:13px; color:var(--text-muted); margin-bottom:20px;">
-      <p style="margin-bottom:8px;"><b>🕵️ Шпион:</b> от 3 до 20 игроков.</p>
-      <p style="margin-bottom:8px;"><b>🐊 Крокодил:</b> от 2 до 20 игроков.</p>
-      <p style="margin-bottom:8px;"><b>🏚️ Бункер:</b> от 4 до 16 игроков.</p>
-      <p><b>⚔️ Манчкин:</b> от 3 до 6 игроков.</p>
-    </div>
-    <button class="btn btn-primary" onclick="closeWelcome()">Понятно</button>
-  </div>
-</div>
-
-<div class="toast-wrap" id="toastWrap"></div>
+<div class="toast-wrap" id="toastWrap" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
 
 <script>
 /* ============================================================
-   SVG ICONS & AVATARS
+   SVG ИКОНКИ
    ============================================================ */
-const AVATARS = [
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M9 9h.01M15 9h.01"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
-];
-function getAvatar(userId) { return AVATARS[Math.abs(userId) % AVATARS.length]; }
-
-const ICON_PATHS = {
+const ICONS = {
   home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
   spy: '<path d="M12 4a8 8 0 0 0-8 8c0 3 2 5 5 5h6c3 0 5-2 5-5a8 8 0 0 0-8-8z"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M10 14h4"/>',
   croc: '<path d="M4 16c0-3 2-6 6-6h8a2 2 0 0 1 2 2v2a4 4 0 0 1-4 4H4z"/><circle cx="8" cy="13" r="1.5"/><path d="M14 16l2 2M10 16l2 2"/>',
@@ -350,8 +424,8 @@ const ICON_PATHS = {
   coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a2 2 0 0 1 0 4h-3a2 2 0 0 0 0 4h4"/>',
   play: '<polygon points="6 3 20 12 6 21 6 3"/>',
   pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
-  arrowLeft: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
-  chevronRight: '<polyline points="9 18 15 12 9 6"/>',
+  back: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+  next: '<polyline points="9 18 15 12 9 6"/>',
   send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
   crown: '<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/>',
   check: '<polyline points="20 6 9 17 4 12"/>',
@@ -359,23 +433,28 @@ const ICON_PATHS = {
   users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
   clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
-  refresh: '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
   skull: '<circle cx="12" cy="9" r="7"/><path d="M9 16v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/>',
-  ghost: '<path d="M9 10h.01M15 10h.01M12 2a8 8 0 0 0-8 8v12l3-3 3 3 2-2 2 2 3-3 3 3V10a8 8 0 0 0-8-8z"/>',
-  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
   mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/>',
-  // Munchkin icons
   door: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18"/>',
-  treasure: '<path d="M2 20h20M4 20V8l8-5 8 5v12M12 3v17"/>',
+  item: '<path d="M20 7h-4V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z"/><path d="M16 3v4"/>',
   monster: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M8 10h.01M16 10h.01M12 14h.01M9 18h6"/>',
-  item: '<path d="M20 7h-4V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z"/><path d="M16 3v4"/>'
+  refresh: '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
 };
-function icon(name, size = 20) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[name] || ''}</svg>`;
+function icon(name, size = 24) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
 }
 
+const AVATARS = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M9 9h.01M15 9h.01"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+];
+function getAvatar(id) { return AVATARS[Math.abs(id) % AVATARS.length]; }
+
 /* ============================================================
-   CONFIG & INIT
+   КОНФИГ И API
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://jgjereoejdipaqwjhexc.supabase.co',
@@ -391,39 +470,11 @@ const myId = telegramUser.id || 0;
 
 let guestRoundsPlayed = parseInt(localStorage.getItem('guestRounds') || '0');
 
-/* ============================================================
-   THEME & MODALS
-   ============================================================ */
-function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  document.getElementById('themeBtn').innerHTML = icon(theme === 'dark' ? 'sun' : 'moon', 18);
-  if (tg) { tg.setHeaderColor(theme === 'dark' ? '#141828' : '#ffffff'); tg.setBackgroundColor(theme === 'dark' ? '#080b14' : '#eef2f8'); }
-}
-document.getElementById('themeBtn').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-
-function closeWelcome() {
-  document.getElementById('welcomeModal').classList.remove('active');
-  localStorage.setItem('welcomeShown', 'true');
-}
-
-if (!localStorage.getItem('welcomeShown')) {
-  document.getElementById('welcomeModal').classList.add('active');
-}
-
-/* ============================================================
-   API & AUDIO
-   ============================================================ */
 async function api(path, method = 'GET', body = null) {
   try {
     const res = await fetch(`${CONFIG.FUNCTIONS_URL}${path}`, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': CONFIG.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
-        'x-telegram-init-data': tg?.initData || '',
-      },
+      headers: { 'Content-Type': 'application/json', 'apikey': CONFIG.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`, 'x-telegram-init-data': tg?.initData || '' },
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
@@ -431,46 +482,34 @@ async function api(path, method = 'GET', body = null) {
   } catch (e) { console.error("API Error:", e); throw e; }
 }
 
-let mediaRecorder;
-let audioChunks = [];
-let isRecording = false;
-
+/* ============================================================
+   АУДИО (ГС)
+   ============================================================ */
+let mediaRecorder, audioChunks = [], isRecording = false;
 async function toggleRecord(btn, roomId) {
-  if (isRecording) {
-    mediaRecorder.stop();
-    isRecording = false;
-    btn.classList.remove('recording');
-    return;
-  }
+  if (isRecording) { mediaRecorder.stop(); isRecording = false; btn.classList.remove('recording'); return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-    audioChunks = [];
-    isRecording = true;
-    btn.classList.add('recording');
-
+    audioChunks = []; isRecording = true; btn.classList.add('recording');
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
+      const reader = new FileReader(); reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        const base64data = reader.result.split(',')[1];
-        try {
-          await api(`/api/rooms/${roomId}/voice`, 'POST', { base64: base64data });
-          showToast('ГС отправлено', 'success');
-        } catch (e) { showToast('Ошибка отправки ГС', 'error'); }
+        try { await api(`/api/rooms/${roomId}/voice`, 'POST', { base64: reader.result.split(',')[1] }); showToast('ГС отправлено', 'success'); }
+        catch (e) { showToast('Ошибка ГС', 'error'); }
       };
       stream.getTracks().forEach(t => t.stop());
     };
     mediaRecorder.start();
-  } catch (e) { showToast('Нет доступа к микрофону', 'error'); }
+  } catch (e) { showToast('Нет микрофона', 'error'); }
 }
 
 /* ============================================================
-   STATE & NAVIGATION
+   СОСТОЯНИЕ И НАВИГАЦИЯ
    ============================================================ */
-const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinCards: null };
+const state = { balance: 0, currentRoom: null, lastMessageId: 0, pollingTimer: null, userIsHost: false, currentGame: null, munchkinData: null };
 const screens = { home: 'screen-home', rooms: 'screen-rooms', lobby: 'screen-lobby', game: 'screen-game', profile: 'screen-profile' };
 
 function showScreen(name) {
@@ -488,9 +527,7 @@ const NAV_ITEMS = [
 ];
 
 function renderNav() {
-  const html = NAV_ITEMS.map(n => 
-    `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 20)}<span>${n.label}</span></button>`
-  ).join('');
+  const html = NAV_ITEMS.map(n => `<button class="nav-item" data-nav="${n.id}">${icon(n.icon, 22)}<span>${n.label}</span></button>`).join('');
   document.getElementById('bottomNav').innerHTML = html;
   document.getElementById('sideNav').innerHTML = html;
   
@@ -510,41 +547,59 @@ function renderNav() {
 }
 
 /* ============================================================
-   SCREENS
+   ТЕМЫ И УТИЛИТЫ
+   ============================================================ */
+function setTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('themeBtn').innerHTML = icon('moon', 18);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeBtn').innerHTML = icon('sun', 18);
+  }
+  localStorage.setItem('theme', theme);
+}
+document.getElementById('themeBtn').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+
+function setGameTheme(game) {
+  document.body.className = game ? `theme-${game}` : 'theme-home';
+}
+
+function closeWelcome() { document.getElementById('welcomeModal').style.display = 'none'; localStorage.setItem('welcomeShown', 'true'); }
+if (!localStorage.getItem('welcomeShown')) document.getElementById('welcomeModal').style.display = 'flex';
+
+function closeWin() { document.getElementById('winOverlay').classList.remove('show'); }
+
+function showToast(text, type = 'info') {
+  const wrap = document.getElementById('toastWrap');
+  const toast = document.createElement('div');
+  toast.className = `animate-pop`;
+  toast.style.cssText = `background: var(--surface); border: 1px solid var(--accent); padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px; pointer-events: auto;`;
+  toast.innerHTML = `${icon(type === 'success' ? 'check' : 'x', 18)} <span>${esc(text)}</span>`;
+  wrap.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+}
+
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+/* ============================================================
+   ГЛАВНЫЙ ЭКРАН
    ============================================================ */
 async function goHome() {
-  stopPolling(); showScreen('home');
-  document.getElementById('headerTitle').textContent = 'Игровой хаб';
+  stopPolling(); showScreen('home'); setGameTheme(null);
+  document.getElementById('headerTitle').textContent = 'Game Hub';
   document.getElementById('userName').textContent = telegramUser.first_name;
   
-  document.getElementById('gameGrid').innerHTML = `
-    <div class="game-card spy" onclick="goRooms('shpion')">
-      <div>${icon('spy', 48)}</div>
-      <div><h3>Шпион</h3><p>Найди шпиона (3-20)</p></div>
-    </div>
-    <div class="game-card crocodile" onclick="goRooms('crocodile')">
-      <div>${icon('croc', 48)}</div>
-      <div><h3>Крокодил</h3><p>Угадай слово (2-20)</p></div>
-    </div>
-    <div class="game-card bunker" onclick="goRooms('bunker')">
-      <div>${icon('bunker', 48)}</div>
-      <div><h3>Бункер</h3><p>Выживи после апокалипсиса (4-16)</p></div>
-    </div>
-    <div class="game-card munchkin" onclick="goRooms('munchkin')">
-      <div>${icon('munchkin', 48)}</div>
-      <div><h3>Манчкин</h3><p>Мочи монстров, хапай сокровища (3-6)</p></div>
-    </div>
-  `;
+  document.getElementById('icon-spy-container').innerHTML = icon('spy', 48);
+  document.getElementById('icon-croc-container').innerHTML = icon('croc', 48);
+  document.getElementById('icon-bunker-container').innerHTML = icon('bunker', 48);
+  document.getElementById('icon-munchkin-container').innerHTML = icon('munchkin', 48);
 
   await Promise.all([refreshBalance(), loadActiveRooms()]);
 }
 
 async function refreshBalance() {
-  if (isGuest) {
-    document.getElementById('balanceValue').textContent = '0';
-    document.getElementById('profileBalance').textContent = '0';
-    return;
-  }
+  if (isGuest) { document.getElementById('balanceValue').textContent = '0'; return; }
   try {
     const data = await api('/api/me');
     document.getElementById('balanceValue').textContent = data.balance ?? 0;
@@ -559,75 +614,73 @@ async function refreshBalance() {
 
 async function loadActiveRooms() {
   const container = document.getElementById('activeRooms');
-  container.innerHTML = '<div class="spinner"></div>';
+  container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Загрузка...</div>`;
   try {
     const rooms = await api('/api/rooms');
-    const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 5);
-    if (!active.length) { container.innerHTML = `<div class="empty-state">Пока нет активных комнат</div>`; return; }
+    const active = (rooms || []).filter(r => r.status !== 'finished').slice(0, 4);
+    if (!active.length) { container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-weight: 600; padding: 20px;">Нет активных комнат</div>`; return; }
     container.innerHTML = active.map(r => `
       <div class="room-item" onclick="joinRoom(${r.id})">
-        <div class="room-icon">${icon(r.game_type === 'shpion' ? 'spy' : r.game_type === 'crocodile' ? 'croc' : r.game_type === 'bunker' ? 'bunker' : 'munchkin', 20)}</div>
+        <div class="room-icon">${icon(r.game_type === 'shpion' ? 'spy' : r.game_type === 'crocodile' ? 'croc' : r.game_type === 'bunker' ? 'bunker' : 'munchkin', 24)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Играют' : `${r.players_count}/20`}</div>
         </div>
-        <span style="color:var(--text-muted);">${icon('chevronRight', 16)}</span>
+        <span style="color:var(--accent);">${icon('next', 20)}</span>
       </div>
     `).join('');
-  } catch (e) { container.innerHTML = `<div class="empty-state">Ошибка загрузки</div>`; }
+  } catch (e) { container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 20px;">Ошибка загрузки</div>`; }
 }
 
+/* ============================================================
+   КОМНАТЫ
+   ============================================================ */
 async function goRooms(game) {
-  state.currentGame = game;
-  showScreen('rooms');
+  state.currentGame = game; showScreen('rooms'); setGameTheme(game);
   const title = game === 'shpion' ? 'Шпион' : game === 'crocodile' ? 'Крокодил' : game === 'bunker' ? 'Бункер' : 'Манчкин';
   document.getElementById('headerTitle').textContent = title;
   document.getElementById('roomsTitle').textContent = title;
-  document.getElementById('backBtn').innerHTML = icon('arrowLeft', 16) + ' Назад';
+  document.getElementById('backBtn').innerHTML = icon('back', 18) + ' Назад';
   document.getElementById('backBtn').onclick = goHome;
 
   const container = document.getElementById('roomList');
-  container.innerHTML = '<div class="spinner"></div>';
+  container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Загрузка...</div>`;
   try {
     const rooms = await api(`/api/rooms?game=${game}`);
     container.innerHTML = rooms.map(r => `
       <div class="room-item" ${r.status === 'waiting' ? `onclick="joinRoom(${r.id})"` : ''}>
-        <div class="room-icon">${icon(r.status === 'waiting' ? 'play' : 'x', 20)}</div>
+        <div class="room-icon">${icon(r.status === 'waiting' ? 'play' : 'x', 24)}</div>
         <div class="room-info">
           <div class="room-name">${esc(r.code)}</div>
           <div class="room-meta"><span class="status-dot ${r.status !== 'waiting' ? 'playing' : 'waiting'}"></span>${r.status !== 'waiting' ? 'Игра уже идет' : `${r.players_count}/20`}</div>
         </div>
-        ${r.status === 'waiting' ? `<span style="color:var(--text-muted);">${icon('chevronRight', 16)}</span>` : ''}
+        ${r.status === 'waiting' ? `<span style="color:var(--accent);">${icon('next', 20)}</span>` : ''}
       </div>
     `).join('');
-  } catch (e) { container.innerHTML = `<div class="empty-state">Ошибка загрузки</div>`; }
+  } catch (e) { container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 20px;">Ошибка загрузки</div>`; }
 }
 
 async function joinRoom(roomId) {
-  if (isGuest && guestRoundsPlayed >= 3) {
-    document.getElementById('guestModal').classList.add('active');
-    return;
-  }
+  if (isGuest && guestRoundsPlayed >= 3) { showToast('Лимит гостя. Перейдите в бота.', 'error'); return; }
   try {
     const room = await api(`/api/rooms/${roomId}/join`, 'POST');
     state.currentRoom = room; state.lastMessageId = 0;
-    showToast('Вы вошли в комнату', 'success');
     if (room.status === 'waiting') goLobby(); else goGame();
   } catch (e) { showToast('Не удалось войти', 'error'); }
 }
 
 /* ============================================================
-   LOBBY & GAME
+   ЛОББИ
    ============================================================ */
 async function goLobby() {
-  showScreen('lobby');
+  showScreen('lobby'); setGameTheme(state.currentRoom.game_type || state.currentGame);
   document.getElementById('headerTitle').textContent = state.currentRoom.code;
   document.getElementById('lobbyTitle').textContent = state.currentRoom.code;
-  document.getElementById('leaveLobbyBtn').innerHTML = icon('arrowLeft', 16) + ' Выйти';
+  document.getElementById('leaveLobbyBtn').innerHTML = icon('back', 18) + ' Выйти';
   document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
-  document.getElementById('playersIcon').innerHTML = icon('users', 16);
-  document.getElementById('lobbySendBtn').innerHTML = icon('send', 16);
-  document.getElementById('lobbyVoiceBtn').innerHTML = icon('mic', 16);
+  document.getElementById('playersIcon').innerHTML = icon('users', 18);
+  document.getElementById('lobbySendBtn').innerHTML = icon('send', 18);
+  document.getElementById('lobbyVoiceBtn').innerHTML = icon('mic', 18);
   document.getElementById('lobbyVoiceBtn').onclick = function() { toggleRecord(this, state.currentRoom.id); };
   
   await refreshLobby();
@@ -642,55 +695,49 @@ async function refreshLobby() {
     if (data.room.status !== 'waiting') return goGame();
 
     document.getElementById('playersCount').textContent = data.players.length;
-    document.getElementById('lobbyStatus').textContent = state.currentGame === 'shpion' ? 'Шпион' : state.currentGame === 'crocodile' ? 'Крокодил' : state.currentGame === 'bunker' ? 'Бункер' : 'Манчкин';
+    document.getElementById('lobbyStatus').textContent = data.room.game_type;
     
     document.getElementById('lobbyPlayers').innerHTML = data.players.map(p => `
-      <div class="player-item">
+      <div class="player-chip ${data.room.host_id === p.user_id ? 'ready' : ''}">
         <div class="player-avatar">${getAvatar(p.user_id)}</div>
-        <div class="player-name">${esc(p.username || 'Игрок')} ${p.user_id === myId ? '(вы)' : ''}</div>
-        ${data.room.host_id === p.user_id ? `<span style="color:gold;">${icon('crown', 16)}</span>` : ''}
-        ${state.userIsHost && p.user_id !== myId ? `
-          <button class="icon-btn" onclick="kickPlayer(${p.user_id})" style="width:28px;height:28px;border:none;background:none;color:var(--danger);margin-left:8px;">${icon('x', 16)}</button>
-        ` : ''}
+        <div class="player-name">${esc(p.username || 'Игрок')}</div>
+        ${data.room.host_id === p.user_id ? `<div style="position: absolute; top: -8px; right: -8px; background: var(--accent); border-radius: 50%; padding: 4px; color: #000;">${icon('crown', 12)}</div>` : ''}
       </div>
     `).join('');
 
     const startBtn = document.getElementById('startBtn');
-    const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : data.room.game_type === 'munchkin' ? 3 : 3;
+    const minPlayers = data.room.game_type === 'bunker' ? 4 : data.room.game_type === 'crocodile' ? 2 : 3;
     const canStart = data.players.length >= minPlayers;
     startBtn.style.display = (state.userIsHost || data.room.host_id === -1) ? 'flex' : 'none';
     startBtn.disabled = !canStart;
-    startBtn.innerHTML = icon('play', 16) + (canStart ? ' Начать игру' : ` Нужно ещё ${minPlayers - data.players.length}`);
+    startBtn.innerHTML = icon('play', 18) + (canStart ? ' НАЧАТЬ ИГРУ' : ` ЖДЕМ (${data.players.length}/${minPlayers})`);
 
     appendMessages(data.messages || [], 'lobbyChat');
   } catch (e) {}
 }
 
 document.getElementById('startBtn').onclick = async () => {
-  if (isGuest && guestRoundsPlayed >= 3) { document.getElementById('guestModal').classList.add('active'); return; }
+  if (isGuest && guestRoundsPlayed >= 3) { showToast('Лимит гостя!', 'error'); return; }
   try { await api(`/api/rooms/${state.currentRoom.id}/start`, 'POST'); } catch (e) { showToast('Ошибка старта', 'error'); }
 };
-
-async function kickPlayer(targetId) {
-  if (!confirm('Кикнуть игрока?')) return;
-  try { await api(`/api/rooms/${state.currentRoom.id}/kick`, 'POST', { target_id: targetId }); showToast('Игрок кикнут', 'success'); refreshLobby(); } catch (e) { showToast('Ошибка кика', 'error'); }
-}
 
 document.getElementById('leaveLobbyBtn').onclick = leaveRoom;
 async function leaveRoom() {
   if (!state.currentRoom) return;
-  if (!confirm('Выйти из комнаты?')) return;
   try { await api(`/api/rooms/${state.currentRoom.id}/leave`, 'POST'); } catch {}
   state.currentRoom = null; stopPolling(); goHome();
 }
 
+/* ============================================================
+   ИГРА (РЕНДЕР)
+   ============================================================ */
 async function goGame() {
-  showScreen('game');
+  showScreen('game'); setGameTheme(state.currentRoom.game_type);
   document.getElementById('headerTitle').textContent = state.currentRoom.code;
-  document.getElementById('leaveGameBtn').innerHTML = icon('arrowLeft', 16) + ' Выйти';
+  document.getElementById('leaveGameBtn').innerHTML = icon('back', 18) + ' Выйти';
   document.getElementById('leaveGameBtn').onclick = leaveRoom;
-  document.getElementById('gameSendBtn').innerHTML = icon('send', 16);
-  document.getElementById('gameVoiceBtn').innerHTML = icon('mic', 16);
+  document.getElementById('gameSendBtn').innerHTML = icon('send', 18);
+  document.getElementById('gameVoiceBtn').innerHTML = icon('mic', 18);
   document.getElementById('gameVoiceBtn').onclick = function() { toggleRecord(this, state.currentRoom.id); };
   
   await refreshGame();
@@ -701,18 +748,20 @@ async function refreshGame() {
   if (!state.currentRoom) return;
   try {
     const data = await api(`/api/rooms/${state.currentRoom.id}/state?since_id=${state.lastMessageId}`);
+    const oldStatus = state.currentRoom.status;
     state.currentRoom = data.room;
+    state.munchkinData = data.munchkin_data;
     const me = data.players.find(p => p.user_id === myId);
 
     if (data.room.status === 'waiting') { goLobby(); return; }
 
-    if (isGuest && data.room.status === 'finished') {
-      guestRoundsPlayed++;
-      localStorage.setItem('guestRounds', guestRoundsPlayed);
-      if (guestRoundsPlayed >= 3) document.getElementById('guestModal').classList.add('active');
+    // Анимация победы
+    if (data.room.status === 'finished' && oldStatus !== 'finished') {
+      document.getElementById('winOverlay').classList.add('show');
+      if (isGuest) { guestRoundsPlayed++; localStorage.setItem('guestRounds', guestRoundsPlayed); }
     }
 
-    document.getElementById('gameStatus').textContent = data.room.game_type === 'shpion' ? 'Шпион' : data.room.game_type === 'crocodile' ? 'Крокодил' : data.room.game_type === 'bunker' ? 'Бункер' : 'Манчкин';
+    document.getElementById('gameStatus').textContent = data.room.game_type;
     renderGameContent(data.room, data.players, me);
     appendMessages(data.messages || [], 'gameChat');
     
@@ -725,158 +774,147 @@ function renderGameContent(room, players, me) {
   const el = document.getElementById('gameContent');
   
   if (room.status === 'countdown') {
-    el.innerHTML = `<div class="state-card" style="text-align:center;">${icon('clock', 32)}<div class="state-title">Игра начинается...</div></div>`;
+    el.innerHTML = `<div style="text-align: center; padding: 40px 0; animation: pulseGlow 2s infinite;"><div style="font-size: 48px; color: var(--accent);">${icon('clock', 64)}</div><div style="font-size: 24px; font-weight: 900; margin-top: 20px;">ИГРА НАЧИНАЕТСЯ...</div></div>`;
     return;
   }
   if (room.status === 'finished') {
-    el.innerHTML = `
-      <div class="state-card" style="text-align:center;">
-        ${icon('trophy', 32)}
-        <div class="state-title">Игра окончена</div>
-        <div class="state-subtitle" style="font-size:18px; margin-top:8px;">${room.game_type === 'bunker' ? 'Бункер закрыт!' : 'Слово: ' + room.pending_guess}</div>
-      </div>
-      <button class="btn btn-primary" onclick="playAgain()">${icon('refresh', 16)} Играть снова</button>
-      <button class="btn btn-secondary" onclick="leaveRoom()">${icon('arrowLeft', 16)} Выйти в меню</button>
-    `;
-    return;
-  }
-  if (room.status === 'guessing') {
-    el.innerHTML = `<div class="state-card"><div class="state-label">Последний шанс</div><div class="state-title">${room.guesser_id === myId ? 'Вы Мистер Уайт' : 'Мистер Уайт угадывает'}</div></div>`;
+    el.innerHTML = `<div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.3); border-radius: var(--radius-lg);"><div style="font-size: 48px; color: #fcd34d;">${icon('trophy', 64)}</div><div style="font-size: 24px; font-weight: 900; margin-top: 16px;">ИГРА ОКОНЧЕНА</div></div>`;
     return;
   }
   
-  // --- CROCODILE ---
+  // КРОКОДИЛ
   if (room.game_type === 'crocodile' && room.status === 'playing') {
     const isHost = room.current_speaker_id === myId;
-    const isSpectator = me && (!me.is_alive || me.is_spectator);
+    const speaker = players.find(p => p.user_id === room.current_speaker_id);
     el.innerHTML = `
-      <div class="state-card">
-        <div class="state-label">${isHost ? 'Ты ведущий' : (isSpectator ? 'Вы наблюдатель' : 'Ведущий')}</div>
-        <div class="state-title">${isHost ? 'Объясни слово' : (players.find(p => p.user_id === room.current_speaker_id)?.username || '...') + ' объясняет'}</div>
-        ${isHost ? `<div class="secret-word">${esc(room.pending_guess || '...')}</div>` : ''}
+      <div class="card-3d-wrapper animate-slide-up">
+        <div class="card-3d ${!isHost ? 'flipped' : ''}">
+          <div class="card-face">
+            <div class="card-icon-large">${icon('croc', 48)}</div>
+            <div class="card-label">Твоё слово</div>
+            <div class="card-value">${esc(room.pending_guess || '...')}</div>
+          </div>
+          <div class="card-face back">
+             <div class="card-icon-large">${icon('users', 48)}</div>
+             <div class="card-label">Объясняет</div>
+             <div class="card-value">${esc(speaker?.username || 'Игрок')}</div>
+          </div>
+        </div>
       </div>
-      ${isHost ? `<button class="btn btn-danger" onclick="surrender()">${icon('skull', 16)} Сдаться</button>` : ''}
+      ${isHost ? `<button class="btn btn-danger" onclick="surrender()">${icon('skull', 18)} СДАТЬСЯ</button>` : `<p style="text-align: center; color: var(--text-muted); font-weight: 600;">Пиши варианты в чат!</p>`}
     `;
     return;
   }
 
-  // --- SPY ---
+  // ШПИОН
   if (room.game_type === 'shpion' && room.status === 'playing') {
     const isMyTurn = room.current_speaker_id === myId;
-    const speaker = players.find(p => p.user_id === room.current_speaker_id);
-    const myRole = me?.role;
     const myWord = me?.word;
-    const roleLabel = myRole === 'civilian' ? 'Мирный' : myRole === 'undercover' ? 'Шпион' : 'Мистер Уайт';
-    const isSpectator = me && (!me.is_alive || me.is_spectator);
-
+    const role = me?.role === 'civilian' ? 'МИРНЫЙ' : me?.role === 'undercover' ? 'ШПИОН' : 'МИСТЕР УАЙТ';
     el.innerHTML = `
-      <div class="state-card">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <div class="state-label">Раунд ${room.current_round}</div>
-          <div style="font-size:12px; font-weight:700; color:var(--accent);">${roleLabel}</div>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: inline-block; padding: 6px 16px; background: var(--accent-soft); color: var(--accent); border-radius: var(--radius-pill); font-weight: 900; letter-spacing: 1px;">${role}</div>
+      </div>
+      <div class="card-3d-wrapper animate-slide-up">
+        <div class="card-3d flipped">
+          <div class="card-face">
+            <div class="card-icon-large">${icon('eye', 48)}</div>
+          </div>
+          <div class="card-face back">
+            <div class="card-label">Секретное слово</div>
+            <div class="card-value">${esc(myWord || 'Блефуй!')}</div>
+          </div>
         </div>
-        ${isSpectator ? `<div style="text-align:center; color:var(--text-muted);">Вы наблюдатель</div>` : (myWord ? `<div class="secret-word">${esc(myWord)}</div>` : `<div style="text-align:center; color:var(--text-muted);">Нет слова — блефуй!</div>`)}
       </div>
-      <div class="state-card">
-        <div class="state-label">${isMyTurn ? 'Твоя очередь' : 'Сейчас говорит'}</div>
-        <div class="state-title">${isMyTurn ? 'Опиши слово' : esc(speaker?.username || '...')}</div>
-        ${isMyTurn && (myRole === 'undercover' || myRole === 'mrwhite') ? `<button class="btn btn-secondary" onclick="guessWord()" style="margin-top:12px;">${icon('zap', 16)} Угадать слово</button>` : ''}
-        ${isMyTurn ? `<button class="btn btn-danger" onclick="surrender()" style="margin-top:12px;">${icon('skull', 16)} Сдаться</button>` : ''}
-      </div>
+      ${isMyTurn ? `<div class="animate-pop" style="text-align: center; font-weight: 800; font-size: 18px; color: var(--accent); margin-top: 20px;">ТВОЯ ОЧЕРЕДЬ!</div>` : `<p style="text-align: center; color: var(--text-muted); font-weight: 600;">Ждем хода...</p>`}
     `;
     return;
   }
 
-  // --- BUNKER ---
-  if (room.game_type === 'bunker') {
-    if (!state.bunkerCards && me?.word) {
-      try {
-        state.bunkerCards = JSON.parse(me.word);
-        setTimeout(() => {
-          document.querySelectorAll('.card-container').forEach(c => c.classList.add('flipped'));
-        }, 500);
-      } catch(e) { console.error("Error parsing bunker cards", e); }
-    }
-
-    const isSpectator = me && (!me.is_alive || me.is_spectator);
+  // БУНКЕР
+  if (room.game_type === 'bunker' && room.status === 'discussion') {
+    // Парсим карты из me.word (если они есть)
+    let cards = { profession: '...', health: '...', baggage: '...', fact: '...' };
+    if (me?.word) { try { cards = JSON.parse(me.word); } catch(e){} }
     
-    if (isSpectator) {
-      el.innerHTML = `<div class="state-card" style="text-align:center;">${icon('skull', 32)}<div class="state-title">Вас изгнали</div><div class="state-desc">Вы наблюдаете за игрой.</div></div>`;
-    } else if (state.bunkerCards) {
-      el.innerHTML = `
-        <div class="state-card" style="text-align:center; margin-bottom:12px;">
-          <div class="state-label">Ваш персонаж</div>
-          <div class="state-title" style="font-size:16px;">Раунд ${room.current_round}</div>
-          <div class="state-desc">Нажмите на карту, чтобы перевернуть</div>
-        </div>
-        <div class="card-container" onclick="this.classList.toggle('flipped')">
-          <div class="card-inner">
-            <div class="card-front"><div class="card-icon">${icon('bunker', 32)}</div><div>Скрыто</div></div>
-            <div class="card-back">
-              <div class="card-icon" style="color:var(--accent)">${icon('profession', 24)}</div>
-              <div class="card-title">Профессия</div>
-              <div class="card-value">${esc(state.bunkerCards.profession)}</div>
+    el.innerHTML = `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        ${['profession', 'health', 'baggage', 'fact'].map((key, i) => `
+          <div class="card-3d-wrapper animate-slide-up" style="height: 140px; animation-delay: ${i * 0.1}s" onclick="this.querySelector('.card-3d').classList.toggle('flipped')">
+            <div class="card-3d">
+              <div class="card-face">
+                <div class="card-icon-large">${icon('bunker', 32)}</div>
+              </div>
+              <div class="card-face back">
+                <div class="card-label" style="font-size: 10px;">${key.toUpperCase()}</div>
+                <div class="card-value" style="font-size: 14px;">${esc(cards[key])}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-container" onclick="this.classList.toggle('flipped')">
-          <div class="card-inner">
-            <div class="card-front"><div class="card-icon">${icon('health', 32)}</div><div>Скрыто</div></div>
-            <div class="card-back">
-              <div class="card-icon" style="color:var(--success)">${icon('health', 24)}</div>
-              <div class="card-title">Здоровье</div>
-              <div class="card-value">${esc(state.bunkerCards.health)}</div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container" onclick="this.classList.toggle('flipped')">
-          <div class="card-inner">
-            <div class="card-front"><div class="card-icon">${icon('baggage', 32)}</div><div>Скрыто</div></div>
-            <div class="card-back">
-              <div class="card-icon" style="color:var(--warning)">${icon('baggage', 24)}</div>
-              <div class="card-title">Багаж</div>
-              <div class="card-value">${esc(state.bunkerCards.baggage)}</div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container" onclick="this.classList.toggle('flipped')">
-          <div class="card-inner">
-            <div class="card-front"><div class="card-icon">${icon('fact', 32)}</div><div>Скрыто</div></div>
-            <div class="card-back">
-              <div class="card-icon" style="color:var(--danger)">${icon('fact', 24)}</div>
-              <div class="card-title">Факт</div>
-              <div class="card-value">${esc(state.bunkerCards.fact)}</div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    if (room.status === 'discussion') {
-      const alive = players.filter(p => p.is_alive && !p.is_spectator);
-      el.innerHTML += `
-        <div class="state-card" style="margin-top:16px;">
-          <div class="state-label">Голосование</div>
-          <div class="state-title">Кого выгнать из бункера?</div>
-          <div class="vote-grid">
-            ${alive.filter(p => p.user_id !== myId).map(p => `
-              <button class="btn btn-secondary" onclick="vote(${p.user_id}, this)">${icon('user', 16)} ${esc(p.username || 'Игрок')}</button>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
+        `).join('')}
+      </div>
+      <button class="btn btn-danger" onclick="surrender()">${icon('skull', 18)} СДАТЬСЯ</button>
+    `;
     return;
   }
 
-  // --- MUNCHKIN ---
+  // МАНЧКИН
   if (room.game_type === 'munchkin') {
-    // Логика для Манчкина будет добавлена в следующем шаге (в функции api)
+    const mData = state.munchkinData || { hand: [], equipped: [], active_monster: null };
+    const isMyTurn = room.current_speaker_id === myId;
+
     el.innerHTML = `
-      <div class="state-card" style="text-align:center;">
-        <div class="card-icon">${icon('munchkin', 64)}</div>
-        <div class="state-title">Манчкин</div>
-        <div class="state-desc">Подготовка к игре...</div>
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <div style="flex: 1; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 16px; text-align: center; border: 1px solid var(--border);">
+          <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">УРОВЕНЬ</div>
+          <div style="font-size: 28px; font-weight: 900; color: var(--accent);">${me?.munchkin_level || 1}</div>
+        </div>
+        <div style="flex: 1; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 16px; text-align: center; border: 1px solid var(--border);">
+          <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">СИЛА</div>
+          <div style="font-size: 28px; font-weight: 900; color: var(--accent);">${me?.munchkin_power || 1}</div>
+        </div>
+      </div>
+
+      ${mData.active_monster ? `
+        <div class="monster-zone animate-pop" style="border: 2px dashed #ef4444; background: rgba(239,68,68,0.1); border-radius: var(--radius-lg); padding: 20px; text-align: center; margin-bottom: 20px;">
+          <div style="color: #ef4444; margin-bottom: 10px;">${icon('monster', 48)}</div>
+          <div style="font-size: 20px; font-weight: 900; color: #ef4444; text-transform: uppercase;">${esc(mData.active_monster.name)}</div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 8px;">СИЛА МОНСТРА: ${mData.active_monster.power}</div>
+          ${isMyTurn ? `
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+              <button class="btn btn-primary" onclick="munchkinAction('fight')" style="margin: 0;">БОЙ</button>
+              <button class="btn btn-secondary" onclick="munchkinAction('run')" style="margin: 0;">СМЫТЬСЯ</button>
+            </div>
+          ` : ''}
+        </div>
+      ` : isMyTurn ? `
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-weight: 900; font-size: 18px; color: var(--accent); margin-bottom: 12px;">ТВОЙ ХОД</div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" onclick="munchkinAction('door')" style="margin: 0;">${icon('door', 18)} ДВЕРЬ</button>
+            <button class="btn btn-secondary" onclick="munchkinAction('loot')" style="margin: 0;">${icon('item', 18)} НЫЧКИ</button>
+          </div>
+        </div>
+      ` : ''}
+
+      <h3 style="font-size: 14px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">Надето</h3>
+      <div class="hand-scroll">
+        ${mData.equipped.map(c => `
+          <div class="m-card item" onclick="munchkinAction('unequip', ${c.id})">
+            <div class="m-card-title">${c.name || 'Шмотка'}</div>
+            <div class="m-card-icon">${icon('item', 24)}</div>
+          </div>
+        `).join('') || `<div style="font-size: 12px; color: var(--text-muted);">Пусто</div>`}
+      </div>
+
+      <h3 style="font-size: 14px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">В руке</h3>
+      <div class="hand-scroll">
+        ${mData.hand.map((c, i) => `
+          <div class="m-card item deal-animation" style="animation-delay: ${i * 0.1}s" onclick="munchkinAction('play_card', ${c.id})">
+            <div class="m-card-title">${c.name || 'Карта'}</div>
+            <div class="m-card-icon">${icon(c.deck_type === 'door' ? 'door' : 'item', 24)}</div>
+          </div>
+        `).join('') || `<div style="font-size: 12px; color: var(--text-muted);">Пусто</div>`}
       </div>
     `;
     return;
@@ -884,7 +922,7 @@ function renderGameContent(room, players, me) {
 }
 
 /* ============================================================
-   CHAT & AUDIO PLAYER
+   ЧАТ И ДЕЙСТВИЯ
    ============================================================ */
 function appendMessages(messages, targetId) {
   if (!messages || !messages.length) return;
@@ -897,30 +935,14 @@ function appendMessages(messages, targetId) {
     const el = document.createElement('div');
     el.dataset.msgId = m.id;
     if (m.is_system) {
-      el.className = 'msg msg-system'; el.textContent = m.text;
+      el.className = 'msg msg-system animate-pop'; el.textContent = m.text;
     } else {
       const isMe = m.user_id === myId;
-      el.className = `msg ${isMe ? 'msg-me' : 'msg-other'}`;
+      el.className = `msg ${isMe ? 'msg-me' : 'msg-other'} animate-slide-up`;
       let content = '';
       if (!isMe) content += `<div class="msg-meta">${esc(m.username)}</div>`;
-      
-      if (m.is_voice && m.voice_url) {
-        const uniqueId = 'audio_' + m.id;
-        content += `
-          <div class="audio-player" id="player_${uniqueId}">
-            <button class="audio-play-btn" onclick="toggleAudio('${uniqueId}')">${icon('play', 16)}</button>
-            <div class="audio-progress" onclick="seekAudio(event, '${uniqueId}')">
-              <div class="audio-progress-fill" id="progress_${uniqueId}"></div>
-            </div>
-            <span class="audio-time" id="time_${uniqueId}">0:00</span>
-            <audio id="${uniqueId}" src="${m.voice_url}" preload="metadata"></audio>
-          </div>
-        `;
-      } else if (m.is_voice) {
-        content += `<div style="display:flex;align-items:center;gap:6px;opacity:0.7;">${icon('mic', 16)}<span>Голосовое (нет ссылки)</span></div>`;
-      } else {
-        content += esc(m.text);
-      }
+      if (m.is_voice && m.voice_url) content += `<audio controls src="${m.voice_url}" style="max-width: 100%; height: 36px;"></audio>`;
+      else content += esc(m.text);
       el.innerHTML = content;
     }
     container.appendChild(el);
@@ -928,31 +950,6 @@ function appendMessages(messages, targetId) {
   container.scrollTop = container.scrollHeight;
 }
 
-window.toggleAudio = function(id) {
-  const audio = document.getElementById(id);
-  const btn = document.querySelector(`#player_${id} .audio-play-btn`);
-  if (audio.paused) { audio.play(); btn.innerHTML = icon('pause', 16); } else { audio.pause(); btn.innerHTML = icon('play', 16); }
-  audio.onended = () => { btn.innerHTML = icon('play', 16); };
-  audio.ontimeupdate = () => {
-    const progress = document.getElementById(`progress_${id}`);
-    const timeEl = document.getElementById(`time_${id}`);
-    if (progress && audio.duration) {
-      progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
-      timeEl.textContent = `${Math.floor(audio.currentTime / 60)}:${Math.floor(audio.currentTime % 60).toString().padStart(2, '0')}`;
-    }
-  };
-};
-
-window.seekAudio = function(event, id) {
-  const audio = document.getElementById(id);
-  const rect = event.currentTarget.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  if (audio.duration) audio.currentTime = (x / rect.width) * audio.duration;
-};
-
-/* ============================================================
-   ACTIONS
-   ============================================================ */
 async function sendChatMessage(inputId) {
   const input = document.getElementById(inputId);
   const text = input.value.trim();
@@ -968,21 +965,16 @@ document.getElementById('lobbyInput').onkeydown = (e) => { if (e.key === 'Enter'
 document.getElementById('gameSendBtn').onclick = () => sendChatMessage('gameInput');
 document.getElementById('gameInput').onkeydown = (e) => { if (e.key === 'Enter') sendChatMessage('gameInput'); };
 
-async function vote(targetId, btn) {
-  try {
-    await api(`/api/rooms/${state.currentRoom.id}/vote`, 'POST', { target_id: targetId });
-    showToast('Голос учтён', 'success'); btn.disabled = true;
-  } catch (e) { showToast('Ошибка', 'error'); }
-}
-
-async function guessWord() {
-  const word = prompt('Твоя догадка:');
-  if (word) { try { await api(`/api/rooms/${state.currentRoom.id}/guess`, 'POST', { text: word }); } catch (e) { showToast('Ошибка', 'error'); } }
-}
-
 async function surrender() {
   if (!confirm('Вы уверены, что хотите сдаться?')) return;
   try { await api(`/api/rooms/${state.currentRoom.id}/surrender`, 'POST'); showToast('Вы сдались', 'info'); } catch (e) { showToast('Ошибка', 'error'); }
+}
+
+async function munchkinAction(action, cardId = null) {
+  try {
+    await api(`/api/rooms/${state.currentRoom.id}/munchkin`, 'POST', { action, card_id: cardId });
+    refreshGame();
+  } catch (e) { showToast('Ошибка действия', 'error'); }
 }
 
 async function playAgain() {
@@ -990,10 +982,10 @@ async function playAgain() {
 }
 
 /* ============================================================
-   PROFILE & UTILS
+   ПРОФИЛЬ И УТИЛИТЫ
    ============================================================ */
 async function goProfile() {
-  stopPolling(); showScreen('profile');
+  stopPolling(); showScreen('profile'); setGameTheme(null);
   document.getElementById('headerTitle').textContent = 'Профиль';
   document.getElementById('profileName').textContent = telegramUser.first_name;
   document.getElementById('profileId').textContent = isGuest ? 'Режим гостя' : 'ID: ' + myId;
@@ -1003,23 +995,14 @@ async function goProfile() {
 
 function startPolling(fn, ms) { stopPolling(); state.pollingTimer = setInterval(fn, ms); }
 function stopPolling() { if (state.pollingTimer) clearInterval(state.pollingTimer); }
-function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function showToast(text, type = 'info') {
-  const wrap = document.getElementById('toastWrap');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `${icon(type === 'success' ? 'check' : 'x', 16)} <span>${esc(text)}</span>`;
-  wrap.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
-}
 
 /* ============================================================
-   INIT
+   ИНИЦИАЛИЗАЦИЯ
    ============================================================ */
-document.getElementById('headerBrandIcon').innerHTML = icon('zap', 18);
-document.getElementById('sideBrandIcon').innerHTML = icon('zap', 18);
-document.getElementById('balanceIcon').innerHTML = icon('coin', 14);
-setTheme(localStorage.getItem('theme') || (tg?.colorScheme === 'light' ? 'light' : 'dark'));
+document.getElementById('headerBrandIcon').innerHTML = icon('zap', 20);
+document.getElementById('sideBrandIcon').innerHTML = icon('zap', 20);
+document.getElementById('balanceIcon').innerHTML = icon('coin', 16);
+setTheme(localStorage.getItem('theme') || 'dark');
 renderNav();
 goHome();
 </script>
