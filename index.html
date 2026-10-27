@@ -9,10 +9,10 @@
 
   <!-- Технические параметры развёртывания: меняй только здесь. Нужны URL Edge Function и публичный anon/publishable key. -->
   <script>
-  window.GAME_HUB_CONFIG = {
-  apiBase: 'https://jgjereoejdipaqwjhexc.supabase.co/functions/v1/api', 
-  supabaseAnonKey: 'sb_publishable_rAKslUXIvq-SjFbBGJV6DQ_3IZSJZPL'
-};
+    window.GAME_HUB_CONFIG = {
+      apiBase: 'https://jgjereoejdipaqwjhexc.supabase.co/functions/v1/api',
+      supabaseAnonKey: 'sb_publishable_rAKslUXIvq-SjFbBGJV6DQ_3IZSJZPL' // публичный ключ; не вставляй service_role / secret key
+    };
   </script>
   <!-- Нарисованные персонажи и иконки строятся через Canvas 2D; внешние библиотеки и векторной графики не нужны. -->
   <style>
@@ -1239,10 +1239,10 @@
     // Не добавляй сюда service_role/secret key. Профиль пользователя не управляет подключением.
     // Можно переопределить эти значения через window.GAME_HUB_CONFIG до загрузки этого скрипта.
     const DEPLOYMENT_CONFIG = {
-      apiBase: '', // например: https://PROJECT.supabase.co/functions/v1/api
-      supabaseAnonKey: '',
+      apiBase: 'https://jgjereoejdipaqwjhexc.supabase.co/functions/v1/api',
+      supabaseAnonKey: 'sb_publishable_rAKslUXIvq-SjFbBGJV6DQ_3IZSJZPL',
       pollMs: 4000,
-      maxMessageLength: 500
+      maxMessageLength: 4000
     };
     const safeStorage={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,String(v));return true}catch{return false}},remove(k){try{localStorage.removeItem(k)}catch{}}};
     const CONFIG = Object.assign({}, DEPLOYMENT_CONFIG, window.GAME_HUB_CONFIG||{});
@@ -1439,8 +1439,12 @@
     function apiUrl(path){const base=String(CONFIG.apiBase||'').replace(/\/$/,'');return `${base}${path.startsWith('/')?path:`/${path}`}`}
     function authHeaders(){
       // FIX: контракт требует anon key в обоих заголовках и только x-telegram-init-data/x-guest-id для личности.
-      const key=String(CONFIG.supabaseAnonKey||window.SUPABASE_ANON_KEY||'');
-      const h={'Accept':'application/json','apikey':key,'Authorization':`Bearer ${key}`};
+      const key=String(CONFIG.supabaseAnonKey||window.SUPABASE_ANON_KEY||'').trim();
+      // sb_publishable_* — это API key, не JWT. Передаём его только в apikey,
+      // а Authorization используем лишь для legacy anon JWT. Личность проверяет API
+      // отдельно по Telegram initData или отрицательному x-guest-id.
+      const h={'Accept':'application/json','apikey':key};
+      if(key && !key.startsWith('sb_publishable_') && !key.startsWith('sb_secret_')) h['Authorization']=`Bearer ${key}`;
       const tg=window.Telegram?.WebApp;
       if(tg?.initData)h['x-telegram-init-data']=tg.initData;
       else if(guestId<0)h['x-guest-id']=String(guestId);
